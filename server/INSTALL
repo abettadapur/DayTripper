@@ -9,7 +9,11 @@
 	a. source venv/bin/activate
 5. Install the dependencies
 	a. pip install -r requirements.txt
-6. Run the server
+6. Fill in the Yelp API Configuration
+	a. cp daytrip/etc/config.sample.py daytrip/etc/config.py
+	b. vim daytrip/etc/config.py
+	c. Fill in the string fields (Ask ALEX)
+7. Run the server
 	a. python daytrip/serve.py
-7. Deactivate your environment when finished
+8. Deactivate your environment when finished
 	a. deactivate
