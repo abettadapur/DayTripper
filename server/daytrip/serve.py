@@ -1,3 +1,4 @@
+from etc import config
 from flask import Flask
 from flask_restful import Api
 
@@ -18,4 +19,3 @@ if __name__ == '__main__':
 	http_server = WSGIServer(('0.0.0.0', 5000), app)
 
 	http_server.serve_forever()
-

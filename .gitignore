@@ -55,3 +55,6 @@ target/
 
 #Virtual Environemnt
 server/venv/
+
+#Configuration File
+server/daytrip/etc/config.py
