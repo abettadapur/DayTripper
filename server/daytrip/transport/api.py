@@ -1,3 +1,4 @@
+import facebook
 from flask import request
 from flask_restful import Resource, reqparse
 
@@ -10,3 +11,18 @@ class Test2(Resource):
 	def post(self, parameter):
 		json_data = request.get_json(force=True)
 		return {"received": json_data, "parameter": parameter}, 200 #Return the posted data with a status code
+
+
+class Auth(Resource):
+
+	def post(self):
+		json_data = request.get_json(force=True)
+		token = json_data['token']
+		uid = json_data['user_id']
+
+		graph = facebook.GraphAPI(access_token=token)
+		user = graph.get_object(id=uid)
+		if(user and user['id']==uid):
+			#verified token. add to token repository
+			#verified user. add to user repository if not exists
+			return True, 200;
