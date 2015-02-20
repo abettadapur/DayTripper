@@ -23,4 +23,4 @@ if __name__ == '__main__':
 	#http_server.serve_forever()
 
 	#debug server. Uncomment above for production
-	app.run(host='0.0.0.0')
+	app.run(host='0.0.0.0', port=3000)
