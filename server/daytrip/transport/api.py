@@ -24,9 +24,13 @@ class Auth(Resource):
 		graph = facebook.GraphAPI(access_token=token)
 		user = graph.get_object(id=uid)
 		if(user and user['id']==uid):
-			#verified token. add to token repository
-			#verified user. add to user repository if not exists
+
+			#add token to repository if not exists
+			if not db.sqlite.check_authorization(token):
+				db.sqlite.add_authorization(token, uid)
+
+			#add to user repository if not exists
 			if not db.sqlite.user_exists(uid):
 				db.sqlite.create_user(uid, user['first_name'], user['last_name'], user['email'])
-				
+
 			return True, 200;
