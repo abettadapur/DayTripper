@@ -58,3 +58,4 @@ server/venv/
 
 #Configuration File
 server/daytrip/etc/config.py
+server/.idea/

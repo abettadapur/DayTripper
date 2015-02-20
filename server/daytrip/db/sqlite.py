@@ -21,8 +21,8 @@ class SqlLiteManager(object):
     def user_exists(self, id):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
-            cursor.execute('SELECT {id} FROM {table} WHERE {id}=?'.format(id=users.ID, table=users.USERS_TABLE), (id,))
-            if cursor.rowcount>0:
+            cursor.execute('SELECT {id} FROM {table} WHERE {id}=:id'.format(id=users.ID, table=users.USERS_TABLE), {'id':id})
+            if cursor.fetchone():
                 cursor.close()
                 return True
             else:
