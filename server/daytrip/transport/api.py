@@ -1,6 +1,7 @@
 import facebook
 from flask import request
 from flask_restful import Resource, reqparse
+import db
 
 class Test(Resource):
 	def get(self):
@@ -25,4 +26,7 @@ class Auth(Resource):
 		if(user and user['id']==uid):
 			#verified token. add to token repository
 			#verified user. add to user repository if not exists
+			if not db.sqlite.user_exists(uid):
+				db.sqlite.create_user(uid, user['first_name'], user['last_name'], user['email'])
+				
 			return True, 200;
