@@ -3,6 +3,13 @@ from flask import request
 from flask_restful import Resource, reqparse
 import db
 
+
+#ALL QUERIES MUST BE AUTHENTICATED WITH AN AUTHENTICATION TOKEN (Except for the AUTH POST)
+
+#Add the token as part of a query string, and check db.sqlite.check_authorization(token)
+
+
+
 class Test(Resource):
 	def get(self):
 		return {"message": "HelloWorld"}, 200  #Return a python object and a status code!
