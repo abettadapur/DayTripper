@@ -23,10 +23,16 @@ class Test2(Resource):
 
 class Auth(Resource):
 
+	def __init__(self):
+		self.reqparse = reqparse.RequestParser()
+		self.reqparse.add_argument('token', type=str, required = True, help="No token to verify", location='json')
+		self.reqparse.add_argument('user_id', type=str, required = True, help="An associated Facebook User ID is required", location='json')
+		super(Auth, self).__init__()
+
 	def post(self):
-		json_data = request.get_json(force=True)
-		token = json_data['token']
-		uid = json_data['user_id']
+		args = self.reqparse.parse_args()
+		token = args['token']
+		uid = args['user_id']
 
 		graph = facebook.GraphAPI(access_token=token)
 		user = graph.get_object(id=uid)
@@ -41,3 +47,30 @@ class Auth(Resource):
 				db.sqlite.create_user(uid, user['first_name'], user['last_name'], user['email'])
 
 			return True, 200;
+
+class Itinerary(Resource):
+
+	def get(self, id):
+		pass
+
+	def put(self, id):
+		pass
+
+	def delete(self, id):
+		pass
+
+class Create_Itinerary(Resource):
+
+	def post(self):
+		pass
+
+
+class Item(Resource):
+	def get(self, id):
+		pass
+
+	def put(self, id):
+		pass
+
+	def delete(self, id):
+		pass

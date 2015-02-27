@@ -14,11 +14,16 @@ api = Api(app)
 api.add_resource(restapi.Test, '/test')
 api.add_resource(restapi.Test2, '/test/<string:parameter>')
 api.add_resource(restapi.Auth, '/auth/verify')
+api.add_resource(restapi.Create_Itinerary, '/itinerary/create')
+api.add_resource(restapi.Itinerary, '/itinerary/<int:id>')
+
+#Will be changed
+api.add_resource(restapi.Item, '/item/<int:id>')
 
 
 #Run the server on port 5000
 if __name__ == '__main__':
-	#http_server = WSGIServer(('0.0.0.0', 5000), app)
+	#http_server = WSGIServer(('0.0.0.0', 3000), app)
 
 	#http_server.serve_forever()
 
