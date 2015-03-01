@@ -12,6 +12,7 @@ import db
 
 class Test(Resource):
     def get(self):
+        db.sqlite.get_itinerary(1)
         return {"message": "HelloWorld"}, 200  #Return a python object and a status code!
 
 
@@ -40,11 +41,11 @@ class Auth(Resource):
 
             #add token to repository if not exists
             if not db.sqlite.check_authorization(token):
-                db.sqlite.add_authorization(token, uid)
+                db.sqlite.insert_authorization(token, uid)
 
             #add to user repository if not exists
             if not db.sqlite.user_exists(uid):
-                db.sqlite.create_user(uid, user['first_name'], user['last_name'], user['email'])
+                db.sqlite.insert_user(uid, user['first_name'], user['last_name'], user['email'])
 
             return True, 200;
 
@@ -66,11 +67,11 @@ class Create_Itinerary(Resource):
 
 
 class Item(Resource):
-    def get(self, id):
+    def get(self, itinerary_id, id):
         pass
 
-    def put(self, id):
+    def put(self, itinerary_id, id):
         pass
 
-    def delete(self, id):
+    def delete(self, itinerary_id, id):
         pass
