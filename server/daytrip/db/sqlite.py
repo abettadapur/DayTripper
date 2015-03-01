@@ -4,6 +4,7 @@ from schema import users as user_schema, auth as auth_schema, itinerary as itine
 import datetime
 from model.user import User
 from model.itinerary import Itinerary
+from model.item import Item
 
 
 #CREATE_DATABASE = users.CREATE_USERS_TABLE + auth.CREATE_AUTH_TABLE #+ othertable.CREATEOTHERTABLE
@@ -175,20 +176,84 @@ class SqlLiteManager(object):
                 ),
                 (id, )
             )
-            intinerary = cursor.fetchone()
-            cursor.close()
-            #self.list_items
 
-            return intinerary
+            itinerary = cursor.fetchone()
+            cursor.close()
+            return itinerary
 
     def itinerary_from_cursor(self, cursor, row):
         if row:
-            itinerary = Itinerary(row[0], row[1], row[2], row[3], row[4], row[5],[])
+            items = self.list_items(row[0])
+            user = self.get_user(row[1])
+            itinerary = Itinerary(row[0], user, row[2], row[3], row[4], row[5], row[6], items)
             return itinerary
         return None
 
 
     #ITEMS FUNCTIONS
+
+    def insert_item(self, item, itinerary):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'INSERT INTO {table} ({name}, {itinerary_id}, {yelp_id}, {category_id}, {start_time}, {end_time})'
+                'VALUES (?,?,?,?,?,?)'
+                .format(
+                    table = item_schema.ITEM_TABLE,
+                    name = item_schema.NAME,
+                    itinerary_id=item_schema.ITINERARY_ID,
+                    yelp_id = item_schema.YELP_ID,
+                    category_id = item_schema.CATEGORY_ID,
+                    start_time = item_schema.START_TIME,
+                    end_time = item_schema.END_TIME
+                ),
+                (item.name, itinerary.id, item.yelp_id, item.category.id, item.start_time, item.end_time)
+            )
+            if cursor.rowcount == 0:
+                pass #ERROR
+            cursor.close()
+
+    def get_item(self, id):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.row_factory = self.item_from_cursor
+
+            cursor.execute(
+                'SELECT * FROM {table} WHERE {id} = ?'
+                .format(
+                    table=item_schema.ITEM_TABLE,
+                    id=item_schema.ID
+                ),
+                (id, )
+            )
+
+            item = cursor.fetchone()
+            cursor.close()
+            return item
+
+    def list_items(self, itinerary_id):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.row_factory = self.item_from_cursor
+
+            cursor.execute(
+                'SELECT * FROM {table} WHERE {itinerary_id} = ?'
+                .format(
+                    table = item_schema.ITEM_TABLE,
+                    itinerary_id = item_schema.ITINERARY_ID
+                ),
+                (itinerary_id,)
+            )
+
+            items = cursor.fetchall()
+            cursor.close()
+            return items
+
+    def item_from_cursor(self, cursor, row):
+        if row:
+            item = Item(row[0], row[2], row[3], row[4], row[5], row[6])
+            return item
+        return None
 
 
 
