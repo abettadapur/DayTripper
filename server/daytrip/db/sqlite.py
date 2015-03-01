@@ -1,5 +1,5 @@
 from sqlite3 import dbapi2 as sqlite3
-from schema import users, auth
+from schema import users, auth, itinerary, item
 
 
 #CREATE_DATABASE = users.CREATE_USERS_TABLE + auth.CREATE_AUTH_TABLE #+ othertable.CREATEOTHERTABLE
@@ -17,6 +17,9 @@ class SqlLiteManager(object):
             cursor = conn.cursor()
             cursor.execute(users.CREATE_USERS_TABLE)
             cursor.execute(auth.CREATE_AUTH_TABLE)
+            cursor.execute(itinerary.CREATE_ITINERARY_TABLE)
+            cursor.execute(item.CREATE_ITEM_TABLE)
+
             cursor.close()
 
     #USERS OPERATIONS
@@ -82,3 +85,5 @@ class SqlLiteManager(object):
             if cursor.rowcount==0:
                 pass #ERROR
             cursor.close()
+
+    #ITINERARY OPERATIONS
