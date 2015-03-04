@@ -78,19 +78,13 @@ class SqlLiteManager(object):
     def list_users(self):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
+            cursor.row_factory = self.user_from_cursor
             cursor.execute('SELECT * FROM {table}'.format(table=user_schema.USERS_TABLE))
-            users = []
-            while True:
-                user = self.user_from_cursor(cursor)
-                if user:
-                    users.append(user)
-                else:
-                    break
-
+            users = cursor.fetchall()
+            cursor.close()
             return users
 
     def user_from_cursor(self, cursor, row):
-        print row
         if row:
             user = User(row[0], row[1], row[2], row[3])
             return user
