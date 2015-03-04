@@ -11,12 +11,12 @@ api = Api(app)
 
 api.add_resource(restapi.Test, '/test')
 api.add_resource(restapi.Test2, '/test/<string:parameter>')
-api.add_resource(restapi.Auth, '/auth/verify')
-api.add_resource(restapi.Create_Itinerary, '/itinerary/create')
-api.add_resource(restapi.Itinerary, '/itinerary/<int:id>')
+api.add_resource(restapi.AuthResource, '/auth/verify')
+api.add_resource(restapi.CreateItineraryResource, '/itinerary/create')
+api.add_resource(restapi.ItineraryResource, '/itinerary/<int:id>')
 
 #Will be changed
-api.add_resource(restapi.Item, '/itinerary/<int:itinerary_id>/item/<int:id>')
+api.add_resource(restapi.ItemResource, '/itinerary/<int:itinerary_id>/item/<int:id>')
 
 
 #Run the server on port 5000
