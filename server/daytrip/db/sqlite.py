@@ -42,9 +42,8 @@ class SqlLiteManager(object):
             else:
                 cursor.close()
 
-
     def insert_user(self, user):
-        with sqlite3.connect(self.db_name, factory=sqlite3.Row) as conn:
+        with sqlite3.connect(self.db_name) as conn:
 
             cursor = conn.cursor()
 
@@ -65,10 +64,10 @@ class SqlLiteManager(object):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.row_factory = self.user_from_cursor
-            cursor.execute('SELECT * FROM {table} WHERE {id}=:id'.format(
+            cursor.execute('SELECT * FROM {table} WHERE {id}=?'.format(
                 id=user_schema.ID,
                 table=user_schema.USERS_TABLE),
-                           (id,)
+                (id,)
             )
 
             user = cursor.fetchone()
@@ -90,9 +89,8 @@ class SqlLiteManager(object):
 
             return users
 
-
-
     def user_from_cursor(self, cursor, row):
+        print row
         if row:
             user = User(row[0], row[1], row[2], row[3])
             return user
@@ -118,15 +116,15 @@ class SqlLiteManager(object):
     def check_authorization(self, token):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
-            cursor.execute('SELECT {token} FROM {table} WHERE {token}=?'.format(
+            cursor.execute('SELECT {user_id} FROM {table} WHERE {token}=?'.format(
+                user_id=auth_schema.USER_ID,
                 token=auth_schema.TOKEN,
                 table=auth_schema.AUTH_TABLE), (
                 token,)
             )
-            if cursor.fetchone():
-                cursor.close()
-                return True
+            uid = cursor.fetchone()
             cursor.close()
+            return uid
 
     def delete_authorization(self, token):
         with sqlite3.connect(self.db_name) as conn:
@@ -145,8 +143,7 @@ class SqlLiteManager(object):
             cursor = conn.cursor()
             cursor.execute(
                 'INSERT INTO {table} ({user}, {name}, {date}, {start_time}, {end_time}, {city}) VALUES (?,?,?,?,?,?)'
-                .format
-                (
+                .format(
                     table = itinerary_schema.ITINERARY_TABLE,
                     user = itinerary_schema.USER_ID,
                     name = itinerary_schema.NAME,
@@ -180,6 +177,37 @@ class SqlLiteManager(object):
             itinerary = cursor.fetchone()
             cursor.close()
             return itinerary
+
+    def update_itinerary(self, itinerary):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'UPDATE {table} SET {user}=?, {name}=?, {date}=?, {start_time}=?, {end_time}=?, {city}=?) WHERE {id}=?'
+                .format(
+                    table=itinerary_schema.ITINERARY_TABLE,
+                    user=itinerary_schema.USER_ID,
+                    name=itinerary_schema.NAME,
+                    date=itinerary_schema.DATE,
+                    start_time=itinerary_schema.START_TIME,
+                    end_time=itinerary_schema.END_TIME,
+                    city=itinerary_schema.CITY,
+                    id=itinerary_schema.ID
+                ),
+                (itinerary.user.id, itinerary.name, itinerary.date, itinerary.start_time, itinerary.end_time, itinerary.city, itinerary.id)
+            )
+            cursor.close()
+
+    def delete_itinerary(self, id):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'DELETE FROM {table} WHERE {id}=?'
+                .format(
+                    table=itinerary_schema.ITINERARY_TABLE
+                ),
+                (id, )
+            )
+            cursor.close()
 
     def itinerary_from_cursor(self, cursor, row):
         if row:
@@ -248,6 +276,37 @@ class SqlLiteManager(object):
             items = cursor.fetchall()
             cursor.close()
             return items
+
+    def update_item(self, item, itinerary):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'UPDATE {table} SET {name}=?, {itinerary_id}=?, {yelp_id}=?, {category_id}=?, {start_time}=?, {end_time}=?)'
+                'WHERE {id}=?'
+                .format(
+                    table=item_schema.ITEM_TABLE,
+                    name=item_schema.NAME,
+                    itinerary_id=item_schema.ITINERARY_ID,
+                    yelp_id=item_schema.YELP_ID,
+                    category_id=item_schema.CATEGORY_ID,
+                    start_time=item_schema.START_TIME,
+                    end_time=item_schema.END_TIME
+                ),
+                (item.name, itinerary.id, item.yelp_id, item.category.id, item.start_time, item.end_time, item.id)
+            )
+            cursor.close()
+
+    def delete_item(self, id):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'DELETE FROM {table} WHERE {id}=?'
+                .format(
+                    table=item_schema.ITEM_TABLE
+                ),
+                (id, )
+            )
+            cursor.close()
 
     def item_from_cursor(self, cursor, row):
         if row:

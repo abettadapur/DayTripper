@@ -1,9 +1,7 @@
-from etc import config
 from flask import Flask
 from flask_restful import Api
 
-from transport import api as restapi
-from gevent.pywsgi import WSGIServer
+import api as restapi
 
 app = Flask(__name__)
 app.debug=True
@@ -28,4 +26,6 @@ if __name__ == '__main__':
 	#http_server.serve_forever()
 
 	#debug server. Uncomment above for production
+	import localtest
+	localtest.init_db()
 	app.run(host='0.0.0.0', port=3000)
