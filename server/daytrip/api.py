@@ -57,7 +57,8 @@ class Auth(Resource):
 
             #add to user repository if not exists
             if not db.sqlite.user_exists(uid):
-                db.sqlite.insert_user(uid, user['first_name'], user['last_name'], user['email'])
+                new_user = User(uid, user['first_name'], user['last_name'], user['email'])
+                db.sqlite.insert_user(new_user)
 
             return True, 200
 
@@ -94,7 +95,7 @@ class Itinerary(Resource):
         abort_on_invalid_itinerary(old_itinerary, user_id)
 
         # TODO give creation ability through put?
-        updated_itinerary = model.Itinerary(
+        updated_itinerary = Itinerary(
             id=id,
             user=db.sqlite.get_user(user_id),
             name=args['name'],
@@ -183,7 +184,7 @@ class Item(Resource):
 
         abort_on_invalid_item_relation(old_item, itinerary_id, user_id)
 
-        updated_item = model.item(
+        updated_item = Item(
             id=id,
             yelp_id=args['yelp_id'],
             category=args['category'],

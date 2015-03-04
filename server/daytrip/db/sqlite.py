@@ -165,6 +165,7 @@ class SqlLiteManager(object):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.row_factory = self.itinerary_from_cursor
+
             cursor.execute(
                 'SELECT * FROM {itinerary} WHERE {id} = ?'
                 .format(
