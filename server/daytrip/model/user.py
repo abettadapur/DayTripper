@@ -8,3 +8,6 @@ class User(object):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
+
+    def as_dict(self):
+        return self.__dict__

@@ -116,9 +116,12 @@ class SqlLiteManager(object):
                 table=auth_schema.AUTH_TABLE), (
                 token,)
             )
-            uid = cursor.fetchone()[0]
+            uid_row = cursor.fetchone()
             cursor.close()
-            return uid
+            if uid_row:
+                return uid_row[0]
+
+            return None
 
     def delete_authorization(self, token):
         with sqlite3.connect(self.db_name) as conn:

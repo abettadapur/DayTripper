@@ -84,7 +84,7 @@ class ItineraryResource(Resource):
         user_id = get_uid_or_abort_on_bad_token(args['token'])
         itinerary = db.sqlite.get_itinerary(id)
         abort_on_invalid_itinerary(itinerary, user_id)
-        return itinerary
+        return itinerary.as_dict()
 
     def put(self, id):
         args = self.put_reqparse.parse_args()
@@ -106,7 +106,7 @@ class ItineraryResource(Resource):
             items=old_itinerary.items
         )
         db.sqlite.update_itinerary(updated_itinerary)
-        return db.sqlite.get_itinerary(id)
+        return db.sqlite.get_itinerary(id).as_dict()
 
     def delete(self, id):
         args = self.reqparse.parse_args()
@@ -174,7 +174,7 @@ class ItemResource(Resource):
         item = db.sqlite.get_item(id)
 
         abort_on_invalid_item_relation(item, itinerary_id, user_id)
-        return item
+        return item.as_dict()
 
     def put(self, itinerary_id, id):
         args = self.put_reqparse.parse_args()
@@ -193,7 +193,7 @@ class ItemResource(Resource):
             end_time=args['end_time']
         )
         db.sqlite.update_item(updated_item)
-        return db.sqlite.get_item(itinerary_id, id)
+        return db.sqlite.get_item(itinerary_id, id).as_dict()
 
     def delete(self, itinerary_id, id):
         args = self.reqparse.parse_args()

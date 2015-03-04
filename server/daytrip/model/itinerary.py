@@ -11,3 +11,12 @@ class Itinerary(object):
         self.end_time = end_time
         self.city = city
         self.items = items
+
+
+    def as_dict(self):
+        idict = self.__dict__
+        idict['user'] = self.user.as_dict()
+        for i in range(0,len(idict['items'])):
+            idict['items'][i] = idict['items'][i].as_dict()
+
+        return idict
