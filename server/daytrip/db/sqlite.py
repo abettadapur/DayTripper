@@ -223,18 +223,18 @@ class SqlLiteManager(object):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                'INSERT INTO {table} ({name}, {itinerary_id}, {yelp_id}, {category_id}, {start_time}, {end_time})'
+                'INSERT INTO {table} ({name}, {itinerary_id}, {yelp_id}, {category}, {start_time}, {end_time})'
                 'VALUES (?,?,?,?,?,?)'
                 .format(
                     table = item_schema.ITEM_TABLE,
                     name = item_schema.NAME,
                     itinerary_id=item_schema.ITINERARY_ID,
                     yelp_id = item_schema.YELP_ID,
-                    category_id = item_schema.CATEGORY_ID,
+                    category = item_schema.CATEGORY,
                     start_time = item_schema.START_TIME,
                     end_time = item_schema.END_TIME
                 ),
-                (item.name, itinerary.id, item.yelp_id, 1, item.start_time, item.end_time)
+                (item.name, itinerary.id, item.yelp_id, item.category, item.start_time, item.end_time)
             )
             if cursor.rowcount == 0:
                 pass #ERROR
@@ -280,18 +280,18 @@ class SqlLiteManager(object):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                'UPDATE {table} SET {name}=?, {itinerary_id}=?, {yelp_id}=?, {category_id}=?, {start_time}=?, {end_time}=?)'
+                'UPDATE {table} SET {name}=?, {itinerary_id}=?, {yelp_id}=?, {category}=?, {start_time}=?, {end_time}=?)'
                 'WHERE {id}=?'
                 .format(
                     table=item_schema.ITEM_TABLE,
                     name=item_schema.NAME,
                     itinerary_id=item_schema.ITINERARY_ID,
                     yelp_id=item_schema.YELP_ID,
-                    category_id=item_schema.CATEGORY_ID,
+                    category=item_schema.CATEGORY,
                     start_time=item_schema.START_TIME,
                     end_time=item_schema.END_TIME
                 ),
-                (item.name, itinerary.id, item.yelp_id, item.category.id, item.start_time, item.end_time, item.id)
+                (item.name, itinerary.id, item.yelp_id, item.category, item.start_time, item.end_time, item.id)
             )
             cursor.close()
 
