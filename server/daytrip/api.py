@@ -235,5 +235,5 @@ def abort_on_invalid_itinerary(itinerary, user_id):
     if not itinerary:
         abort(400, message='Itinerary not found')
 
-    if itinerary.user.user_id != user_id:
+    if itinerary.user.id != user_id:
         abort(401, message='Do not own itinerary')
