@@ -209,6 +209,39 @@ class ItemResource(Resource):
         db.sqlite.delete_item(id)
         return True, 204
 
+class CreateItemResource(Resource):
+
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('token', type=str, required=True, location='args', help='No token to verify')
+        self.reqparse.add_argument('yelp_id', type=str, required=True, location='json', help='Missing yelp_id')
+        self.reqparse.add_argument('category', type=str, required=True, location='json', help='Missing category')
+        self.reqparse.add_argument('name', type=str, required=True, location='json', help='Missing name')
+        self.reqparse.add_argument('start_time', type=str, required=True, location='json', help='Missing start_time')
+        self.reqparse.add_argument('end_time', type=str, required=True, location='json', help='Missing end_time')
+        super(CreateItemResource, self).__init__()
+
+    def post(self, itinerary_id):
+        args = self.reqparse.parse_args()
+
+        user_id = get_uid_or_abort_on_bad_token(args['token'])
+
+        itinerary = db.sqlite.get_itinerary(itinerary_id)
+
+        if itinerary:
+            item = Item(
+                id=None,
+                yelp_id=args['yelp_id'],
+                category=args['category'],
+                name=args['name'],
+                start_time=args['start_time'],
+                end_time=args['end_time']
+            )
+            db.sqlite.insert_item(item, itinerary)
+            return 204, True
+
+        abort(404, message="Itinerary not found")
+
 
 def get_uid_or_abort_on_bad_token(token):
     uid = db.sqlite.check_authorization(token)
@@ -224,11 +257,12 @@ def abort_on_invalid_item_relation(item, itinerary_id, user_id):
     if not itinerary or not item:
         abort(400, message='Item or itinerary not found')
 
-    if itinerary.user.user_id != user_id:
+    if itinerary.user.id != user_id:
         abort(401, message='Do not own itinerary')
 
-    if itinerary.id != id:
-        abort(400, message='Item does not belong to given itinerary id')
+    #TODO(abettadapur): check itinerary list for the item
+    # if item not in itinerary.items:
+    #     abort(400, message='Item does not belong to given itinerary id')
 
 
 def abort_on_invalid_itinerary(itinerary, user_id):

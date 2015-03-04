@@ -201,7 +201,8 @@ class SqlLiteManager(object):
             cursor.execute(
                 'DELETE FROM {table} WHERE {id}=?'
                 .format(
-                    table=itinerary_schema.ITINERARY_TABLE
+                    table=itinerary_schema.ITINERARY_TABLE,
+                    id=itinerary_schema.ID
                 ),
                 (id, )
             )
@@ -233,7 +234,7 @@ class SqlLiteManager(object):
                     start_time = item_schema.START_TIME,
                     end_time = item_schema.END_TIME
                 ),
-                (item.name, itinerary.id, item.yelp_id, item.category.id, item.start_time, item.end_time)
+                (item.name, itinerary.id, item.yelp_id, 1, item.start_time, item.end_time)
             )
             if cursor.rowcount == 0:
                 pass #ERROR

@@ -17,6 +17,7 @@ api.add_resource(restapi.ItineraryResource, '/itinerary/<int:id>')
 
 #Will be changed
 api.add_resource(restapi.ItemResource, '/itinerary/<int:itinerary_id>/item/<int:id>')
+api.add_resource(restapi.CreateItemResource, '/itinerary/<int:itinerary_id>/item/create')
 
 
 #Run the server on port 5000
