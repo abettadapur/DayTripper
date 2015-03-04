@@ -2,7 +2,9 @@ import facebook
 from flask import request
 from flask_restful import Resource, reqparse, abort
 import db
-import model
+from model.itinerary import Itinerary
+from model.item import Item
+from model.user import User
 
 
 #ALL QUERIES MUST BE AUTHENTICATED WITH AN AUTHENTICATION TOKEN (Except for the AUTH POST)
@@ -137,7 +139,7 @@ class Create_Itinerary(Resource):
         args = self.reqparse.parse_args()
         user_id = get_uid_or_abort_on_bad_token(args['token'])
 
-        itinerary = model.Itinerary(
+        itinerary = Itinerary(
             id=None,
             user=db.sqlite.get_user(user_id),
             name=args['name'],
