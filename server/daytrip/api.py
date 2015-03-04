@@ -77,7 +77,7 @@ class ItineraryResource(Resource):
         self.put_reqparse.add_argument('city', type=str, required=True, location='json', help='No city provided')
         self.put_reqparse.add_argument('items', type=list, required=True, location='json', help='No items field provided')
 
-        super(Itinerary, self).__init__()
+        super(ItineraryResource, self).__init__()
 
     def get(self, id):
         args = self.reqparse.parse_args()
@@ -165,7 +165,7 @@ class ItemResource(Resource):
         self.put_reqparse.add_argument('name', type=str, required=True, location='json', help='Missing name')
         self.put_reqparse.add_argument('start_time', type=str, required=True, location='json', help='Missing start_time')
         self.put_reqparse.add_argument('end_time', type=str, required=True, location='json', help='Missing end_time')
-        super(Item, self).__init__()
+        super(ItemResource, self).__init__()
 
     def get(self, itinerary_id, id):
         args = self.reqparse.parse_args()
