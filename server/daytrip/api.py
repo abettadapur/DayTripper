@@ -34,13 +34,13 @@ class Test2(Resource):
         return items[0]['id'], 200
 
 
-class Auth(Resource):
+class AuthResource(Resource):
 
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('token', type=str, required = True, help="No token to verify", location='json')
         self.reqparse.add_argument('user_id', type=str, required = True, help="An associated Facebook User ID is required", location='json')
-        super(Auth, self).__init__()
+        super(AuthResource, self).__init__()
 
     def post(self):
         args = self.reqparse.parse_args()
@@ -63,7 +63,7 @@ class Auth(Resource):
             return True, 200
 
 
-class Itinerary(Resource):
+class ItineraryResource(Resource):
 
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
@@ -123,7 +123,7 @@ class Itinerary(Resource):
         return True, 204
 
 
-class Create_Itinerary(Resource):
+class CreateItineraryResource(Resource):
 
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
@@ -134,7 +134,7 @@ class Create_Itinerary(Resource):
         self.reqparse.add_argument('end_time', type=str, required=True, location='json', help='No end_time provided')
         self.reqparse.add_argument('city', type=str, required=True, location='json', help='No city provided')
 
-        super(Create_Itinerary, self).__init__()
+        super(CreateItineraryResource, self).__init__()
 
     def post(self):
         args = self.reqparse.parse_args()
@@ -154,7 +154,7 @@ class Create_Itinerary(Resource):
         return True, 201
 
 
-class Item(Resource):
+class ItemResource(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('token', type=str, required=True, location='args', help='No token to verify')

@@ -60,14 +60,14 @@ class SqlLiteManager(object):
                 pass #ERROR
             cursor.close()
 
-    def get_user(self, id):
+    def get_user(self, user_id):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.row_factory = self.user_from_cursor
             cursor.execute('SELECT * FROM {table} WHERE {id}=?'.format(
                 id=user_schema.ID,
                 table=user_schema.USERS_TABLE),
-                (id,)
+                (user_id,)
             )
 
             user = cursor.fetchone()
@@ -122,7 +122,7 @@ class SqlLiteManager(object):
                 table=auth_schema.AUTH_TABLE), (
                 token,)
             )
-            uid = cursor.fetchone()
+            uid = cursor.fetchone()[0]
             cursor.close()
             return uid
 
