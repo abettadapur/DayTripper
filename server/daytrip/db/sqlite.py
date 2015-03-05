@@ -95,7 +95,6 @@ class SqlLiteManager(object):
     def insert_authorization(self, token, user_id):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
-            print 'LOGGING IT'
             cursor.execute('INSERT INTO {table} ({token}, {user_id}) VALUES(?,?)'.format(
                 table=auth_schema.AUTH_TABLE,
                 token=auth_schema.TOKEN,
