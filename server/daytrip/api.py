@@ -177,7 +177,6 @@ class ItemResource(Resource):
         return item.as_dict()
 
     def put(self, itinerary_id, id):
-        print "LOGGING"
         args = self.put_reqparse.parse_args()
 
         user_id = get_uid_or_abort_on_bad_token(args['token'])
