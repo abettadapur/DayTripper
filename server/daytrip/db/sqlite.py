@@ -95,6 +95,7 @@ class SqlLiteManager(object):
     def insert_authorization(self, token, user_id):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
+            print 'LOGGING IT'
             cursor.execute('INSERT INTO {table} ({token}, {user_id}) VALUES(?,?)'.format(
                 table=auth_schema.AUTH_TABLE,
                 token=auth_schema.TOKEN,
@@ -151,12 +152,12 @@ class SqlLiteManager(object):
                 ),
                 (itinerary.user.id, itinerary.name, itinerary.date, itinerary.start_time, itinerary.end_time, itinerary.city)
             )
-            if cursor.rowcount==0:
-                pass #ERROR
             if len(itinerary.items)> 0:
                 pass #CALL INSERT for each item
 
+            itinerary_id = cursor.lastrowid
             cursor.close()
+            return itinerary_id
 
     def get_itinerary(self, id):
         with sqlite3.connect(self.db_name) as conn:
@@ -180,7 +181,7 @@ class SqlLiteManager(object):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                'UPDATE {table} SET {user}=?, {name}=?, {date}=?, {start_time}=?, {end_time}=?, {city}=?) WHERE {id}=?'
+                'UPDATE {table} SET {user}=?, {name}=?, {date}=?, {start_time}=?, {end_time}=?, {city}=? WHERE {id}=?'
                 .format(
                     table=itinerary_schema.ITINERARY_TABLE,
                     user=itinerary_schema.USER_ID,
@@ -236,9 +237,9 @@ class SqlLiteManager(object):
                 ),
                 (item.name, itinerary.id, item.yelp_id, item.category, item.start_time, item.end_time)
             )
-            if cursor.rowcount == 0:
-                pass #ERROR
+            item_id = cursor.lastrowid
             cursor.close()
+            return item_id
 
     def get_item(self, id):
         with sqlite3.connect(self.db_name) as conn:
@@ -276,12 +277,12 @@ class SqlLiteManager(object):
             cursor.close()
             return items
 
-    def update_item(self, item, itinerary):
+    def update_item(self, item, itinerary_id):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                'UPDATE {table} SET {name}=?, {itinerary_id}=?, {yelp_id}=?, {category}=?, {start_time}=?, {end_time}=?)'
-                'WHERE {id}=?'
+                'UPDATE {table} SET {name}=?, {itinerary_id}=?, {yelp_id}=?, {category}=?, {start_time}=?, {end_time}=?'
+                ' WHERE {id}=?'
                 .format(
                     table=item_schema.ITEM_TABLE,
                     name=item_schema.NAME,
@@ -289,9 +290,10 @@ class SqlLiteManager(object):
                     yelp_id=item_schema.YELP_ID,
                     category=item_schema.CATEGORY,
                     start_time=item_schema.START_TIME,
-                    end_time=item_schema.END_TIME
+                    end_time=item_schema.END_TIME,
+                    id=item_schema.ID
                 ),
-                (item.name, itinerary.id, item.yelp_id, item.category, item.start_time, item.end_time, item.id)
+                (item.name, itinerary_id, item.yelp_id, item.category, item.start_time, item.end_time, item.id)
             )
             cursor.close()
 
@@ -301,7 +303,8 @@ class SqlLiteManager(object):
             cursor.execute(
                 'DELETE FROM {table} WHERE {id}=?'
                 .format(
-                    table=item_schema.ITEM_TABLE
+                    table=item_schema.ITEM_TABLE,
+                    id=item_schema.ID
                 ),
                 (id, )
             )

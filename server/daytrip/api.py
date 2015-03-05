@@ -150,8 +150,8 @@ class CreateItineraryResource(Resource):
             city=args['city'],
             items=[]
         )
-        db.sqlite.insert_itinerary(itinerary)
-        return True, 201
+        itinerary_id = db.sqlite.insert_itinerary(itinerary)
+        return db.sqlite.get_itinerary(itinerary_id).as_dict(), 201
 
 
 class ItemResource(Resource):
@@ -160,7 +160,7 @@ class ItemResource(Resource):
         self.reqparse.add_argument('token', type=str, required=True, location='args', help='No token to verify')
 
         self.put_reqparse = self.reqparse.copy()
-        self.put_reqparse.add_argument('yelp_id', type=str, required=True, location='json', help='Missing yelp_id')
+        self.put_reqparse.add_argument('yelp_id', type=int, required=True, location='json', help='Missing yelp_id')
         self.put_reqparse.add_argument('category', type=str, required=True, location='json', help='Missing category')
         self.put_reqparse.add_argument('name', type=str, required=True, location='json', help='Missing name')
         self.put_reqparse.add_argument('start_time', type=str, required=True, location='json', help='Missing start_time')
@@ -177,6 +177,7 @@ class ItemResource(Resource):
         return item.as_dict()
 
     def put(self, itinerary_id, id):
+        print "LOGGING"
         args = self.put_reqparse.parse_args()
 
         user_id = get_uid_or_abort_on_bad_token(args['token'])
@@ -192,8 +193,8 @@ class ItemResource(Resource):
             start_time=args['start_time'],
             end_time=args['end_time']
         )
-        db.sqlite.update_item(updated_item)
-        return db.sqlite.get_item(itinerary_id, id).as_dict()
+        db.sqlite.update_item(updated_item, itinerary_id)
+        return db.sqlite.get_item(id).as_dict()
 
     def delete(self, itinerary_id, id):
         args = self.reqparse.parse_args()
@@ -214,7 +215,7 @@ class CreateItemResource(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('token', type=str, required=True, location='args', help='No token to verify')
-        self.reqparse.add_argument('yelp_id', type=str, required=True, location='json', help='Missing yelp_id')
+        self.reqparse.add_argument('yelp_id', type=int, required=True, location='json', help='Missing yelp_id')
         self.reqparse.add_argument('category', type=str, required=True, location='json', help='Missing category')
         self.reqparse.add_argument('name', type=str, required=True, location='json', help='Missing name')
         self.reqparse.add_argument('start_time', type=str, required=True, location='json', help='Missing start_time')
@@ -225,22 +226,20 @@ class CreateItemResource(Resource):
         args = self.reqparse.parse_args()
 
         user_id = get_uid_or_abort_on_bad_token(args['token'])
-
         itinerary = db.sqlite.get_itinerary(itinerary_id)
 
-        if itinerary:
-            item = Item(
-                id=None,
-                yelp_id=args['yelp_id'],
-                category=args['category'],
-                name=args['name'],
-                start_time=args['start_time'],
-                end_time=args['end_time']
-            )
-            db.sqlite.insert_item(item, itinerary)
-            return 204, True
+        abort_on_invalid_itinerary(itinerary, user_id)
 
-        abort(404, message="Itinerary not found")
+        item = Item(
+            id=None,
+            yelp_id=args['yelp_id'],
+            category=args['category'],
+            name=args['name'],
+            start_time=args['start_time'],
+            end_time=args['end_time']
+        )
+        item_id = db.sqlite.insert_item(item, itinerary)
+        return db.sqlite.get_item(item_id).as_dict(), 201
 
 
 def get_uid_or_abort_on_bad_token(token):
@@ -255,7 +254,7 @@ def abort_on_invalid_item_relation(item, itinerary_id, user_id):
     itinerary = db.sqlite.get_itinerary(itinerary_id)
 
     if not itinerary or not item:
-        abort(400, message='Item or itinerary not found')
+        abort(404, message='Item or itinerary not found')
 
     if itinerary.user.id != user_id:
         abort(401, message='Do not own itinerary')
@@ -267,7 +266,7 @@ def abort_on_invalid_item_relation(item, itinerary_id, user_id):
 
 def abort_on_invalid_itinerary(itinerary, user_id):
     if not itinerary:
-        abort(400, message='Itinerary not found')
+        abort(404, message='Itinerary not found')
 
     if itinerary.user.id != user_id:
         abort(401, message='Do not own itinerary')
