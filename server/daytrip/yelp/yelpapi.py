@@ -50,7 +50,7 @@ def request(host, path, url_params=None):
 
 def search(term, location, category_filters, **kwargs):
     url_params = {}
-    url_params['term']=term.replace(' ', '+')
+    url_params['term']= term.replace(' ', '+') if term else ""
     url_params['location']=location.replace(' ', '+')
 
     filter_str = ""

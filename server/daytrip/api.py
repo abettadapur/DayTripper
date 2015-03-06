@@ -7,6 +7,8 @@ from model.itinerary import Itinerary
 from model.item import Item
 from model.user import User
 
+from yelp import yelpapi
+
 
 
 #ALL QUERIES MUST BE AUTHENTICATED WITH AN AUTHENTICATION TOKEN (Except for the AUTH POST)
@@ -245,7 +247,7 @@ class CreateItemResource(Resource):
 class ListCategoryResource(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('token', type=str, required=True, location='args')
+        self.reqparse.add_argument('token', type=str, required=True, location='args', help='No token to verify')
         super(ListCategoryResource, self).__init__()
 
     def get(self):
@@ -255,6 +257,30 @@ class ListCategoryResource(Resource):
 
         categories = [c.as_dict() for c in model.categories]
         return categories, 200
+
+class QueryCategoryResource(Resource):
+
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('token', type=str, required=True, location='args', help='No token to verify')
+        self.reqparse.add_argument('term', type=str, required=False, location='args')
+        self.reqparse.add_argument('location', type=str, required=True, location='args', help='Need a location to query')
+        self.reqparse.add_argument('latitude', type=str, required=False, location='args')
+        self.reqparse.add_argument('longitude', type=str, required=False, location='args')
+
+        super(QueryCategoryResource, self).__init__()
+
+    def get(self, category_str):
+        args = self.reqparse.parse_args()
+        user_id = get_uid_or_abort_on_bad_token(args['token'])
+
+        category = model.match_category(category_str)
+        results = yelpapi.search(args['term'], args['location'], category.filters)
+        return results, 200
+
+
+
+
 
 
 def get_uid_or_abort_on_bad_token(token):
