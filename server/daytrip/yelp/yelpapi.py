@@ -37,6 +37,7 @@ def request(host, path, url_params=None):
     token = oauth2.Token(TOKEN, TOKEN_SECRET)
     oauth_request.sign_request(oauth2.SignatureMethod_HMAC_SHA1(), consumer, token)
     signed_url = oauth_request.to_url();
+    print signed_url
 
     conn = urllib2.urlopen(signed_url, None)
     try:
@@ -47,13 +48,28 @@ def request(host, path, url_params=None):
     return response
 
 
-def search(term, location):
-    return request(API_HOST, SEARCH_PATH, url_params={'term': term.replace(' ','+'), 'location': location.replace(' ','+')})
+def search(term, location, category_filters, **kwargs):
+    url_params = {}
+    url_params['term']=term.replace(' ', '+')
+    url_params['location']=location.replace(' ', '+')
+
+    filter_str = ""
+    for i in range(0,len(category_filters)):
+        filter_str = filter_str + category_filters[i]
+        if i != len(category_filters)-1:
+            filter_str = filter_str+','
+
+    url_params['category_filter'] = filter_str
+    url_params.update(kwargs)
+
+    return request(API_HOST, SEARCH_PATH, url_params=url_params)
+
+def business(yelp_id):
+    return request(API_HOST, BUSINESS_PATH+yelp_id)
 
 
 
 if __name__ == "__main__":
-    results = search("Honey Bubble", "Atlanta")
-    pprint.pprint(results)
+    results = search("", "Atlanta", ['shopping'])
     for business in results['businesses']:
         print business['name']
