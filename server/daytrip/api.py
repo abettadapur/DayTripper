@@ -2,9 +2,11 @@ import facebook
 from flask import request
 from flask_restful import Resource, reqparse, abort
 import db
+import model
 from model.itinerary import Itinerary
 from model.item import Item
 from model.user import User
+
 
 
 #ALL QUERIES MUST BE AUTHENTICATED WITH AN AUTHENTICATION TOKEN (Except for the AUTH POST)
@@ -239,6 +241,20 @@ class CreateItemResource(Resource):
         )
         item_id = db.sqlite.insert_item(item, itinerary)
         return db.sqlite.get_item(item_id).as_dict(), 201
+
+class ListCategoryResource(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('token', type=str, required=True, location='args')
+        super(ListCategoryResource, self).__init__()
+
+    def get(self):
+        args = self.reqparse.parse_args()
+
+        user_id = get_uid_or_abort_on_bad_token(args['token'])
+
+        categories = [c.as_dict() for c in model.categories]
+        return categories, 200
 
 
 def get_uid_or_abort_on_bad_token(token):
