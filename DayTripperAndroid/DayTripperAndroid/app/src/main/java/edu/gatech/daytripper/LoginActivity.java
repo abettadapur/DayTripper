@@ -126,10 +126,16 @@ public class LoginActivity extends FragmentActivity {
                                 Log.e("LOGIN", "Login was successful, launch new activity");
                                 Log.e("Token", token);
                                 Log.e("User", user_ID);
+
+                                Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+                                i.addCategory(Intent.CATEGORY_HOME);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                LoginActivity.this.startActivity(i);
                             }
 
                             @Override
                             public void failure(RetrofitError error) {
+                                Log.e("LOGIN", error.getMessage());
                                 Log.e("LOGIN", "Login failed, verification was ");
                                 Log.e("Token", token);
                                 Log.e("User", user_ID);
