@@ -71,7 +71,6 @@ class SqlLiteManager(object):
             )
 
             user = cursor.fetchone()
-            print str(user)
             cursor.close()
             return user
 
