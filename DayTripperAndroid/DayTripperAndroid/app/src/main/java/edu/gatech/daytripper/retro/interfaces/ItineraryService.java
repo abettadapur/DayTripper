@@ -1,5 +1,7 @@
 package edu.gatech.daytripper.retro.interfaces;
 
+import java.util.List;
+
 import edu.gatech.daytripper.model.Itinerary;
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -20,6 +22,9 @@ public interface ItineraryService
 
     @GET("/itinerary/{id}")
     public void getItinerary(@Path("id") int id, @Query("token") String token, Callback<Itinerary> callback);
+
+    @GET("/itinerary/list")
+    public void listItineraries(@Query("token") String token, Callback<List<Itinerary>> callback);
 
     @PUT("/itinerary/{id}")
     public void updateItinerary(@Path("id") int id, @Body Itinerary itinerary, @Query("token") String token, Callback<Itinerary> callback);
