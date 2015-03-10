@@ -7,13 +7,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.gatech.daytripper.R;
 
-import edu.gatech.daytripper.adapters.ItineraryAdapter;
-import edu.gatech.daytripper.model.Itinerary;
+import edu.gatech.daytripper.fragments.dummy.DummyContent;
 
 /**
  * A fragment representing a list of Items.
@@ -22,14 +18,15 @@ import edu.gatech.daytripper.model.Itinerary;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class ItineraryListFragment extends ListFragment {
+public class ItemFragment extends ListFragment {
+
 
 
     private OnFragmentInteractionListener mListener;
-    private List<Itinerary> mItineraryList;
 
-    public static ItineraryListFragment newInstance() {
-        ItineraryListFragment fragment = new ItineraryListFragment();
+    // TODO: Rename and change types of parameters
+    public static ItemFragment newInstance() {
+        ItemFragment fragment = new ItemFragment();
         return fragment;
     }
 
@@ -37,16 +34,15 @@ public class ItineraryListFragment extends ListFragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ItineraryListFragment() {
+    public ItemFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mItineraryList = new ArrayList<>();
-        // TODO: Change Adapter to display your content
-        setListAdapter(new ItineraryAdapter(getActivity(), android.R.layout.simple_list_item_1, mItineraryList));
+
+
     }
 
 
@@ -75,17 +71,9 @@ public class ItineraryListFragment extends ListFragment {
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-           // mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
+            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
         }
     }
-
-    public void updateItems(List<Itinerary> items)
-    {
-        mItineraryList.clear();
-        mItineraryList.addAll(items);
-        ((ItineraryAdapter)getListAdapter()).notifyDataSetChanged();
-    }
-
 
     /**
      * This interface must be implemented by activities that contain this
