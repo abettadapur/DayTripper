@@ -24,18 +24,7 @@ public class HomeActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        ItineraryService service = new RestClient().getItineraryService();
-        service.createItinerary(new Itinerary("Android itinerary", new Date(), new Date(), new Date(), "atlanta", null), Session.getActiveSession().getAccessToken(), new Callback<Itinerary>() {
-            @Override
-            public void success(Itinerary itinerary, Response response) {
 
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e("Create", error.getMessage());
-            }
-        });
     }
 
 
