@@ -175,6 +175,24 @@ class SqlLiteManager(object):
             cursor.close()
             return itinerary
 
+    def list_itineraries(self, user_id):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.row_factory = self.itinerary_from_cursor
+
+            cursor.execute(
+                'SELECT * FROM {itinerary} WHERE {user_id} = ?'
+                .format(
+                    itinerary = itinerary_schema.ITINERARY_TABLE,
+                    user_id = itinerary_schema.USER_ID
+                ),
+                (user_id, )
+            )
+
+            itineraries = cursor.fetchall()
+            cursor.close()
+            return itineraries
+
     def update_itinerary(self, itinerary):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()

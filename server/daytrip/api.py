@@ -157,6 +157,20 @@ class CreateItineraryResource(Resource):
         itinerary_id = db.sqlite.insert_itinerary(itinerary)
         return db.sqlite.get_itinerary(itinerary_id).as_dict(), 201
 
+class ListItineraryResource(Resource):
+
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument("token", type=str, required=True, location='args', help='Missing auth token')
+
+
+    def get(self):
+        args = self.reqparse.parse_args()
+
+        user_id = get_uid_or_abort_on_bad_token(args['token'])
+        itineraries = db.sqlite.list_itineraries(user_id)
+        itineraries_dict = [i.as_dict() for i in itineraries]
+        return itineraries_dict
 
 class ItemResource(Resource):
     def __init__(self):
