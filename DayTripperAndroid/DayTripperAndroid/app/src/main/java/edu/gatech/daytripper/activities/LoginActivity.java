@@ -116,7 +116,7 @@ public class LoginActivity extends FragmentActivity {
                                 Log.e("Token", token);
                                 Log.e("User", user_ID);
 
-                                Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+                                Intent i = new Intent(LoginActivity.this, ItineraryActivity.class);
                                 i.addCategory(Intent.CATEGORY_HOME);
                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 LoginActivity.this.startActivity(i);

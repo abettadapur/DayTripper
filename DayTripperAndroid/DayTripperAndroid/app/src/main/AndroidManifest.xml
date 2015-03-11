@@ -56,7 +56,7 @@
             android:label="@string/title_activity_drawer_test" >
         </activity>
         <activity
-            android:name=".activities.IntineraryActivity"
+            android:name=".activities.ItineraryActivity"
             android:label="@string/title_activity_intinerary" >
         </activity>
     </application>
