@@ -1,14 +1,20 @@
 package edu.gatech.daytripper.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
-import android.app.ListFragment;
+
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ListView;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.gatech.daytripper.R;
 import edu.gatech.daytripper.adapters.ItemAdapter;
 import edu.gatech.daytripper.model.Item;
 
@@ -20,13 +26,15 @@ import edu.gatech.daytripper.model.Item;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class ItemListFragment extends ListFragment {
+public class ItemListFragment extends Fragment {
 
 
 
     private OnFragmentInteractionListener mListener;
 
     private List<Item> mItemList;
+    private RecyclerView mReccyleView;
+    private ItemAdapter mAdapter;
 
 
     public static ItemListFragment newInstance() {
@@ -45,7 +53,6 @@ public class ItemListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mItemList = new ArrayList<>();
-        setListAdapter(new ItemAdapter(getActivity(), android.R.layout.simple_list_item_1, mItemList));
     }
 
 
@@ -61,22 +68,30 @@ public class ItemListFragment extends ListFragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        View rootView = inflater.inflate(R.layout.fragment_item_list, container, false);
+        mReccyleView = (RecyclerView)rootView.findViewById(R.id.recycle_view);
+
+        mAdapter = new ItemAdapter(mItemList, getActivity());
+        mReccyleView.setAdapter(mAdapter);
+
+        mReccyleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mReccyleView.setItemAnimator(new DefaultItemAnimator());
+
+
+
+        return rootView;
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
 
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            //mListener.onFragmentInteraction();
-        }
-    }
 
 
     public void updateItems(List<Item> items)
@@ -85,7 +100,7 @@ public class ItemListFragment extends ListFragment {
         if(items!=null) {
             mItemList.clear();
             mItemList.addAll(items);
-            ((ItemAdapter) getListAdapter()).notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
         }
     }
 

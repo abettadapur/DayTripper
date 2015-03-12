@@ -1,5 +1,7 @@
 package edu.gatech.daytripper.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Date;
 import java.util.List;
 
@@ -14,8 +16,10 @@ public class Itinerary
     private Date start_time;
     private Date end_time;
     private String city;
-    private transient List<Item> items;
-    private transient User user;
+    @Expose(serialize = false)
+    private List<Item> items;
+    @Expose(serialize = false)
+    private User user;
 
 
     public Itinerary(){}

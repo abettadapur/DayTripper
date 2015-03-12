@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInstaller;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -23,6 +24,7 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
 
     private ItineraryListFragment itineraryListFragment;
     private RestClient mRestClient;
+    private List<Itinerary> itineraries;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +46,13 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
         mRestClient.getItineraryService().listItineraries(Session.getActiveSession().getAccessToken(), new Callback<List<Itinerary>>() {
             @Override
             public void success(List<Itinerary> itineraries, Response response) {
+                ItineraryActivity.this.itineraries = itineraries;
                 itineraryListFragment.updateItems(itineraries);
             }
 
             @Override
             public void failure(RetrofitError error) {
-
+                Log.e("GET ITINERARIES", error.getMessage());
             }
         });
     }

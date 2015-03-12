@@ -1,9 +1,13 @@
 package edu.gatech.daytripper.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.ListFragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +23,7 @@ import edu.gatech.daytripper.R;
 
 import edu.gatech.daytripper.activities.ItineraryDetailActivity;
 import edu.gatech.daytripper.adapters.ItineraryAdapter;
+import edu.gatech.daytripper.adapters.RecyclerItemClickListener;
 import edu.gatech.daytripper.model.Itinerary;
 
 /**
@@ -28,12 +33,14 @@ import edu.gatech.daytripper.model.Itinerary;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class ItineraryListFragment extends ListFragment {
+public class ItineraryListFragment extends Fragment implements RecyclerItemClickListener.OnItemClickListener {
 
 
     private OnFragmentInteractionListener mListener;
     private List<Itinerary> mItineraryList;
     private FloatingActionButton mAddButton;
+    private RecyclerView mRecycleView;
+    private ItineraryAdapter mAdapter;
 
     public static ItineraryListFragment newInstance() {
         ItineraryListFragment fragment = new ItineraryListFragment();
@@ -51,24 +58,31 @@ public class ItineraryListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mItineraryList = new ArrayList<>();
-        // TODO: Change Adapter to display your content
-        setListAdapter(new ItineraryAdapter(getActivity(), android.R.layout.simple_list_item_1, mItineraryList));
-
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_itinerary_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_itinerary_list, container, false);
+        mRecycleView = (RecyclerView)rootView.findViewById(R.id.recycle_view);
+
+        mAdapter = new ItineraryAdapter(mItineraryList, getActivity());
+        mRecycleView.setAdapter(mAdapter);
+
+        mRecycleView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        mRecycleView.setItemAnimator(new DefaultItemAnimator());
+
+        mRecycleView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
+
+        mAddButton = (FloatingActionButton)rootView.findViewById(R.id.add_fab);
+        mAddButton.attachToRecyclerView(mRecycleView);
+
+        return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mAddButton = (FloatingActionButton)getView().findViewById(R.id.add_fab);
-        mAddButton.attachToListView(getListView());
     }
 
     @Override
@@ -88,23 +102,6 @@ public class ItineraryListFragment extends ListFragment {
         mListener = null;
     }
 
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-           // mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
-            int itinerary_id = mItineraryList.get(position).getId();
-            Intent i = new Intent(getActivity(), ItineraryDetailActivity.class);
-            i.putExtra("itinerary_id", itinerary_id);
-            getActivity().startActivity(i);
-
-        }
-    }
-
     public void updateItems(List<Itinerary> items)
     {
         if(mItineraryList == null)
@@ -112,9 +109,22 @@ public class ItineraryListFragment extends ListFragment {
 
         mItineraryList.clear();
         mItineraryList.addAll(items);
-        ((ItineraryAdapter)getListAdapter()).notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onItemClick(View childView, int position)
+    {
+        int itinerary_id = mItineraryList.get(position).getId();
+        Intent i = new Intent(getActivity(), ItineraryDetailActivity.class);
+        i.putExtra("itinerary_id", itinerary_id);
+        getActivity().startActivity(i);
+    }
+
+    @Override
+    public void onItemLongPress(View childView, int position) {
+
+    }
 
 
     /**

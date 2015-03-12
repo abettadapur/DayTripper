@@ -5,7 +5,7 @@ package edu.gatech.daytripper.model;
  */
 public class User
 {
-    private int id;
+    private long id;
     private String first_name;
     private String last_name;
     private String email;
@@ -17,7 +17,7 @@ public class User
         this.email = email;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

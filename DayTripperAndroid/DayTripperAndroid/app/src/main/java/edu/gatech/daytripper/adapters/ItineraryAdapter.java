@@ -1,11 +1,10 @@
 package edu.gatech.daytripper.adapters;
 
-import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.List;
@@ -13,33 +12,51 @@ import java.util.List;
 import edu.gatech.daytripper.R;
 import edu.gatech.daytripper.model.Itinerary;
 
+import static android.support.v7.widget.RecyclerView.Adapter;
+
 /**
  * Created by Alex on 3/10/2015.
  */
-public class ItineraryAdapter extends ArrayAdapter<Itinerary>
+public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.ViewHolder>
 {
-    private List<Itinerary> items;
-    public ItineraryAdapter(Context context, int resource, List<Itinerary> objects) {
-        super(context, resource, objects);
-        this.items = objects;
+    public static class ViewHolder extends RecyclerView.ViewHolder
+    {
+        public TextView mTitleView;
+        public TextView mSubtitleView;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            mTitleView = (TextView)itemView.findViewById(R.id.titleView);
+            mSubtitleView = (TextView)itemView.findViewById(R.id.detailView);
+
+
+        }
+    }
+    private List<Itinerary> mItems;
+    private Context mContext;
+
+    public ItineraryAdapter(List<Itinerary> items, Context context)
+    {
+        this.mItems = items;
+        this.mContext=context;
     }
 
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.itinerary_list_item, viewGroup, false);
+        return new ViewHolder(v);
+    }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
+    public void onBindViewHolder(ViewHolder viewHolder, int i)
     {
-        Itinerary itinerary = items.get(position);
+        Itinerary itinerary = mItems.get(i);
+        viewHolder.mTitleView.setText(itinerary.getName());
+        viewHolder.mSubtitleView.setText(itinerary.getCity());
+    }
 
-
-        LayoutInflater mInflater = (LayoutInflater)getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        View view = mInflater.inflate(R.layout.itinerary_list_item, null);
-
-        TextView titleView = (TextView)view.findViewById(R.id.titleView);
-        TextView detailView = (TextView)view.findViewById(R.id.detailView);
-
-        titleView.setText(itinerary.getName());
-        detailView.setText(itinerary.getCity());
-
-        return view;
+    @Override
+    public int getItemCount() {
+        return mItems==null ? 0: mItems.size();
     }
 }
