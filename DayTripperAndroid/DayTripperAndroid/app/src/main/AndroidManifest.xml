@@ -52,12 +52,16 @@
             android:label="Facebook Login" >
         </activity>
         <activity
-            android:name=".DrawerTest"
-            android:label="@string/title_activity_drawer_test" >
-        </activity>
-        <activity
             android:name=".activities.ItineraryActivity"
             android:label="@string/title_activity_intinerary" >
+        </activity>
+        <activity
+            android:name=".activities.SplashActivity"
+            android:label="@string/title_activity_splash" >
+        </activity>
+        <activity
+            android:name=".activities.ItineraryDetailActivity"
+            android:label="@string/title_activity_itinerary_detail" >
         </activity>
     </application>
 

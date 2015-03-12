@@ -1,6 +1,7 @@
 package edu.gatech.daytripper.activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +43,8 @@ public class LoginActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
 
@@ -120,6 +123,7 @@ public class LoginActivity extends FragmentActivity {
                                 i.addCategory(Intent.CATEGORY_HOME);
                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 LoginActivity.this.startActivity(i);
+                                finish();
                             }
 
                             @Override
@@ -138,6 +142,7 @@ public class LoginActivity extends FragmentActivity {
 
             });
             request.executeAsync();
+
         }
         else if(state.isClosed())
         {

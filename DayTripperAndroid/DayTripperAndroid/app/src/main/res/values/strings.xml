@@ -14,5 +14,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="title_activity_intinerary">IntineraryActivity</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_itinerary_detail">ItineraryDetailActivity</string>
 
 </resources>

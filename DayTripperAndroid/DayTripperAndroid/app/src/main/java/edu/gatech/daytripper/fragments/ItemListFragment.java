@@ -81,10 +81,15 @@ public class ItemListFragment extends ListFragment {
 
     public void updateItems(List<Item> items)
     {
-        mItemList.clear();
-        mItemList.addAll(items);
-        ((ItemAdapter) getListAdapter()).notifyDataSetChanged();
+
+        if(items!=null) {
+            mItemList.clear();
+            mItemList.addAll(items);
+            ((ItemAdapter) getListAdapter()).notifyDataSetChanged();
+        }
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this
