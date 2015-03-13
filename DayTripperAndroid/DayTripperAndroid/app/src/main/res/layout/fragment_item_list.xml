@@ -8,12 +8,11 @@
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
     <!--<TextView-->
         <!--android:id="@android:id/empty"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:text="Create some itineraries!" />-->
+        <!--android:text="Your itinerary is empty!" />-->
 
 
     <com.melnykov.fab.FloatingActionButton
