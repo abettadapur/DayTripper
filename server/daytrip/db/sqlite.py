@@ -1,11 +1,13 @@
 import json
 from sqlite3 import dbapi2 as sqlite3
-from schema import users as user_schema, auth as auth_schema, itinerary as itinerary_schema, item as item_schema
+from schema import users as user_schema, auth as auth_schema, itinerary as itinerary_schema, item as item_schema, yelp_entry, yelp_location
 import datetime
 from model.user import User
 from model.itinerary import Itinerary
 from model.item import Item
-
+from model.yelp_entry import YelpEntry
+from model.yelp_location import YelpLocation
+from yelp import yelpapi
 
 #CREATE_DATABASE = users.CREATE_USERS_TABLE + auth.CREATE_AUTH_TABLE #+ othertable.CREATEOTHERTABLE
 class SqlLiteManager(object):
@@ -24,7 +26,8 @@ class SqlLiteManager(object):
             cursor.execute(auth_schema.CREATE_AUTH_TABLE)
             cursor.execute(itinerary_schema.CREATE_ITINERARY_TABLE)
             cursor.execute(item_schema.CREATE_ITEM_TABLE)
-
+            cursor.execute(yelp_entry.CREATE_YELP_ENTRY_TABLE)
+            cursor.execute(yelp_location.CREATE_YELP_LOCATION_TABLE)
             cursor.close()
 
     #USERS OPERATIONS
@@ -329,10 +332,103 @@ class SqlLiteManager(object):
     def item_from_cursor(self, cursor, row):
         if row:
             item = Item(row[0], row[2], row[3], row[4], row[5], row[6])
+            item.yelp_entry = get_yelp_entry(item.yelp_id)
             return item
         return None
 
 
+    # YELP_ENTRY OPERATIONS
+    def get_yelp_entry(self, id):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.row_factory = self.yelp_entry_from_cursor
+            cursor.execute(
+                'SELECT * FROM {table} WHERE {id}=?'
+                .format(
+                    table=yelp_entry.YELP_ENTRY_TABLE,
+                    id=yelp_entry.ID
+                ),
+                (id, )
+            )
+            entry = cursor.fetchone()
+            cursor.close()
+            return entry
 
 
+    def insert_yelp_entry(self, entry):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'INSERT INTO {table} ({id}, {phone}, {image_url}, {url}, {name}, {rating})'
+                'VALUES (?, ?, ?, ?, ? ,?)'
+                .format(
+                    table=yelp_entry.YELP_ENTRY_TABLE,
+                    id=yelp_entry.ID,
+                    phone=yelp_entry.PHONE,
+                    image_url=yelp_entry.IMAGE_URL,
+                    url=yelp_entry.URL,
+                    name=yelp_entry.NAME,
+                    rating=yelp_entry.RATING
+                ),
+                (entry.id, entry.phone, entry.image_url, entry.name, entry.rating)
+            )
 
+            cursor.close()
+            insert_yelp_location(entry)
+
+
+    def yelp_entry_from_cursor(self, cursor, row):
+        if row:
+            location = get_yelp_location(row[0])
+            entry = YelpEntry(row[0], row[4], row[1], row[2], row[3], row[5], location)
+            return entry
+        return None
+
+
+    #YELP_LOCATION_OPERATIONS
+
+    def get_yelp_location(self, yelp_id):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.row_factory = self.yelp_location_from_cursor
+            cursor.execute(
+                'SELECT * FROM {table} WHERE {yelp_id} = ?'
+                .format(
+                    table = yelp_location.YELP_LOCATION_TABLE,
+                    yelp_id = yelp_location.YELP_ID
+                ),
+                (yelp_id, )
+            )
+
+            location = cursor.fetchone()
+            cursor.close()
+            return location
+
+    def insert_yelp_location(self, entry):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            location = entry.location
+            cursor.execute(
+                'INSERT INTO {table}'
+                '({yelp_id}, {address}, {city}, {zip}, {state}, {latitude}, {longitude})'
+                'VALUES (?,?,?,?,?,?,?)'
+                .format(
+                    table = yelp_location.YELP_LOCATION_TABLE,
+                    yelp_id = yelp_location.YELP_ID,
+                    address = yelp_location.ADDRESS,
+                    city = yelp_location.CITY,
+                    zip = yelp_location.ZIP,
+                    state = yelp_location.STATE,
+                    latitude = yelp_location.LATITUDE,
+                    longitude = yelp_location.LONGITUDE
+                ),
+                (location.yelp_id, location.address, location.city, location.zip, location.state, location.latitude, location.longitude)
+            )
+
+            cursor.close()
+
+    def yelp_location_from_cursor(self, cursor, row):
+        if row:
+            location = YelpLocation(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+            return location
+        return None

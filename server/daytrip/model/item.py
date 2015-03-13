@@ -6,7 +6,7 @@ class Item(object):
         self.name = name
         self.start_time = start_time
         self.end_time = end_time
-        
+        self.yelp_entry = None
+
     def as_dict(self):
         return self.__dict__
-

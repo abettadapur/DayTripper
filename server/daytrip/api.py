@@ -178,7 +178,7 @@ class ItemResource(Resource):
         self.reqparse.add_argument('token', type=str, required=True, location='args', help='No token to verify')
 
         self.put_reqparse = self.reqparse.copy()
-        self.put_reqparse.add_argument('yelp_id', type=int, required=True, location='json', help='Missing yelp_id')
+        self.put_reqparse.add_argument('yelp_id', type=str, required=True, location='json', help='Missing yelp_id')
         self.put_reqparse.add_argument('category', type=str, required=True, location='json', help='Missing category')
         self.put_reqparse.add_argument('name', type=str, required=True, location='json', help='Missing name')
         self.put_reqparse.add_argument('start_time', type=str, required=True, location='json', help='Missing start_time')
@@ -232,7 +232,7 @@ class CreateItemResource(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('token', type=str, required=True, location='args', help='No token to verify')
-        self.reqparse.add_argument('yelp_id', type=int, required=True, location='json', help='Missing yelp_id')
+        self.reqparse.add_argument('yelp_id', type=str, required=True, location='json', help='Missing yelp_id')
         self.reqparse.add_argument('category', type=str, required=True, location='json', help='Missing category')
         self.reqparse.add_argument('name', type=str, required=True, location='json', help='Missing name')
         self.reqparse.add_argument('start_time', type=str, required=True, location='json', help='Missing start_time')
