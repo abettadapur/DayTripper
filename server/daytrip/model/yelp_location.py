@@ -1,0 +1,18 @@
+class YelpLocation(object):
+
+    def __init__(self, yelp_id, address, city, zip_code, state, latitude, longitude):
+        self.yelpl_id = yelp_id
+        self.address = address
+        self.city = city
+        self.zip = zip_code
+        self.state = state
+        self.latitude = latitude
+        self.longitude = longitude
+
+
+    def asDict(self):
+        loc_dict = self.__dict__
+        loc_dict['coordinate'] = {'latitude': self.latitude, 'longitude': self.longitude}
+        del loc_dict['latitude']
+        del loc_dict['longitude']
+        return loc_dict
