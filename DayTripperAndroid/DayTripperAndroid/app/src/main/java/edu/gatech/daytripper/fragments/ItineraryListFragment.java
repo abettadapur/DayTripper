@@ -1,6 +1,7 @@
 package edu.gatech.daytripper.fragments;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,7 +34,7 @@ import edu.gatech.daytripper.model.Itinerary;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class ItineraryListFragment extends Fragment implements RecyclerItemClickListener.OnItemClickListener {
+public class ItineraryListFragment extends Fragment implements RecyclerItemClickListener.OnItemClickListener, View.OnClickListener {
 
 
     private OnFragmentInteractionListener mListener;
@@ -41,6 +42,7 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
     private FloatingActionButton mAddButton;
     private RecyclerView mRecycleView;
     private ItineraryAdapter mAdapter;
+    private final int ITINERARY_CREATE_CODE = 86;
 
     public static ItineraryListFragment newInstance() {
         ItineraryListFragment fragment = new ItineraryListFragment();
@@ -76,6 +78,7 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
 
         mAddButton = (FloatingActionButton)rootView.findViewById(R.id.add_fab);
         mAddButton.attachToRecyclerView(mRecycleView);
+        mAddButton.setOnClickListener(this);
 
         return rootView;
     }
@@ -123,6 +126,16 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
 
     @Override
     public void onItemLongPress(View childView, int position) {
+
+    }
+
+    /** Open a dialog to add a new itinerary. After collecting info, open edit itinerary activity **/
+    @Override
+    public void onClick(View v)
+    {
+        CreateItineraryDialog dialog = new CreateItineraryDialog();
+        //dialog.setTargetFragment(this, ITINERARY_CREATE_CODE);
+        dialog.show(getActivity().getFragmentManager(), "fm");
 
     }
 
