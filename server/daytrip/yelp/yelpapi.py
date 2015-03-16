@@ -5,7 +5,8 @@ import pprint
 import oauth2
 
 from etc import config
-
+from model.yelp_entry import YelpEntry
+from model.yelp_location import YelpLocation
 
 
 API_HOST = "api.yelp.com"
@@ -65,7 +66,10 @@ def search(term, location, category_filters, **kwargs):
     return request(API_HOST, SEARCH_PATH, url_params=url_params)
 
 def business(yelp_id):
-    return request(API_HOST, BUSINESS_PATH+yelp_id)
+    api_entry = request(API_HOST, BUSINESS_PATH+yelp_id)
+    location = YelpLocation(api_entry['id'], api_entry['location']['address'][0], api_entry['location']['city'], api_entry['location']['postal_code'], api_entry['location']['state_code'], api_entry['location']['coordinate']['latitude'], api_entry['location']['coordinate']['longitude'])
+    entry = YelpEntry(api_entry['id'], api_entry['name'], api_entry['phone'], api_entry['image_url'], api_entry['url'], api_entry['rating'], location)
+    return entry
 
 
 

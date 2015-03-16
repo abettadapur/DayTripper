@@ -5,7 +5,7 @@ class YelpEntry(object):
         self.id = id
         self.name = name
         self.phone = phone
-        self.image_url = image_ur;
+        self.image_url = image_url;
         self.url = url
         self.rating = rating
         self.location = location

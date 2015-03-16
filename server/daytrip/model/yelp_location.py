@@ -1,10 +1,10 @@
 class YelpLocation(object):
 
     def __init__(self, yelp_id, address, city, zip_code, state, latitude, longitude):
-        self.yelpl_id = yelp_id
+        self.yelp_id = yelp_id
         self.address = address
         self.city = city
-        self.zip = zip_code
+        self.postal_code = zip_code
         self.state = state
         self.latitude = latitude
         self.longitude = longitude

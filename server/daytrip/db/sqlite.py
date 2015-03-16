@@ -258,7 +258,12 @@ class SqlLiteManager(object):
             )
             item_id = cursor.lastrowid
             cursor.close()
-            return item_id
+
+        if not self.has_yelp_entry(item.yelp_id):
+            entry = yelpapi.business(item.yelp_id)
+            self.insert_yelp_entry(entry)
+            item.yelp_entry = entry
+        return item_id
 
     def get_item(self, id):
         with sqlite3.connect(self.db_name) as conn:
@@ -332,7 +337,7 @@ class SqlLiteManager(object):
     def item_from_cursor(self, cursor, row):
         if row:
             item = Item(row[0], row[2], row[3], row[4], row[5], row[6])
-            item.yelp_entry = get_yelp_entry(item.yelp_id)
+            item.yelp_entry = self.get_yelp_entry(item.yelp_id)
             return item
         return None
 
@@ -354,6 +359,21 @@ class SqlLiteManager(object):
             cursor.close()
             return entry
 
+    def has_yelp_entry(self,id):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'SELECT {id} FROM {table} WHERE {id}=?'
+                .format(
+                    table=yelp_entry.YELP_ENTRY_TABLE,
+                    id=yelp_entry.ID
+                ),
+                (id, )
+            )
+            row = cursor.fetchone()
+            cursor.close()
+            return row != None
+
 
     def insert_yelp_entry(self, entry):
         with sqlite3.connect(self.db_name) as conn:
@@ -370,16 +390,16 @@ class SqlLiteManager(object):
                     name=yelp_entry.NAME,
                     rating=yelp_entry.RATING
                 ),
-                (entry.id, entry.phone, entry.image_url, entry.name, entry.rating)
+                (entry.id, entry.phone, entry.image_url, entry.url, entry.name, entry.rating)
             )
 
             cursor.close()
-            insert_yelp_location(entry)
+        self.insert_yelp_location(entry)
 
 
     def yelp_entry_from_cursor(self, cursor, row):
         if row:
-            location = get_yelp_location(row[0])
+            location = self.get_yelp_location(row[0])
             entry = YelpEntry(row[0], row[4], row[1], row[2], row[3], row[5], location)
             return entry
         return None
@@ -422,7 +442,7 @@ class SqlLiteManager(object):
                     latitude = yelp_location.LATITUDE,
                     longitude = yelp_location.LONGITUDE
                 ),
-                (location.yelp_id, location.address, location.city, location.zip, location.state, location.latitude, location.longitude)
+                (location.yelp_id, location.address, location.city, location.postal_code, location.state, location.latitude, location.longitude)
             )
 
             cursor.close()

@@ -9,4 +9,7 @@ class Item(object):
         self.yelp_entry = None
 
     def as_dict(self):
-        return self.__dict__
+        idict = self.__dict__
+        if self.yelp_entry:
+            idict['yelp_entry'] = self.yelp_entry.asDict()
+        return idict
