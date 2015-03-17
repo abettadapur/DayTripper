@@ -59,3 +59,10 @@ server/venv/
 #Configuration File
 server/daytrip/etc/config.py
 server/.idea/
+
+#Android Studio
+DayTripperAndroid/DayTripperAndroid/.gradle
+DayTripperAndroid/DayTripperAndroid/local.properties
+DayTripperAndroid/DayTripperAndroid/.idea/
+DayTripperAndroid/DayTripperAndroid/.DS_Store
+DayTripperAndroid/DayTripperAndroid/build

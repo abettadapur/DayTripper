@@ -1,5 +1,7 @@
 package edu.gatech.daytripper.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Date;
 
 /**
@@ -13,6 +15,18 @@ public class Item
     private String name;
     private Date start_time;
     private Date end_time;
+    @Expose(serialize = false)
+    private YelpEntry yelp_entry;
+
+    public Item(int id, String yelp_id, String category, String name, Date start_time, Date end_time, YelpEntry yelp_entry) {
+        this.id = id;
+        this.yelp_id = yelp_id;
+        this.category = category;
+        this.name = name;
+        this.start_time = start_time;
+        this.end_time = end_time;
+        this.yelp_entry = yelp_entry;
+    }
 
     public Item(int id, String yelp_id, String category, String name, Date start_time, Date end_time) {
         this.id = id;
@@ -21,6 +35,7 @@ public class Item
         this.name = name;
         this.start_time = start_time;
         this.end_time = end_time;
+        this.yelp_entry = null;
     }
 
     public Item(String yelp_id, String category, String name, Date start_time, Date end_time) {
@@ -29,6 +44,8 @@ public class Item
         this.name = name;
         this.start_time = start_time;
         this.end_time = end_time;
+        this.yelp_entry = null;
+        this.id=-1;
     }
 
     public Item()  {}
@@ -80,5 +97,13 @@ public class Item
 
     public void setEnd_time(Date end_time) {
         this.end_time = end_time;
+    }
+
+    public YelpEntry getYelp_entry() {
+        return yelp_entry;
+    }
+
+    public void setYelp_entry(YelpEntry yelp_entry) {
+        this.yelp_entry = yelp_entry;
     }
 }

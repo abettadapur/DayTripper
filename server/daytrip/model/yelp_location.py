@@ -5,7 +5,7 @@ class YelpLocation(object):
         self.address = address
         self.city = city
         self.postal_code = zip_code
-        self.state = state
+        self.state_code = state
         self.latitude = latitude
         self.longitude = longitude
 
