@@ -1,5 +1,7 @@
 package edu.gatech.daytripper.model;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by abettadapur on 3/17/2015.
  */
@@ -10,8 +12,7 @@ public class YelpLocation
     private String city;
     private String postal_code;
     private String state;
-    private double latitude;
-    private double longitude;
+    private LatLng coordinate;
 
     public YelpLocation()
     {}
@@ -56,19 +57,11 @@ public class YelpLocation
         this.state = state;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public LatLng getCoordinate() {
+        return coordinate;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setCoordinate(LatLng coordinate) {
+        this.coordinate = coordinate;
     }
 }

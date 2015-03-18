@@ -40,11 +40,7 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
                     .commit();
 
         }
-
-
         mRestClient = new RestClient();
-
-
     }
 
     @Override
@@ -68,7 +64,6 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
 
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void refresh_list(final ItineraryListFragment fragment)

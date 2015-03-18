@@ -1,5 +1,6 @@
 package edu.gatech.daytripper.net;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -7,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
@@ -42,6 +44,7 @@ public class RestClient {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Calendar.class, new CalendarSerializer())
                 .registerTypeAdapter(GregorianCalendar.class, new CalendarSerializer())
+                .registerTypeAdapter(LatLng.class, new LatLngSerializer())
                 .setDateFormat("yyyy-MM-dd'T'HH:mmZ")
                 .addSerializationExclusionStrategy(new ExclusionStrategy() {
                     @Override
@@ -113,5 +116,21 @@ public class RestClient {
             return new JsonPrimitive(sdf.format(src.getTime()));
         }
     }
+
+    private class LatLngSerializer implements JsonSerializer<LatLng>, JsonDeserializer<LatLng>
+    {
+        @Override
+        public LatLng deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject coordinate = (JsonObject)json;
+
+            return new LatLng(coordinate.getAsJsonPrimitive("latitude").getAsDouble(), coordinate.getAsJsonPrimitive("longitude").getAsDouble());
+        }
+
+        @Override
+        public JsonElement serialize(LatLng src, Type typeOfSrc, JsonSerializationContext context) {
+            return null;
+        }
+    }
+
 
 }

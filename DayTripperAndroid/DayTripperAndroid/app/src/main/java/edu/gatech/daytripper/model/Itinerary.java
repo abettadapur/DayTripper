@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Alex on 3/7/2015.
  */
-public class Itinerary
+public class Itinerary implements Comparable<Itinerary>
 {
     private int id;
     private String name;
@@ -109,5 +109,10 @@ public class Itinerary
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public int compareTo(Itinerary another) {
+        return this.getDate().compareTo(another.getDate());
     }
 }

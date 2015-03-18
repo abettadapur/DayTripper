@@ -1,22 +1,35 @@
 package edu.gatech.daytripper.activities;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.facebook.Session;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.List;
 
 import edu.gatech.daytripper.R;
 import edu.gatech.daytripper.fragments.ItemListFragment;
 import edu.gatech.daytripper.fragments.ItineraryListFragment;
+import edu.gatech.daytripper.model.Item;
 import edu.gatech.daytripper.model.Itinerary;
 import edu.gatech.daytripper.net.RestClient;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ItineraryDetailActivity extends ActionBarActivity implements ItemListFragment.OnFragmentInteractionListener {
+public class ItineraryDetailActivity extends ActionBarActivity implements ItemListFragment.OnFragmentInteractionListener, OnMapReadyCallback {
 
     private Itinerary currentItinerary;
     private RestClient mRestClient;
@@ -47,6 +60,10 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
                 //notify fragments
                 itemListFragment.updateItems(itinerary.getItems());
                 getSupportActionBar().setTitle(itinerary.getName());
+
+                MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
+                mapFragment.getMapAsync(ItineraryDetailActivity.this);
+
             }
 
             @Override
@@ -54,6 +71,7 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
 
             }
         });
+
 
 
     }
@@ -83,6 +101,28 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
 
     @Override
     public void onFragmentInteraction(String id) {
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap)
+    {
+        Geocoder coder = new Geocoder(this);
+        try {
+            List<Address> addresses = coder.getFromLocationName(currentItinerary.getCity(), 1);
+            LatLng city =  new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(city, 10));
+        }
+        catch(IOException ioex)
+        {}
+
+        for(Item i: currentItinerary.getItems())
+        {
+            googleMap.addMarker(new MarkerOptions()
+            .title(i.getName())
+            .snippet(i.getYelp_entry().getPhone())
+            .position(i.getYelp_entry().getLocation().getCoordinate()));
+        }
 
     }
 }
