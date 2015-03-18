@@ -4,9 +4,25 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:hint="Hello World"/>
+        android:id="@+id/nameBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Itinerary Name"/>
+
+    <Spinner
+        android:id="@+id/citySpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!--<TimePicker-->
+        <!--android:id="@+id/startPicker"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"/>-->
+
+    <!--<TimePicker-->
+        <!--android:id="@+id/endPicker"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"/>-->
 
 
 </LinearLayout>

@@ -7,6 +7,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import edu.gatech.daytripper.R;
 
@@ -15,6 +18,11 @@ import edu.gatech.daytripper.R;
  */
 public class CreateItineraryDialog extends DialogFragment
 {
+    private EditText mNameBox;
+    private Spinner mCitySpinner;
+    private ArrayAdapter<String> mCityAdapter;
+    private final String[] cities = {"Atlanta", "New York City", "Seattle", "San Francisco", "Philadelphia"};
+
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity())
@@ -33,6 +41,11 @@ public class CreateItineraryDialog extends DialogFragment
                 });
         LayoutInflater i = getActivity().getLayoutInflater();
         View v = i.inflate(R.layout.dialog_create_itinerary, null);
+
+        mNameBox = (EditText)v.findViewById(R.id.nameBox);
+        mCitySpinner = (Spinner)v.findViewById(R.id.citySpinner);
+        mCityAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, cities);
+        mCitySpinner.setAdapter(mCityAdapter);
 
         ///View setup
         b.setView(v);
