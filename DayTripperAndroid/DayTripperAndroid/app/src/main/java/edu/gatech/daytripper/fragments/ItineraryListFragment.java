@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,8 +17,8 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.gatech.daytripper.R;
 
+import edu.gatech.daytripper.R;
 import edu.gatech.daytripper.activities.ItineraryDetailActivity;
 import edu.gatech.daytripper.adapters.ItineraryAdapter;
 import edu.gatech.daytripper.adapters.RecyclerItemClickListener;
@@ -30,10 +31,11 @@ import edu.gatech.daytripper.model.Itinerary;
  * Activities containing this fragment MUST implement the {@link edu.gatech.daytripper.fragments.ItineraryListFragment.ItineraryListListener}
  * interface.
  */
-public class ItineraryListFragment extends Fragment implements RecyclerItemClickListener.OnItemClickListener, View.OnClickListener {
+public class ItineraryListFragment extends Fragment implements RecyclerItemClickListener.OnItemClickListener, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
 
     private ItineraryListListener mListListener;
+    private SwipeRefreshLayout mSwipeRefresh;
     private List<Itinerary> mItineraryList;
     private FloatingActionButton mAddButton;
     private RecyclerView mRecycleView;
@@ -63,8 +65,11 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_itinerary_list, container, false);
-        mRecycleView = (RecyclerView)rootView.findViewById(R.id.recycle_view);
 
+        mSwipeRefresh = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh);
+        mSwipeRefresh.setOnRefreshListener(this);
+
+        mRecycleView = (RecyclerView)rootView.findViewById(R.id.recycle_view);
         mAdapter = new ItineraryAdapter(mItineraryList, getActivity());
         mRecycleView.setAdapter(mAdapter);
 
@@ -108,9 +113,12 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
         if(mItineraryList == null)
             mItineraryList = new ArrayList<>();
 
+
         mItineraryList.clear();
         mItineraryList.addAll(items);
         mAdapter.notifyDataSetChanged();
+
+        mSwipeRefresh.setRefreshing(false);
     }
 
     @Override
@@ -148,6 +156,12 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
 
             }
         }
+        mListListener.refresh_list(this);
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefresh.setRefreshing(true);
         mListListener.refresh_list(this);
     }
 
