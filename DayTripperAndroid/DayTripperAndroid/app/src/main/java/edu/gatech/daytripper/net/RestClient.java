@@ -4,9 +4,21 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.Expose;
 
+import java.lang.reflect.Type;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import edu.gatech.daytripper.model.Itinerary;
 import edu.gatech.daytripper.retro.interfaces.AuthService;
@@ -28,6 +40,8 @@ public class RestClient {
     public RestClient()
     {
         Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Calendar.class, new CalendarSerializer())
+                .registerTypeAdapter(GregorianCalendar.class, new CalendarSerializer())
                 .setDateFormat("yyyy-MM-dd'T'HH:mmZ")
                 .addSerializationExclusionStrategy(new ExclusionStrategy() {
                     @Override
@@ -73,5 +87,31 @@ public class RestClient {
     }
     public ItineraryService getItineraryService() { return itineraryService; }
     public ItemService getItemService() { return itemService; }
+
+    private class CalendarSerializer implements JsonSerializer<Calendar>, JsonDeserializer<Calendar>
+    {
+
+        @Override
+        public Calendar deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+            String date_str = json.getAsString();
+            Calendar date = null;
+            try {
+                sdf.parse(date_str);
+                date = sdf.getCalendar();
+            }
+            catch(ParseException pex)
+            {
+                throw new IllegalStateException("Parse Error");
+            }
+            return date;
+        }
+
+        @Override
+        public JsonElement serialize(Calendar src, Type typeOfSrc, JsonSerializationContext context) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+            return new JsonPrimitive(sdf.format(src.getTime()));
+        }
+    }
 
 }

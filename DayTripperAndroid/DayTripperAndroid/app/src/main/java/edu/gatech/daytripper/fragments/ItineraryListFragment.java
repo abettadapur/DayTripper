@@ -1,19 +1,15 @@
 package edu.gatech.daytripper.fragments;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.ListFragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.melnykov.fab.FloatingActionButton;
 
@@ -31,17 +27,18 @@ import edu.gatech.daytripper.model.Itinerary;
  * A fragment representing a list of Items.
  * <p/>
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link edu.gatech.daytripper.fragments.ItineraryListFragment.ItineraryListListener}
  * interface.
  */
 public class ItineraryListFragment extends Fragment implements RecyclerItemClickListener.OnItemClickListener, View.OnClickListener {
 
 
-    private OnFragmentInteractionListener mListener;
+    private ItineraryListListener mListListener;
     private List<Itinerary> mItineraryList;
     private FloatingActionButton mAddButton;
     private RecyclerView mRecycleView;
     private ItineraryAdapter mAdapter;
+
     private final int ITINERARY_CREATE_CODE = 86;
 
     public static ItineraryListFragment newInstance() {
@@ -86,13 +83,14 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
     @Override
     public void onStart() {
         super.onStart();
+        mListListener.refresh_list(this);
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListListener = (ItineraryListListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -102,7 +100,7 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        mListListener = null;
     }
 
     public void updateItems(List<Itinerary> items)
@@ -134,11 +132,24 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
     public void onClick(View v)
     {
         CreateItineraryDialog dialog = new CreateItineraryDialog();
-        //dialog.setTargetFragment(this, ITINERARY_CREATE_CODE);
+        dialog.setTargetFragment(this, ITINERARY_CREATE_CODE);
         dialog.show(getActivity().getFragmentManager(), "fm");
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==ITINERARY_CREATE_CODE)
+        {
+            if(resultCode==Activity.RESULT_OK)
+            {
+                //things
+
+            }
+        }
+        mListListener.refresh_list(this);
+    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -150,9 +161,10 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+    public interface ItineraryListListener
+    {
+        public void refresh_list(ItineraryListFragment fragment);
+
     }
 
 }

@@ -2,7 +2,7 @@ package edu.gatech.daytripper.model;
 
 import com.google.gson.annotations.Expose;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -12,9 +12,9 @@ public class Itinerary
 {
     private int id;
     private String name;
-    private Date date;
-    private Date start_time;
-    private Date end_time;
+    private Calendar date;
+    private Calendar start_time;
+    private Calendar end_time;
     private String city;
     @Expose(serialize = false)
     private List<Item> items;
@@ -24,7 +24,7 @@ public class Itinerary
 
     public Itinerary(){}
 
-    public Itinerary(String name, Date date, Date start_time, Date end_time, String city, List<Item> items)
+    public Itinerary(String name, Calendar date, Calendar start_time, Calendar end_time, String city, List<Item> items)
     {
         this.id = 0;
         this.name = name;
@@ -35,7 +35,7 @@ public class Itinerary
         this.items = items;
     }
 
-    public Itinerary(int id, String name, Date date, Date start_time, Date end_time, String city, List<Item> items)
+    public Itinerary(int id, String name, Calendar date, Calendar start_time, Calendar end_time, String city, List<Item> items)
     {
 
         this.id = id;
@@ -71,27 +71,27 @@ public class Itinerary
         this.name = name;
     }
 
-    public Date getDate() {
+    public Calendar getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Calendar date) {
         this.date = date;
     }
 
-    public Date getStart_time() {
+    public Calendar getStart_time() {
         return start_time;
     }
 
-    public void setStart_time(Date start_time) {
+    public void setStart_time(Calendar start_time) {
         this.start_time = start_time;
     }
 
-    public Date getEnd_time() {
+    public Calendar getEnd_time() {
         return end_time;
     }
 
-    public void setEnd_time(Date end_time) {
+    public void setEnd_time(Calendar end_time) {
         this.end_time = end_time;
     }
 

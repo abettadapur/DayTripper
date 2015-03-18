@@ -1,7 +1,6 @@
 package edu.gatech.daytripper.activities;
 
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInstaller;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +19,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ItineraryActivity extends ActionBarActivity implements ItineraryListFragment.OnFragmentInteractionListener {
+public class ItineraryActivity extends ActionBarActivity implements ItineraryListFragment.ItineraryListListener {
 
     private ItineraryListFragment itineraryListFragment;
     private RestClient mRestClient;
@@ -41,20 +40,11 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
                     .commit();
 
         }
-        mRestClient = new RestClient();
-        /** Get a listing of the itineraries for the current user and update the fragment with the items **/
-        mRestClient.getItineraryService().listItineraries(Session.getActiveSession().getAccessToken(), new Callback<List<Itinerary>>() {
-            @Override
-            public void success(List<Itinerary> itineraries, Response response) {
-                ItineraryActivity.this.itineraries = itineraries;
-                itineraryListFragment.updateItems(itineraries);
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e("GET ITINERARIES", error.getMessage());
-            }
-        });
+
+        mRestClient = new RestClient();
+
+
     }
 
     @Override
@@ -79,8 +69,23 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
-    public void onFragmentInteraction(String id) {
+    public void refresh_list(final ItineraryListFragment fragment)
+    {
+        /** Get a listing of the itineraries for the current user and update the fragment with the items **/
+        mRestClient.getItineraryService().listItineraries(Session.getActiveSession().getAccessToken(), new Callback<List<Itinerary>>() {
+            @Override
+            public void success(List<Itinerary> itineraries, Response response) {
+                ItineraryActivity.this.itineraries = itineraries;
+                fragment.updateItems(itineraries);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("GET ITINERARIES", error.getMessage());
+            }
+        });
 
     }
 }

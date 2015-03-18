@@ -14,15 +14,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <!--<TimePicker-->
-        <!--android:id="@+id/startPicker"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"/>-->
+    <EditText
+        android:id="@+id/datePicker"
+        android:editable="false"
+        android:focusable="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-    <!--<TimePicker-->
-        <!--android:id="@+id/endPicker"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"/>-->
+    <EditText
+        android:id="@+id/startPicker"
+        android:editable="false"
+        android:focusable="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/endPicker"
+        android:editable="false"
+        android:focusable="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 
 </LinearLayout>
