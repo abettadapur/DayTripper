@@ -3,6 +3,8 @@ import urllib
 import urllib2
 import pprint
 import oauth2
+import lxml
+from bs4 import BeautifulSoup
 
 from etc import config
 from model.yelp_entry import YelpEntry
@@ -17,6 +19,21 @@ CONSUMER_KEY = config.CONSUMER_KEY
 CONSUMER_SECRET = config.CONSUMER_SECRET
 TOKEN = config.TOKEN
 TOKEN_SECRET = config.TOKEN_SECRET
+
+def append_price(businesses):
+
+    for business in businesses:
+        print business
+        url = business['url']
+        print url
+        html = urllib2.urlopen(url).read()
+        soup = BeautifulSoup(html)
+        price_str = soup.find("span", {"class":"price-range"}).contents[0]
+        business['price'] = len(price_str)
+
+    return businesses
+
+
 
 
 def request(host, path, url_params=None):
@@ -38,7 +55,6 @@ def request(host, path, url_params=None):
     token = oauth2.Token(TOKEN, TOKEN_SECRET)
     oauth_request.sign_request(oauth2.SignatureMethod_HMAC_SHA1(), consumer, token)
     signed_url = oauth_request.to_url();
-    print signed_url
 
     conn = urllib2.urlopen(signed_url, None)
     try:
@@ -63,7 +79,9 @@ def search(term, location, category_filters, **kwargs):
     url_params['category_filter'] = filter_str
     url_params.update(kwargs)
 
-    return request(API_HOST, SEARCH_PATH, url_params=url_params)
+    businesses = request(API_HOST, SEARCH_PATH, url_params=url_params)
+    #return append_price(businesses['businesses'])
+    return businessses["businesses"]
 
 def business(yelp_id):
     api_entry = request(API_HOST, BUSINESS_PATH+yelp_id)
