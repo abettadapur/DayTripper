@@ -81,7 +81,7 @@ def search(term, location, category_filters, **kwargs):
 
     businesses = request(API_HOST, SEARCH_PATH, url_params=url_params)
     #return append_price(businesses['businesses'])
-    return businessses["businesses"]
+    return businesses["businesses"]
 
 def business(yelp_id):
     api_entry = request(API_HOST, BUSINESS_PATH+yelp_id)

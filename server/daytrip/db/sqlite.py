@@ -442,7 +442,7 @@ class SqlLiteManager(object):
                     latitude = yelp_location.LATITUDE,
                     longitude = yelp_location.LONGITUDE
                 ),
-                (location.yelp_id, location.address, location.city, location.postal_code, location.state, location.latitude, location.longitude)
+                (location.yelp_id, location.address, location.city, location.postal_code, location.state_code, location.latitude, location.longitude)
             )
 
             cursor.close()
