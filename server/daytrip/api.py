@@ -169,6 +169,9 @@ class CreateItineraryResource(Resource):
 
 
         #Add some sample items based on times
+        #TODO(abettadapur): ITEM TIMES MUST BE FIXED TO ALLOW FOR TRANSPORT
+        #TODO(abettadapur): THIS TAKES 20 SECONDS, MAYBE BETTER FASTER, CACHE SAMPLE ITINERARIES?
+        
         if start_time <= date.replace(hour=10, minute=0, second=0, microsecond=0):
             category = model.match_category('breakfast')
             results = yelpapi.search("", itinerary.city, category.filters)
