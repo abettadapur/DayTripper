@@ -168,10 +168,11 @@ class CreateItineraryResource(Resource):
         itinerary = db.sqlite.get_itinerary(itinerary_id)
 
 
+
         #Add some sample items based on times
         #TODO(abettadapur): ITEM TIMES MUST BE FIXED TO ALLOW FOR TRANSPORT
         #TODO(abettadapur): THIS TAKES 20 SECONDS, MAYBE BETTER FASTER, CACHE SAMPLE ITINERARIES?
-        
+
         if start_time <= date.replace(hour=10, minute=0, second=0, microsecond=0):
             category = model.match_category('breakfast')
             results = yelpapi.search("", itinerary.city, category.filters)
@@ -181,8 +182,8 @@ class CreateItineraryResource(Resource):
                 yelp_id = results[random_index]['id'],
                 category = 'breakfast',
                 name = results[random_index]['name'],
-                start_time = start_time,
-                end_time = start_time + datetime.timedelta(hours=1, minutes=30),
+                start_time = start_time.isoformat(),
+                end_time = (start_time + datetime.timedelta(hours=1, minutes=30)).isoformat(),
             )
             db.sqlite.insert_item(item, itinerary)
             itinerary = db.sqlite.get_itinerary(itinerary_id)
@@ -198,8 +199,8 @@ class CreateItineraryResource(Resource):
                     yelp_id = results[random_index]['id'],
                     category = 'lunch',
                     name = results[random_index]['name'],
-                    start_time = start_time,
-                    end_time = start_time + datetime.timedelta(hours=1, minutes=30),
+                    start_time = start_time.isoformat(),
+                    end_time = (start_time + datetime.timedelta(hours=1, minutes=30)).isoformat(),
                 )
                 db.sqlite.insert_item(item, itinerary)
                 itinerary = db.sqlite.get_itinerary(itinerary_id)
@@ -212,8 +213,8 @@ class CreateItineraryResource(Resource):
                     yelp_id = results[index]['id'],
                     category = 'lunch',
                     name = results[index]['name'],
-                    start_time = start_time,
-                    end_time = start_time + datetime.timedelta(hours=1, minutes=30),
+                    start_time = start_time.isoformat(),
+                    end_time = (start_time + datetime.timedelta(hours=1, minutes=30)).isoformat(),
                 )
                 db.sqlite.insert_item(item, itinerary)
                 itinerary = db.sqlite.get_itinerary(itinerary_id)
@@ -229,8 +230,8 @@ class CreateItineraryResource(Resource):
                     yelp_id = results[random_index]['id'],
                     category = 'dinner',
                     name = results[random_index]['name'],
-                    start_time = start_time,
-                    end_time = start_time + datetime.timedelta(hours=1, minutes=30),
+                    start_time = start_time.isoformat(),
+                    end_time = (start_time + datetime.timedelta(hours=1, minutes=30)).isoformat(),
                 )
                 db.sqlite.insert_item(item, itinerary)
                 itinerary = db.sqlite.get_itinerary(itinerary_id)
@@ -243,8 +244,8 @@ class CreateItineraryResource(Resource):
                     yelp_id = results[index]['id'],
                     category = 'dinner',
                     name = results[index]['name'],
-                    start_time = start_time,
-                    end_time = start_time + datetime.timedelta(hours=1, minutes=30),
+                    start_time = start_time.isoformat(),
+                    end_time = (start_time + datetime.timedelta(hours=1, minutes=30)).isoformat(),
                 )
                 db.sqlite.insert_item(item, itinerary)
                 itinerary = db.sqlite.get_itinerary(itinerary_id)
@@ -260,8 +261,8 @@ class CreateItineraryResource(Resource):
                     yelp_id = results[random_index]['id'],
                     category = 'nightlife',
                     name = results[random_index]['name'],
-                    start_time = start_time,
-                    end_time = start_time + datetime.timedelta(hours=1, minutes=30),
+                    start_time = start_time.isoformat(),
+                    end_time = (start_time + datetime.timedelta(hours=1, minutes=30)).isoformat(),
                 )
                 db.sqlite.insert_item(item, itinerary)
                 itinerary = db.sqlite.get_itinerary(itinerary_id)
@@ -274,8 +275,8 @@ class CreateItineraryResource(Resource):
                     yelp_id = results[index]['id'],
                     category = 'nightlife',
                     name = results[index]['name'],
-                    start_time = start_time,
-                    end_time = start_time + datetime.timedelta(hours=1, minutes=30),
+                    start_time = start_time.isoformat(),
+                    end_time = (start_time + datetime.timedelta(hours=1, minutes=30)).isoformat(),
                 )
                 db.sqlite.insert_item(item, itinerary)
                 itinerary = db.sqlite.get_itinerary(itinerary_id)
