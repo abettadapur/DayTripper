@@ -418,7 +418,7 @@ class QueryCategoryResource(Resource):
         user_id = get_uid_or_abort_on_bad_token(args['token'])
 
         category = model.match_category(category_str)
-        if args['term'] == '':
+        if not args['term']:
             term = category.search_term
         else:
             term = args['term']
