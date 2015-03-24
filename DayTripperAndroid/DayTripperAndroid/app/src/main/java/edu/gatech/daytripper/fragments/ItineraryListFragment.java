@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daimajia.swipe.SwipeLayout;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
 
     private ItineraryListListener mListListener;
     private SwipeRefreshLayout mSwipeRefresh;
+
     private List<Itinerary> mItineraryList;
     private FloatingActionButton mAddButton;
     private RecyclerView mRecycleView;
@@ -68,6 +70,8 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
 
         mSwipeRefresh = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(this);
+
+
 
         mRecycleView = (RecyclerView)rootView.findViewById(R.id.recycle_view);
         mAdapter = new ItineraryAdapter(mItineraryList, getActivity());

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -59,15 +60,19 @@ public class CreateItineraryDialog extends DialogFragment
 
                         Itinerary newItinerary = new Itinerary(name, mDate, mStart, mEnd, city, new ArrayList<Item>());
                         ItineraryService service = new RestClient().getItineraryService();
+
+                        final ProgressDialog progress  = ProgressDialog.show(CreateItineraryDialog.this.getActivity(), "Creating", "Creating a custom itinerary....", true);
                         service.createItinerary(newItinerary, Session.getActiveSession().getAccessToken(), new Callback<Itinerary>() {
                             @Override
                             public void success(Itinerary itinerary, Response response) {
+                                progress.dismiss();
                                 Log.e("CREATE ITINERARY", "SUCCESS "+response.getBody());
                                 getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, new Intent());
                             }
 
                             @Override
                             public void failure(RetrofitError error) {
+                                progress.dismiss();
                                 Log.e("CREATE ITINERARY", "FAIL: "+error.getMessage());
                             }
                         });
@@ -83,11 +88,13 @@ public class CreateItineraryDialog extends DialogFragment
         View v = i.inflate(R.layout.dialog_create_itinerary, null);
 
         mStart = Calendar.getInstance();
-        mStart.set(Calendar.HOUR, 10);
+        mStart.set(Calendar.HOUR_OF_DAY, 10);
         mStart.set(Calendar.MINUTE, 0);
+
         mEnd = Calendar.getInstance();
-        mEnd.set(Calendar.HOUR, 21);
+        mEnd.set(Calendar.HOUR_OF_DAY, 21);
         mEnd.set(Calendar.MINUTE, 0);
+
         mDate = Calendar.getInstance();
 
 
@@ -141,7 +148,7 @@ public class CreateItineraryDialog extends DialogFragment
     TimePickerDialog.OnTimeSetListener startTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            mStart.set(Calendar.HOUR, hourOfDay);
+            mStart.set(Calendar.HOUR_OF_DAY, hourOfDay);
             mStart.set(Calendar.MINUTE, minute);
             updateView();
         }
@@ -150,7 +157,7 @@ public class CreateItineraryDialog extends DialogFragment
     TimePickerDialog.OnTimeSetListener endTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            mEnd.set(Calendar.HOUR, hourOfDay);
+            mEnd.set(Calendar.HOUR_OF_DAY, hourOfDay);
             mEnd.set(Calendar.MINUTE, minute);
             updateView();
         }

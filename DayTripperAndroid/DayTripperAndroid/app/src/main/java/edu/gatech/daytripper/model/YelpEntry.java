@@ -10,7 +10,7 @@ public class YelpEntry
     private String phone;
     private String image_url;
     private String url;
-    private int rating;
+    private float rating;
     private YelpLocation location;
 
     public YelpEntry()
@@ -57,7 +57,7 @@ public class YelpEntry
         this.url = url;
     }
 
-    public int getRating() {
+    public float getRating() {
         return rating;
     }
 

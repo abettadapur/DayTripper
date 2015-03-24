@@ -96,7 +96,7 @@ public class RestClient {
 
         @Override
         public Calendar deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
             String date_str = json.getAsString();
             Calendar date = null;
             try {
@@ -105,14 +105,14 @@ public class RestClient {
             }
             catch(ParseException pex)
             {
-                throw new IllegalStateException("Parse Error");
+                throw new IllegalStateException("Parse Error: "+date_str);
             }
             return date;
         }
 
         @Override
         public JsonElement serialize(Calendar src, Type typeOfSrc, JsonSerializationContext context) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mmZ");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
             return new JsonPrimitive(sdf.format(src.getTime()));
         }
     }

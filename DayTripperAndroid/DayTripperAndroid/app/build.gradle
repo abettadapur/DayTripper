@@ -32,7 +32,8 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.2'
     compile 'com.android.support:cardview-v7:21.0.2'
     compile 'com.android.support:recyclerview-v7:21.0.2'
-//    compile 'com.android.support:swiperefreshlayout-v4:21.0.2'
+    compile 'com.sothree.slidinguppanel:library:3.0.0'
     compile 'net.danlew:android.joda:2.7.1'
+    compile 'com.daimajia.swipelayout:library:1.1.9@aar'
 }
 

@@ -418,7 +418,12 @@ class QueryCategoryResource(Resource):
         user_id = get_uid_or_abort_on_bad_token(args['token'])
 
         category = model.match_category(category_str)
-        results = yelpapi.search(args['term'], args['location'], category.filters)
+        if args['term'] == '':
+            term = category.search_term
+        else:
+            term = args['term']
+
+        results = yelpapi.search(term, args['location'], category.filters)
         return results, 200
 
 

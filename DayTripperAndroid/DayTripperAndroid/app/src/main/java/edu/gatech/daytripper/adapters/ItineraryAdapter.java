@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
+
 import java.util.List;
 
 import edu.gatech.daytripper.R;
@@ -23,11 +25,16 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.View
     {
         public TextView mTitleView;
         public TextView mSubtitleView;
+        public SwipeLayout mSwipeDelete;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
             mTitleView = (TextView)itemView.findViewById(R.id.titleView);
             mSubtitleView = (TextView)itemView.findViewById(R.id.detailView);
+            mSwipeDelete = (SwipeLayout)itemView.findViewById(R.id.swipeLayout);
+            mSwipeDelete.setShowMode(SwipeLayout.ShowMode.LayDown);
+            mSwipeDelete.setDragEdge(SwipeLayout.DragEdge.Right);
 
 
         }
@@ -44,6 +51,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.itinerary_list_item, viewGroup, false);
+
         return new ViewHolder(v);
     }
 
