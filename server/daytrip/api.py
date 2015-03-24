@@ -170,9 +170,9 @@ class CreateItineraryResource(Resource):
 
 
         #Add some sample items based on times
-        #TODO(abettadapur): ITEM TIMES MUST BE FIXED TO ALLOW FOR TRANSPORT
-        #TODO(abettadapur): THIS ROUTINE SHOULD BE METHODIZED
-        #TODO(abettadapur): THIS TAKES 20 SECONDS, MAYBE BETTER FASTER, CACHE SAMPLE ITINERARIES?
+        # TODO(abettadapur): ITEM TIMES MUST BE FIXED TO ALLOW FOR TRANSPORT
+        # TODO(abettadapur): THIS ROUTINE SHOULD BE METHODIZED
+        # TODO(abettadapur): THIS TAKES 20 SECONDS, MAYBE BETTER FASTER, CACHE SAMPLE ITINERARIES?
 
         if start_time <= date.replace(hour=10, minute=0, second=0, microsecond=0):
             category = model.match_category('breakfast')
@@ -251,7 +251,6 @@ class CreateItineraryResource(Resource):
                 db.sqlite.insert_item(item, itinerary)
                 itinerary = db.sqlite.get_itinerary(itinerary_id)
 
-
         if end_time >= date.replace(hour=18, minute=0, second=0, microsecond=0):
             category = model.match_category('dinner')
             results = yelpapi.search(category.search_term, itinerary.city, category.filters)
@@ -281,7 +280,6 @@ class CreateItineraryResource(Resource):
                 )
                 db.sqlite.insert_item(item, itinerary)
                 itinerary = db.sqlite.get_itinerary(itinerary_id)
-
 
         if end_time >= date.replace(hour=21, minute=0, second=0, microsecond=0):
             category = model.match_category('nightlife')
@@ -313,10 +311,8 @@ class CreateItineraryResource(Resource):
                 db.sqlite.insert_item(item, itinerary)
                 itinerary = db.sqlite.get_itinerary(itinerary_id)
 
-
-
-
         return itinerary.as_dict(), 201
+
 
 class ListItineraryResource(Resource):
 
@@ -332,6 +328,7 @@ class ListItineraryResource(Resource):
         itineraries = db.sqlite.list_itineraries(user_id)
         itineraries_dict = [i.as_dict() for i in itineraries]
         return itineraries_dict
+
 
 class ItemResource(Resource):
     def __init__(self):
@@ -388,6 +385,7 @@ class ItemResource(Resource):
         db.sqlite.delete_item(id)
         return True, 204
 
+
 class CreateItemResource(Resource):
 
     def __init__(self):
@@ -419,6 +417,7 @@ class CreateItemResource(Resource):
         item_id = db.sqlite.insert_item(item, itinerary)
         return db.sqlite.get_item(item_id).as_dict(), 201
 
+
 class ListCategoryResource(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
@@ -432,6 +431,7 @@ class ListCategoryResource(Resource):
 
         categories = [c.as_dict() for c in model.categories]
         return categories, 200
+
 
 class QueryCategoryResource(Resource):
 
@@ -457,10 +457,6 @@ class QueryCategoryResource(Resource):
 
         results = yelpapi.search(term, args['location'], category.filters)
         return results, 200
-
-
-
-
 
 
 def get_uid_or_abort_on_bad_token(token):
