@@ -171,6 +171,7 @@ class CreateItineraryResource(Resource):
 
         #Add some sample items based on times
         #TODO(abettadapur): ITEM TIMES MUST BE FIXED TO ALLOW FOR TRANSPORT
+        #TODO(abettadapur): THIS ROUTINE SHOULD BE METHODIZED
         #TODO(abettadapur): THIS TAKES 20 SECONDS, MAYBE BETTER FASTER, CACHE SAMPLE ITINERARIES?
 
         if start_time <= date.replace(hour=10, minute=0, second=0, microsecond=0):
@@ -190,7 +191,7 @@ class CreateItineraryResource(Resource):
 
         if end_time >= date.replace(hour=11, minute=0, second=0, microsecond=0):
             category = model.match_category('lunch')
-            results = yelpapi.search("", itinerary.city, category.filters)
+            results = yelpapi.search(category.search_term, itinerary.city, category.filters)
 
             random_index = random.randint(0,15)
             if len(itinerary.items) == 0:
@@ -219,10 +220,41 @@ class CreateItineraryResource(Resource):
                 db.sqlite.insert_item(item, itinerary)
                 itinerary = db.sqlite.get_itinerary(itinerary_id)
 
+        if end_time >= date.replace(hour=14, minute=0, second=0, microsecond=0):
+            category = model.match_category('attraction')
+            results = yelpapi.search(category.search_term, itinerary.city, category.filters)
+
+            random_index = random.randint(0,15)
+            if len(itinerary.items) == 0:
+                item = Item(
+                    id = None,
+                    yelp_id = results[random_index]['id'],
+                    category = 'attraction',
+                    name = results[random_index]['name'],
+                    start_time = start_time.isoformat(),
+                    end_time = (start_time + datetime.timedelta(hours=1, minutes=30)).isoformat(),
+                )
+                db.sqlite.insert_item(item, itinerary)
+                itinerary = db.sqlite.get_itinerary(itinerary_id)
+            else:
+                origin = [itinerary.items[len(itinerary.items)-1].yelp_entry.location.address]
+                destinations = [r['location']['address'][0] for r in results]
+                index = maps.closest_item(origin, destinations)
+                item = Item(
+                    id = None,
+                    yelp_id = results[index]['id'],
+                    category = 'attraction',
+                    name = results[index]['name'],
+                    start_time = start_time.isoformat(),
+                    end_time = (start_time + datetime.timedelta(hours=1, minutes=30)).isoformat(),
+                )
+                db.sqlite.insert_item(item, itinerary)
+                itinerary = db.sqlite.get_itinerary(itinerary_id)
+
 
         if end_time >= date.replace(hour=18, minute=0, second=0, microsecond=0):
             category = model.match_category('dinner')
-            results = yelpapi.search("", itinerary.city, category.filters)
+            results = yelpapi.search(category.search_term, itinerary.city, category.filters)
             random_index = random.randint(0,15)
             if len(itinerary.items) == 0:
                 item = Item(
@@ -253,7 +285,7 @@ class CreateItineraryResource(Resource):
 
         if end_time >= date.replace(hour=21, minute=0, second=0, microsecond=0):
             category = model.match_category('nightlife')
-            results = yelpapi.search("", itinerary.city, category.filters)
+            results = yelpapi.search(category.search_term, itinerary.city, category.filters)
             random_index = random.randint(0,15)
             if len(itinerary.items) == 0:
                 item = Item(
