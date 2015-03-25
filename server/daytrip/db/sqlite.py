@@ -379,8 +379,8 @@ class SqlLiteManager(object):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                'INSERT INTO {table} ({id}, {phone}, {image_url}, {url}, {name}, {rating})'
-                'VALUES (?, ?, ?, ?, ? ,?)'
+                'INSERT INTO {table} ({id}, {phone}, {image_url}, {url}, {name}, {rating}, {review_count})'
+                'VALUES (?, ?, ?, ?, ? ,?, ?)'
                 .format(
                     table=yelp_entry.YELP_ENTRY_TABLE,
                     id=yelp_entry.ID,
@@ -388,9 +388,10 @@ class SqlLiteManager(object):
                     image_url=yelp_entry.IMAGE_URL,
                     url=yelp_entry.URL,
                     name=yelp_entry.NAME,
-                    rating=yelp_entry.RATING
+                    rating=yelp_entry.RATING,
+                    review_count = yelp_entry.REVIEW_COUNT
                 ),
-                (entry.id, entry.phone, entry.image_url, entry.url, entry.name, entry.rating)
+                (entry.id, entry.phone, entry.image_url, entry.url, entry.name, entry.rating, entry.review_count)
             )
 
             cursor.close()
@@ -400,7 +401,7 @@ class SqlLiteManager(object):
     def yelp_entry_from_cursor(self, cursor, row):
         if row:
             location = self.get_yelp_location(row[0])
-            entry = YelpEntry(row[0], row[4], row[1], row[2], row[3], row[5], location)
+            entry = YelpEntry(row[0], row[4], row[1], row[2], row[3], row[5], row[6], location)
             return entry
         return None
 
