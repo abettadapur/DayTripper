@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.facebook.Session;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.melnykov.fab.FloatingActionButton;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,11 +32,12 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ItineraryDetailActivity extends ActionBarActivity implements ItemListFragment.ItemListListener, OnMapReadyCallback {
+public class ItineraryDetailActivity extends ActionBarActivity implements ItemListFragment.ItemListListener, OnMapReadyCallback, View.OnClickListener {
 
     private Itinerary currentItinerary;
     private RestClient mRestClient;
     private ItemListFragment itemListFragment;
+    private FloatingActionButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,9 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
         }
 
         int id = getIntent().getIntExtra("itinerary_id", 0);
+
+        mFab = (FloatingActionButton)findViewById(R.id.edit_fab);
+        mFab.setOnClickListener(this);
         mRestClient = new RestClient();
 
         mRestClient.getItineraryService().getItinerary(id, Session.getActiveSession().getAccessToken(), new Callback<Itinerary>() {
@@ -131,10 +137,15 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
         for(Item i: currentItinerary.getItems())
         {
             googleMap.addMarker(new MarkerOptions()
-            .title(i.getName())
-            .snippet(i.getYelp_entry().getLocation().getAddress())
-            .position(i.getYelp_entry().getLocation().getCoordinate()));
+                    .title(i.getName())
+                    .snippet(i.getYelp_entry().getLocation().getAddress())
+                    .position(i.getYelp_entry().getLocation().getCoordinate()));
         }
+
+    }
+
+    @Override
+    public void onClick(View v) {
 
     }
 }

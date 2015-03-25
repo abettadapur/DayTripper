@@ -35,5 +35,6 @@ dependencies {
     compile 'com.sothree.slidinguppanel:library:3.0.0'
     compile 'net.danlew:android.joda:2.7.1'
     compile 'com.daimajia.swipelayout:library:1.1.9@aar'
+    compile('com.mikepenz.materialdrawer:library:2.5.7@aar'){transitive=true}
 }
 

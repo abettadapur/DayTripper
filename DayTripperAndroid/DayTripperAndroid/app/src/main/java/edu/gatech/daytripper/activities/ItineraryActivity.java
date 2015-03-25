@@ -3,11 +3,22 @@ package edu.gatech.daytripper.activities;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.facebook.Session;
+import com.mikepenz.iconics.typeface.FontAwesome;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SectionDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
 import java.util.List;
 
@@ -28,6 +39,25 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intinerary);
+
+        Drawer.Result result = new Drawer()
+                .withActivity(this)
+                .withTranslucentStatusBar(false)
+                .withActionBarDrawerToggle(false)
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName("My Itineraries").withIcon(FontAwesome.Icon.faw_list),
+                        new PrimaryDrawerItem().withName("Search Itineraries").withIcon(FontAwesome.Icon.faw_search),
+
+                        new SectionDrawerItem().withName("section"),
+                        new SecondaryDrawerItem().withName("Settings").withIcon(FontAwesome.Icon.faw_cog)
+                )
+
+                .build();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
