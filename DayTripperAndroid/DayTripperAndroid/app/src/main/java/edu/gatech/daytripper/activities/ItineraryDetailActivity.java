@@ -1,5 +1,6 @@
 package edu.gatech.daytripper.activities;
 
+import android.content.pm.ActivityInfo;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v7.app.ActionBarActivity;
@@ -29,7 +30,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ItineraryDetailActivity extends ActionBarActivity implements ItemListFragment.OnFragmentInteractionListener, OnMapReadyCallback {
+public class ItineraryDetailActivity extends ActionBarActivity implements ItemListFragment.ItemListListener, OnMapReadyCallback {
 
     private Itinerary currentItinerary;
     private RestClient mRestClient;
@@ -40,6 +41,9 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_itinerary_detail);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out_right);
         itemListFragment = ItemListFragment.newInstance();
         if(savedInstanceState==null)
         {
@@ -90,18 +94,26 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.slide_out, R.anim.slide_in);
+                return true;
+            case R.id.action_settings:
+                return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onFragmentInteraction(String id) {
+    public void refresh_list(final ItemListFragment fragment)
+    {
 
+    }
+
+    @Override
+    public Itinerary getItinerary() {
+        return currentItinerary;
     }
 
     @Override
@@ -120,7 +132,7 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
         {
             googleMap.addMarker(new MarkerOptions()
             .title(i.getName())
-            .snippet(i.getYelp_entry().getPhone())
+            .snippet(i.getYelp_entry().getLocation().getAddress())
             .position(i.getYelp_entry().getLocation().getCoordinate()));
         }
 

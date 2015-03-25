@@ -11,7 +11,12 @@ public class YelpEntry
     private String image_url;
     private String url;
     private float rating;
+    private int review_count;
+
+
+
     private YelpLocation location;
+
 
     public YelpEntry()
     {}
@@ -71,5 +76,18 @@ public class YelpEntry
 
     public void setLocation(YelpLocation location) {
         this.location = location;
+    }
+
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    public int getReview_count() {
+        return review_count;
+    }
+
+    public void setReview_count(int review_count) {
+        this.review_count = review_count;
     }
 }

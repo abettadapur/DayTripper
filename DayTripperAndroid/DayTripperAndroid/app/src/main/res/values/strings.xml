@@ -17,5 +17,6 @@
     <string name="title_activity_splash">SplashActivity</string>
     <string name="title_activity_itinerary_detail">ItineraryDetailActivity</string>
     <string name="title_activity_edit_itinerary">EditItineraryActivity</string>
+    <string name="title_activity_item_detail">ItemDetailActivity</string>
 
 </resources>

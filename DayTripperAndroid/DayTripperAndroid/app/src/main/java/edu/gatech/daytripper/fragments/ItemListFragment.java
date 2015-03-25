@@ -2,6 +2,7 @@ package edu.gatech.daytripper.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,8 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.gatech.daytripper.R;
+import edu.gatech.daytripper.activities.ItemDetailActivity;
 import edu.gatech.daytripper.adapters.ItemAdapter;
+import edu.gatech.daytripper.adapters.RecyclerItemClickListener;
 import edu.gatech.daytripper.model.Item;
+import edu.gatech.daytripper.model.Itinerary;
 
 
 /**
@@ -26,14 +30,13 @@ import edu.gatech.daytripper.model.Item;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class ItemListFragment extends Fragment {
+public class ItemListFragment extends Fragment implements RecyclerItemClickListener.OnItemClickListener{
 
 
 
-    private OnFragmentInteractionListener mListener;
-
+    private ItemListListener mListener;
     private List<Item> mItemList;
-    private RecyclerView mReccyleView;
+    private RecyclerView mRecycleView;
     private ItemAdapter mAdapter;
 
 
@@ -60,7 +63,7 @@ public class ItemListFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (ItemListListener)activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -71,13 +74,15 @@ public class ItemListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_item_list, container, false);
-        mReccyleView = (RecyclerView)rootView.findViewById(R.id.recycle_view);
+        mRecycleView = (RecyclerView)rootView.findViewById(R.id.recycle_view);
 
         mAdapter = new ItemAdapter(mItemList, getActivity());
-        mReccyleView.setAdapter(mAdapter);
+        mRecycleView.setAdapter(mAdapter);
 
-        mReccyleView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mReccyleView.setItemAnimator(new DefaultItemAnimator());
+        mRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecycleView.setItemAnimator(new DefaultItemAnimator());
+
+        mRecycleView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
 
 
 
@@ -104,6 +109,21 @@ public class ItemListFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onItemClick(View childView, int position) {
+        int item_id = mItemList.get(position).getId();
+        int itinerary_id = mListener.getItinerary().getId();
+
+        Intent i = new Intent(getActivity(), ItemDetailActivity.class);
+        i.putExtra(ItemDetailActivity.ITINERARY_ID_EXTRA, itinerary_id);
+        i.putExtra(ItemDetailActivity.ITEM_ID_EXTRA, item_id);
+        startActivity(i);
+    }
+
+    @Override
+    public void onItemLongPress(View childView, int position) {
+
+    }
 
 
     /**
@@ -116,9 +136,10 @@ public class ItemListFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface ItemListListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+        public void refresh_list(ItemListFragment fragment);
+        public Itinerary getItinerary();
     }
 
 }

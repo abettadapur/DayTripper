@@ -31,6 +31,8 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+
         /**Create a new itinerary list fragment and add it to the activity **/
         itineraryListFragment = ItineraryListFragment.newInstance();
         if(savedInstanceState==null)

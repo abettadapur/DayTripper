@@ -67,6 +67,10 @@
             android:name=".activities.EditItineraryActivity"
             android:label="@string/title_activity_edit_itinerary" >
         </activity>
+        <activity
+            android:name=".activities.ItemDetailActivity"
+            android:label="@string/title_activity_item_detail" >
+        </activity>
     </application>
 
 </manifest>
