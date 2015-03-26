@@ -29,12 +29,15 @@
         android:layout_height="match_parent"
         card_view:cardCornerRadius="1dp"
         card_view:cardElevation="3dp"
+
         card_view:cardUseCompatPadding="true"
         >
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

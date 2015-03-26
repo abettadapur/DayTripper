@@ -1,9 +1,5 @@
 package edu.gatech.daytripper.activities;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -19,19 +15,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
 
 import edu.gatech.daytripper.R;
 import edu.gatech.daytripper.model.Item;
-import edu.gatech.daytripper.net.ImageLoader;
 import edu.gatech.daytripper.net.RestClient;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -66,7 +53,7 @@ public class ItemDetailActivity extends ActionBarActivity implements OnMapReadyC
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        overridePendingTransition(R.anim.slide_in, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
         mRestClient = new RestClient();
         mRestClient.getItemService().getItem(getIntent().getIntExtra(ITINERARY_ID_EXTRA, 1), getIntent().getIntExtra(ITEM_ID_EXTRA, 1), Session.getActiveSession().getAccessToken(), new Callback<Item>() {

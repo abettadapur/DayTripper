@@ -1,5 +1,6 @@
 package edu.gatech.daytripper.activities;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.location.Address;
 import android.location.Geocoder;
@@ -14,7 +15,6 @@ import com.facebook.Session;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -25,7 +25,6 @@ import java.util.List;
 
 import edu.gatech.daytripper.R;
 import edu.gatech.daytripper.fragments.ItemListFragment;
-import edu.gatech.daytripper.fragments.ItineraryListFragment;
 import edu.gatech.daytripper.model.Item;
 import edu.gatech.daytripper.model.Itinerary;
 import edu.gatech.daytripper.net.RestClient;
@@ -50,7 +49,8 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        overridePendingTransition(R.anim.slide_in, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
         itemListFragment = ItemListFragment.newInstance();
         if(savedInstanceState==null)
         {
@@ -108,7 +108,6 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
         {
             case android.R.id.home:
                 finish();
-                overridePendingTransition(R.anim.slide_out, R.anim.slide_in);
                 return true;
             case R.id.action_settings:
                 return true;
@@ -150,6 +149,7 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
 
     @Override
     public void onClick(View v) {
-
+        Intent i = new Intent(this, EditItineraryActivity.class);
+        startActivity(i);
     }
 }
