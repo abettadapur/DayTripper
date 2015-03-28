@@ -403,7 +403,7 @@ class SqlLiteManager(object):
     def yelp_entry_from_cursor(self, cursor, row):
         if row:
             location = self.get_yelp_location(row[0])
-            entry = YelpEntry(row[0], row[4], row[1], row[2], row[3], row[5], row[6], location)
+            entry = YelpEntry(row[0], row[4], row[1], row[2], row[3], row[5], row[6], location, row[7])
             return entry
         return None
 

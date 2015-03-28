@@ -20,20 +20,15 @@ CONSUMER_SECRET = config.CONSUMER_SECRET
 TOKEN = config.TOKEN
 TOKEN_SECRET = config.TOKEN_SECRET
 
-def append_price(businesses):
 
-    for business in businesses:
-        print business
-        url = business['url']
-        print url
-        html = urllib2.urlopen(url).read()
-        soup = BeautifulSoup(html)
-        price_str = soup.find("span", {"class":"price-range"}).contents[0]
-        business['price'] = len(price_str)
-
-    return businesses
-
-
+def append_price(business_api_entry):
+    print business_api_entry
+    url = business_api_entry['url']
+    print url
+    html = urllib2.urlopen(url).read()
+    soup = BeautifulSoup(html)
+    price_str = soup.find("span", {"class":"price-range"}).contents[0]
+    business_api_entry['price'] = len(price_str)
 
 
 def request(host, path, url_params=None):
@@ -80,13 +75,13 @@ def search(term, location, category_filters, **kwargs):
     url_params.update(kwargs)
 
     businesses = request(API_HOST, SEARCH_PATH, url_params=url_params)
-    #return append_price(businesses['businesses'])
     return businesses["businesses"]
 
 def business(yelp_id):
     api_entry = request(API_HOST, BUSINESS_PATH+yelp_id)
+    append_price(api_entry)
     location = YelpLocation(api_entry['id'], api_entry['location']['address'][0], api_entry['location']['city'], api_entry['location']['postal_code'], api_entry['location']['state_code'], api_entry['location']['coordinate']['latitude'], api_entry['location']['coordinate']['longitude'])
-    entry = YelpEntry(api_entry['id'], api_entry['name'], api_entry['phone'], api_entry['image_url'], api_entry['url'], api_entry['rating'], api_entry['review_count'], location)
+    entry = YelpEntry(api_entry['id'], api_entry['name'], api_entry['phone'], api_entry['image_url'], api_entry['url'], api_entry['rating'], api_entry['review_count'], location, api_entry['price'])
     return entry
 
 
