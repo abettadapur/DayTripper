@@ -11,12 +11,20 @@ api = Api(app)
 
 api.add_resource(restapi.Test, '/test')
 api.add_resource(restapi.Test2, '/test/<string:parameter>')
+
 api.add_resource(restapi.AuthResource, '/auth/verify')
+
 api.add_resource(restapi.CreateItineraryResource, '/itinerary/create')
 api.add_resource(restapi.ItineraryResource, '/itinerary/<int:id>')
 api.add_resource(restapi.ListItineraryResource, '/itinerary/list')
+
+api.add_resource(restapi.CreateRatingResource, '/itinerary/<int:itinerary_id>/rating/create')
+api.add_resource(restapi.RatingResource, '/itinerary/<int:itinerary_id>/rating/<int:id>')
+api.add_resource(restapi.ListRatingResource, '/itinerary/<int:itinerary_id>/rating/list')
+
 api.add_resource(restapi.ItemResource, '/itinerary/<int:itinerary_id>/item/<int:id>')
 api.add_resource(restapi.CreateItemResource, '/itinerary/<int:itinerary_id>/item/create')
+
 api.add_resource(restapi.ListCategoryResource, '/category/list')
 api.add_resource(restapi.QueryCategoryResource, '/category/<string:category_str>/query')
 

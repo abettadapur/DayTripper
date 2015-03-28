@@ -6,6 +6,7 @@ import model
 import datetime
 import dateutil.parser
 from model.itinerary import Itinerary
+from model.itinerary_rating import ItineraryRating
 from model.item import Item
 from model.user import User
 from maps import maps
@@ -416,6 +417,75 @@ class CreateItemResource(Resource):
         )
         item_id = db.sqlite.insert_item(item, itinerary)
         return db.sqlite.get_item(item_id).as_dict(), 201
+
+
+class CreateRatingResource(Resource):
+
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('token', type=str, required=True, location='args', help='No token to verify')
+        self.reqparse.add_argument('rating', type=int, required=True, location='json', help='No rating given')
+        super(CreateRatingResource, self).__init__()
+
+    def post(self, itinerary_id):
+        args = self.reqparse.parse_args()
+
+        user_id = get_uid_or_abort_on_bad_token(args['token'])
+        rating_id = db.sqlite.insert_itinerary_rating(itinerary_id, user_id, args['rating'])
+        return db.sqlite.get_itinerary_rating(rating_id).as_dict(), 201
+
+
+class RatingResource(Resource):
+
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('token', type=str, required=True, location='args', help='No token to verify')
+
+        self.put_reqparse = self.reqparse.copy()
+        self.put_reqparse.add_argument('rating', type=int, required=True, location='json', help='No rating given')
+
+        super(RatingResource, self).__init__()
+
+    def get(self, itinerary_id, id):
+        print "HELLO"
+        args = self.reqparse.parse_args()
+
+        user_id = get_uid_or_abort_on_bad_token(args['token'])
+        rating = db.sqlite.get_itinerary_rating(id)
+
+        if rating.itinerary_id != itinerary_id:
+            abort(400, message="rating's itinerary id does not match expected itinerary_id")
+
+        return rating.as_dict()
+
+    def put(self, itinerary_id, id):
+        args = self.put_reqparse.parse_args()
+
+        user_id = get_uid_or_abort_on_bad_token(args['token'])
+        updated_rating = ItineraryRating(
+            id=id,
+            itinerary_id=itinerary_id,
+            user_id=user_id,
+            rating=args['rating']
+        )
+        db.sqlite.update_itinerary_rating(updated_rating)
+        return db.sqlite.get_itinerary_rating(id).as_dict()
+
+
+class ListRatingResource(Resource):
+
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('token', type=str, required=True, location='args', help='No token to verify')
+        super(ListRatingResource, self).__init__()
+
+    def get(self, itinerary_id):
+        args = self.reqparse.parse_args()
+
+        get_uid_or_abort_on_bad_token(args['token'])
+        ratings = db.sqlite.get_itinerary_rating_list(itinerary_id)
+        ratings_dict = [r.as_dict() for r in ratings]
+        return ratings_dict
 
 
 class ListCategoryResource(Resource):

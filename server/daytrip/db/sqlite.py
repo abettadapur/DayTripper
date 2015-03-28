@@ -457,13 +457,48 @@ class SqlLiteManager(object):
         return None
 
     # ITINERARY RATING OPERATIONS
-
-    # used for both CREATE and UPDATE
-    def update_itinerary_rating(self, itinerary_id, user_id, rating):
+    #def update_item(self, item, itinerary_id):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                'INSERT OR REPLACE INTO {rating_table}'
+                'UPDATE {table} SET {name}=?, {itinerary_id}=?, {yelp_id}=?, {category}=?, {start_time}=?, {end_time}=?'
+                ' WHERE {id}=?'
+                .format(
+                    table=item_schema.ITEM_TABLE,
+                    name=item_schema.NAME,
+                    itinerary_id=item_schema.ITINERARY_ID,
+                    yelp_id=item_schema.YELP_ID,
+                    category=item_schema.CATEGORY,
+                    start_time=item_schema.START_TIME,
+                    end_time=item_schema.END_TIME,
+                    id=item_schema.ID
+                ),
+                (item.name, itinerary_id, item.yelp_id, item.category, item.start_time, item.end_time, item.id)
+            )
+            cursor.close()
+
+    def update_itinerary_rating(self, itinerary_rating):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'UPDATE {rating_table}'
+                ' SET {rating}=?'
+                ' WHERE {id}=?'
+                .format(
+                    rating_table=itinerary_rating_schema.ITINERARY_RATING_TABLE,
+                    id=itinerary_rating_schema.ID,
+                    rating=itinerary_rating_schema.RATING
+                ),
+                (itinerary_rating.rating, itinerary_rating.id)
+            )
+
+            cursor.close()
+
+    def insert_itinerary_rating(self, itinerary_id, user_id, rating):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'INSERT INTO {rating_table}'
                 ' ({itinerary_id}, {user_id}, {rating})'
                 ' VALUES (?,?,?)'
                 .format(
@@ -474,28 +509,44 @@ class SqlLiteManager(object):
                 ),
                 (itinerary_id, user_id, rating)
             )
+            rating_id = cursor.lastrowid
             cursor.close()
+            return rating_id
 
-    def get_itinerary_rating(self, itinerary_id):
+    def get_itinerary_rating_list(self, itinerary_id):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.row_factory = self.itinerary_rating_from_cursor
             cursor.execute(
-                'SELECT COUNT(*), AVG({rating}) FROM {rating_table} WHERE {itinerary_id} = ?'
+                'SELECT * FROM {rating_table} WHERE {itinerary_id} = ?'
                 .format(
-                    rating=itinerary_rating_schema.RATING,
                     rating_table=itinerary_rating_schema.ITINERARY_RATING_TABLE,
                     itinerary_id=itinerary_rating_schema.ITINERARY_ID
                 ),
                 (itinerary_id,)
             )
-            itinerary_rating = cursor.fetchone()
+            itinerary_ratings = cursor.fetchall()
             cursor.close()
-            return itinerary_rating
+            return itinerary_ratings
+
+    def get_itinerary_rating(self, id):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.row_factory = self.itinerary_rating_from_cursor
+            cursor.execute(
+                'SELECT * FROM {rating_table} WHERE {id}=?'
+                .format(
+                    rating_table=itinerary_rating_schema.ITINERARY_RATING_TABLE,
+                    id=itinerary_rating_schema.ID
+                ),
+                (id,)
+            )
+            rating = cursor.fetchone()
+            cursor.close()
+            return rating
+
 
     def itinerary_rating_from_cursor(self, cursor, row):
         if row:
-            count = row[0]
-            average = row[1] if count > 0 else 0
-            return ItineraryRating(average, count)
-        return ItineraryRating(overall_rating=0, ratings_count=0)
+            return ItineraryRating(row[0], row[1], row[2], row[3])
+        return None
