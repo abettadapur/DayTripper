@@ -457,25 +457,6 @@ class SqlLiteManager(object):
         return None
 
     # ITINERARY RATING OPERATIONS
-    #def update_item(self, item, itinerary_id):
-        with sqlite3.connect(self.db_name) as conn:
-            cursor = conn.cursor()
-            cursor.execute(
-                'UPDATE {table} SET {name}=?, {itinerary_id}=?, {yelp_id}=?, {category}=?, {start_time}=?, {end_time}=?'
-                ' WHERE {id}=?'
-                .format(
-                    table=item_schema.ITEM_TABLE,
-                    name=item_schema.NAME,
-                    itinerary_id=item_schema.ITINERARY_ID,
-                    yelp_id=item_schema.YELP_ID,
-                    category=item_schema.CATEGORY,
-                    start_time=item_schema.START_TIME,
-                    end_time=item_schema.END_TIME,
-                    id=item_schema.ID
-                ),
-                (item.name, itinerary_id, item.yelp_id, item.category, item.start_time, item.end_time, item.id)
-            )
-            cursor.close()
 
     def update_itinerary_rating(self, itinerary_rating):
         with sqlite3.connect(self.db_name) as conn:
