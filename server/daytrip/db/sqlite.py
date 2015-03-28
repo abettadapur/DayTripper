@@ -1,12 +1,13 @@
 import json
 from sqlite3 import dbapi2 as sqlite3
-from schema import users as user_schema, auth as auth_schema, itinerary as itinerary_schema, item as item_schema, yelp_entry, yelp_location
+from schema import users as user_schema, auth as auth_schema, itinerary as itinerary_schema, item as item_schema, yelp_entry, yelp_location, itinerary_rating as itinerary_rating_schema
 import datetime
 from model.user import User
 from model.itinerary import Itinerary
 from model.item import Item
 from model.yelp_entry import YelpEntry
 from model.yelp_location import YelpLocation
+from model.itinerary_rating import ItineraryRating
 from yelp import yelpapi
 
 #CREATE_DATABASE = users.CREATE_USERS_TABLE + auth.CREATE_AUTH_TABLE #+ othertable.CREATEOTHERTABLE
@@ -28,6 +29,7 @@ class SqlLiteManager(object):
             cursor.execute(item_schema.CREATE_ITEM_TABLE)
             cursor.execute(yelp_entry.CREATE_YELP_ENTRY_TABLE)
             cursor.execute(yelp_location.CREATE_YELP_LOCATION_TABLE)
+            cursor.execute(itinerary_rating_schema.CREATE_ITINERARY_RATING_TABLE)
             cursor.close()
 
     #USERS OPERATIONS
@@ -453,3 +455,47 @@ class SqlLiteManager(object):
             location = YelpLocation(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
             return location
         return None
+
+    # ITINERARY RATING OPERATIONS
+
+    # used for both CREATE and UPDATE
+    def update_itinerary_rating(self, itinerary_id, user_id, rating):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'INSERT OR REPLACE INTO {rating_table}'
+                ' ({itinerary_id}, {user_id}, {rating})'
+                ' VALUES (?,?,?)'
+                .format(
+                    rating_table=itinerary_rating_schema.ITINERARY_RATING_TABLE,
+                    itinerary_id=itinerary_rating_schema.ITINERARY_ID,
+                    user_id=itinerary_rating_schema.USER_ID,
+                    rating=itinerary_rating_schema.RATING
+                ),
+                (itinerary_id, user_id, rating)
+            )
+            cursor.close()
+
+    def get_itinerary_rating(self, itinerary_id):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.row_factory = self.itinerary_rating_from_cursor
+            cursor.execute(
+                'SELECT COUNT(*), AVG({rating}) FROM {rating_table} WHERE {itinerary_id} = ?'
+                .format(
+                    rating=itinerary_rating_schema.RATING,
+                    rating_table=itinerary_rating_schema.ITINERARY_RATING_TABLE,
+                    itinerary_id=itinerary_rating_schema.ITINERARY_ID
+                ),
+                (itinerary_id,)
+            )
+            itinerary_rating = cursor.fetchone()
+            cursor.close()
+            return itinerary_rating
+
+    def itinerary_rating_from_cursor(self, cursor, row):
+        if row:
+            count = row[0]
+            average = row[1] if count > 0 else 0
+            return ItineraryRating(average, count)
+        return ItineraryRating(overall_rating=0, ratings_count=0)
