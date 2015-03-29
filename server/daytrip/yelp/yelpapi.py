@@ -22,13 +22,15 @@ TOKEN_SECRET = config.TOKEN_SECRET
 
 
 def append_price(business_api_entry):
-    print business_api_entry
+    """Appends price of 0 if page has no price-range"""
     url = business_api_entry['url']
-    print url
     html = urllib2.urlopen(url).read()
     soup = BeautifulSoup(html)
-    price_str = soup.find("span", {"class":"price-range"}).contents[0]
-    business_api_entry['price'] = len(price_str)
+    price_element = soup.find("span", {"class":"price-range"})
+    if price_element is None:
+        business_api_entry['price'] = 0
+    else:
+        business_api_entry['price'] = len(price_element.contents[0])
 
 
 def request(host, path, url_params=None):
@@ -81,7 +83,7 @@ def business(yelp_id):
     api_entry = request(API_HOST, BUSINESS_PATH+yelp_id)
     append_price(api_entry)
     location = YelpLocation(api_entry['id'], api_entry['location']['address'][0], api_entry['location']['city'], api_entry['location']['postal_code'], api_entry['location']['state_code'], api_entry['location']['coordinate']['latitude'], api_entry['location']['coordinate']['longitude'])
-    entry = YelpEntry(api_entry['id'], api_entry['name'], api_entry['phone'], api_entry['image_url'], api_entry['url'], api_entry['rating'], api_entry['review_count'], location, api_entry['price'])
+    entry = YelpEntry(api_entry['id'], api_entry['name'], api_entry.get('phone', ''), api_entry['image_url'], api_entry['url'], api_entry['rating'], api_entry['review_count'], location, api_entry.get('price', 0))
     return entry
 
 
