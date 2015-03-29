@@ -77,7 +77,7 @@ def search(term, location, category_filters, **kwargs):
 
     url_params['category_filter'] = filter_str
     url_params.update(kwargs)
-    url_params['radius_filter'] = 150000
+    url_params['radius_filters'] = 150000
     businesses = request(API_HOST, SEARCH_PATH, url_params=url_params)
     return businesses["businesses"]
 

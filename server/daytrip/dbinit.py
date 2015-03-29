@@ -1,6 +1,7 @@
 from yelp import yelpapi
 import model
 import db
+import codecs
 
 
 DEFAULT_CITIES = ['Atlanta', 'Seattle', 'Austin', 'Philadelphia', 'Portland', 'Miami']
@@ -29,18 +30,24 @@ def cache_yelp_entries(city, category_name):
     log('\tYelpAPI: Making Business calls (and scraping for prices) and caching entries...')
     count = 0
     for api_result in yelp_api_results:
-        if not db.sqlite.has_yelp_entry(api_result['id'])\
-                and len(api_result['location']['address']) > 0:
-            log('\t\tcaching <' + api_result['url'] + '>')
-            count += 1
-            entry = yelpapi.business(api_result['id'])
-            db.sqlite.insert_yelp_entry(entry)
+        if not db.sqlite.has_yelp_entry(api_result['id']):
+            if len(api_result['location']['address']) > 0:
+                log('\t\tcaching <' + api_result['url'] + '>')
+                count += 1
+                entry = yelpapi.business(api_result['id'])
+                db.sqlite.insert_yelp_entry(entry)
+            else:
+                log('Could not cache: '+str(api_result))
+        else:
+            log('Already added: '+ api_result['id'])
 
     log("\t" + str(count) + " new yelp_entries for category '" + category_name + "'")
 
 
 def log(message):
     if LOGGING_ENABLED:
+        with codecs.open('log.txt', 'a', 'utf-8') as file:
+            file.write(message + '\n')
         print message
 
 
