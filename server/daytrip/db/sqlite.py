@@ -381,8 +381,8 @@ class SqlLiteManager(object):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                'INSERT INTO {table} ({id}, {phone}, {image_url}, {url}, {name}, {rating}, {review_count})'
-                'VALUES (?, ?, ?, ?, ? ,?, ?)'
+                'INSERT INTO {table} ({id}, {phone}, {image_url}, {url}, {name}, {rating}, {review_count}, {price})'
+                'VALUES (?, ?, ?, ?, ? ,?, ?, ?)'
                 .format(
                     table=yelp_entry.YELP_ENTRY_TABLE,
                     id=yelp_entry.ID,
@@ -391,9 +391,10 @@ class SqlLiteManager(object):
                     url=yelp_entry.URL,
                     name=yelp_entry.NAME,
                     rating=yelp_entry.RATING,
-                    review_count = yelp_entry.REVIEW_COUNT
+                    review_count = yelp_entry.REVIEW_COUNT,
+                    price = yelp_entry.PRICE
                 ),
-                (entry.id, entry.phone, entry.image_url, entry.url, entry.name, entry.rating, entry.review_count)
+                (entry.id, entry.phone, entry.image_url, entry.url, entry.name, entry.rating, entry.review_count, entry.price)
             )
 
             cursor.close()

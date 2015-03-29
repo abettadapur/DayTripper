@@ -26,10 +26,12 @@ def append_price(business_api_entry):
     url = business_api_entry['url']
     html = urllib2.urlopen(url).read()
     soup = BeautifulSoup(html)
-    price_element = soup.find("span", {"class":"price-range"})
+    price_element = soup.find("span", {"class":"business-attribute price-range"})
     if price_element is None:
+        print("Price not found")
         business_api_entry['price'] = 0
     else:
+        print("Price found: {0}".format(price_element.contents[0]))
         business_api_entry['price'] = len(price_element.contents[0])
 
 
