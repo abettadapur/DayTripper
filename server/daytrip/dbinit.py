@@ -20,8 +20,6 @@ def run(cities=DEFAULT_CITIES, category_names=DEFAULT_CATEGORY_NAMES):
             log('')
 
 
-# returns dict:  string => list[yelp_entry]
-# uses a dict so we can associate yelp entries with categories later on
 def cache_yelp_entries(city, category_name):
     category = model.match_category(category_name)
 
