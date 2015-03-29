@@ -3,7 +3,7 @@ import model
 import db
 
 
-DEFAULT_CITIES = ['Atlanta', 'Seattle', 'Austin']
+DEFAULT_CITIES = ['Atlanta', 'Seattle', 'Austin', 'Philadelphia', 'Portland', 'Miami']
 DEFAULT_CATEGORY_NAMES = ['breakfast', 'lunch', 'dinner', 'attraction', 'nightlife']
 
 LOGGING_ENABLED = True
