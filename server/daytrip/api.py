@@ -526,8 +526,8 @@ class QueryCategoryResource(Resource):
             term = args['term']
 
         results = yelpapi.search(term, args['location'], category.filters)
-        return results, 200
-        #return [db.sqite.get_yelp_entry(r['id']).asDict() for r in results if len(args['location']['address']) > 0], 200
+        return [db.sqlite.get_yelp_entry(r['id']).asDict() for r in results if len(r['location']['address']) > 0], 200
+        
 
 
 def get_uid_or_abort_on_bad_token(token):
