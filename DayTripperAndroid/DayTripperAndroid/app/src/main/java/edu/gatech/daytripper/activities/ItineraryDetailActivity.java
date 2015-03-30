@@ -17,13 +17,17 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.gatech.daytripper.R;
+import edu.gatech.daytripper.fragments.ItemDetailFragment;
 import edu.gatech.daytripper.fragments.ItemListFragment;
 import edu.gatech.daytripper.model.Item;
 import edu.gatech.daytripper.model.Itinerary;
@@ -32,17 +36,21 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ItineraryDetailActivity extends ActionBarActivity implements ItemListFragment.ItemListListener, OnMapReadyCallback, View.OnClickListener {
+public class ItineraryDetailActivity extends ActionBarActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnMarkerClickListener {
 
     private Itinerary currentItinerary;
     private RestClient mRestClient;
     private ItemListFragment itemListFragment;
     private FloatingActionButton mFab;
+    private ItemDetailFragment itemDetailFragment;
+    private Map<Marker, Item> marker_to_item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_itinerary_detail);
+
+        marker_to_item = new HashMap<>();
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -51,19 +59,20 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
-        itemListFragment = ItemListFragment.newInstance();
+        itemDetailFragment = ItemDetailFragment.newInstance();
+
         if(savedInstanceState==null)
         {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, itemListFragment)
+                    .add(R.id.container, itemDetailFragment)
                     .commit();
-
         }
 
         int id = getIntent().getIntExtra("itinerary_id", 0);
 
-        mFab = (FloatingActionButton)findViewById(R.id.edit_fab);
-        mFab.setOnClickListener(this);
+//        mFab = (FloatingActionButton)findViewById(R.id.edit_fab);
+//        mFab.setOnClickListener(this);
+
         mRestClient = new RestClient();
 
         mRestClient.getItineraryService().getItinerary(id, Session.getActiveSession().getAccessToken(), new Callback<Itinerary>() {
@@ -72,7 +81,8 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
                 currentItinerary = itinerary;
 
                 //notify fragments
-                itemListFragment.updateItems(itinerary.getItems());
+                //itemListFragment.updateItems(itinerary.getItems());
+
                 getSupportActionBar().setTitle(itinerary.getName());
 
                 MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
@@ -115,15 +125,6 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
         return super.onOptionsItemSelected(item);
     }
 
-    public void refresh_list(final ItemListFragment fragment)
-    {
-
-    }
-
-    @Override
-    public Itinerary getItinerary() {
-        return currentItinerary;
-    }
 
     @Override
     public void onMapReady(GoogleMap googleMap)
@@ -139,11 +140,17 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
 
         for(Item i: currentItinerary.getItems())
         {
-            googleMap.addMarker(new MarkerOptions()
+            Marker marker = googleMap.addMarker(new MarkerOptions()
                     .title(i.getName())
+
                     .snippet(i.getYelp_entry().getLocation().getAddress())
                     .position(i.getYelp_entry().getLocation().getCoordinate()));
+
+            marker_to_item.put(marker, i);
         }
+        updateSlidingView(currentItinerary.getItems().get(0));
+
+        googleMap.setOnMarkerClickListener(this);
 
     }
 
@@ -151,5 +158,20 @@ public class ItineraryDetailActivity extends ActionBarActivity implements ItemLi
     public void onClick(View v) {
         Intent i = new Intent(this, EditItineraryActivity.class);
         startActivity(i);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker)
+    {
+        marker.showInfoWindow();
+        Item i = marker_to_item.get(marker);
+        updateSlidingView(i);
+        itemDetailFragment.updateItem(i);
+        return true;
+    }
+
+    private void updateSlidingView(Item i)
+    {
+
     }
 }
