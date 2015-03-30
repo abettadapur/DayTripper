@@ -198,6 +198,26 @@ class SqlLiteManager(object):
             cursor.close()
             return itineraries
 
+    def search_itineraries(self, query, city):
+        with sqlite3.connect(self.db_name) as conn:
+            if not city:
+                city = ''
+            cursor = conn.cursor()
+            cursor.row_factory = self.itinerary_from_cursor
+            cursor.execute(
+                'SELECT * FROM {table} WHERE {name} LIKE ? AND {city} LIKE ?'
+                .format(
+                    table = itinerary_schema.ITINERARY_TABLE,
+                    name = itinerary_schema.NAME,
+                    city = itinerary_schema.CITY
+                ),
+                ('%'+query+'%', '%'+city+'%')
+            )
+
+            itineraries = cursor.fetchall()
+            cursor.close()
+            return itineraries
+
     def update_itinerary(self, itinerary):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()

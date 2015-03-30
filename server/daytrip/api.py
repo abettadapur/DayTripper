@@ -330,6 +330,22 @@ class ListItineraryResource(Resource):
         itineraries_dict = [i.as_dict() for i in itineraries]
         return itineraries_dict
 
+class SearchItineraryResource(Resource):
+
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument("token", type=str, required=True, location='args', help='Missing auth token')
+        self.reqparse.add_argument("query", type=str, required=True, location='args', help='Need a search term')
+        self.reqparse.add_argument("city", type=str, required=False, location='args')
+
+    def get(self):
+        args = self.reqparse.parse_args()
+
+        user_id = get_uid_or_abort_on_bad_token(args['token'])
+        itineraries = db.sqlite.search_itineraries(args['query'], args['city'])
+
+        return [i.as_dict() for i in itineraries], 200
+
 
 class ItemResource(Resource):
     def __init__(self):
@@ -529,7 +545,7 @@ class QueryCategoryResource(Resource):
         return_results = []
         for r in results:
             if db.sqlite.has_yelp_entry(r['id']):
-                return_results.append(db.sqlite.get_yelp_entry(r['id']).asDict())
+                return_results.append(db.sqlite.get_yelp_entry(r['id']).as_dict())
         return return_results, 200
 
 

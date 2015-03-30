@@ -11,5 +11,5 @@ class Item(object):
     def as_dict(self):
         idict = self.__dict__
         if self.yelp_entry:
-            idict['yelp_entry'] = self.yelp_entry.asDict()
+            idict['yelp_entry'] = self.yelp_entry.as_dict()
         return idict

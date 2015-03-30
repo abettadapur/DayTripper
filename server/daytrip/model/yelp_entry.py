@@ -13,7 +13,7 @@ class YelpEntry(object):
         self.price = price
 
 
-    def asDict(self):
+    def as_dict(self):
         edict = self.__dict__
-        edict['location'] = self.location.asDict()
+        edict['location'] = self.location.as_dict()
         return edict

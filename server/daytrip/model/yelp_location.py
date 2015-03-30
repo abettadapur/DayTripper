@@ -10,7 +10,7 @@ class YelpLocation(object):
         self.longitude = longitude
 
 
-    def asDict(self):
+    def as_dict(self):
         loc_dict = self.__dict__
         loc_dict['coordinate'] = {'latitude': self.latitude, 'longitude': self.longitude}
         del loc_dict['latitude']
