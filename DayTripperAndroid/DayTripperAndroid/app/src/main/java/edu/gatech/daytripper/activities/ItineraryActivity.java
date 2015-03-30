@@ -1,6 +1,7 @@
 package edu.gatech.daytripper.activities;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -100,14 +101,21 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
                             case "My Itineraries":
                                 getFragmentManager().beginTransaction().remove(currentFragment).add(R.id.container, itineraryListFragment).commit();
                                 currentFragment = itineraryListFragment;
+                                getSupportActionBar().setTitle("Your Itineraries");
                                 break;
                             case "Search Itineraries":
                                 getFragmentManager().beginTransaction().remove(currentFragment).add(R.id.container, searchItineraryFragment).commit();
                                 currentFragment = searchItineraryFragment;
+                                getSupportActionBar().setTitle("Search Results");
                                 break;
                             case "Settings":
                                 break;
                             case "Logout":
+                                Session.getActiveSession().closeAndClearTokenInformation();
+                                Intent intent = new Intent(ItineraryActivity.this, SplashActivity.class);
+                                intent.putExtra("delay", false);
+                                startActivity(intent);
+                                finish();
                                 break;
                         }
 
