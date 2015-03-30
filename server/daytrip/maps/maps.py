@@ -6,25 +6,26 @@ maps = googlemaps.Client(key=config.MAPS_KEY)
 
 
 def travel_time_matrix(origin, destinations):
-	distance_data = maps.distance_matrix(origin, destinations)
-	return distance_data
+    distance_data = maps.distance_matrix(origin, destinations)
+    return distance_data
+
 
 def closest_item(origin, destinations):
-	print origin
-	print destinations
-	distance_data = travel_time_matrix(origin, destinations)
-	elements = distance_data['rows'][0]['elements']
-	min_time = elements[0]['duration']['value']
-	min_index = 0
-	for i in range(0, len(elements)):
+    distance_data = travel_time_matrix(origin, destinations)
+    elements = distance_data['rows'][0]['elements']
+    min_time = elements[0]['duration']['value']
+    min_index = 0
+    for i in range(0, len(elements)):
+        try:
+            if elements[i]['duration']['value'] < min_time:
+                print elements[i]
+                min_index = i
+        except KeyError as kex:
+            pass
 
-		if elements[i]['duration']['value'] < min_time:
-			print elements[i]
-			min_index = i
-
-	return min_index
+    return min_index
 
 
 def directions(origin, destination):
-	directions = maps.directions(origin, destination)
-	return directions
+    directions = maps.directions(origin, destination)
+    return directions
