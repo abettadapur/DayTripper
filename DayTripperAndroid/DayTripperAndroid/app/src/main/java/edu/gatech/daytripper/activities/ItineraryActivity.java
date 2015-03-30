@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -36,10 +37,10 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class ItineraryActivity extends ActionBarActivity implements ItineraryListFragment.ItineraryListListener {
+public class ItineraryActivity extends ActionBarActivity implements ItineraryListFragment.ItineraryListListener, SearchView.OnQueryTextListener {
 
     private ItineraryListFragment itineraryListFragment;
-    private SearchItineraryFragment searchItineraryFragment;
+    private ItineraryListFragment searchItineraryFragment;
     private Fragment currentFragment;
     private RestClient mRestClient;
     private List<Itinerary> itineraries;
@@ -50,8 +51,8 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intinerary);
 
-        itineraryListFragment = ItineraryListFragment.newInstance();
-        searchItineraryFragment = SearchItineraryFragment.newInstance();
+        itineraryListFragment = ItineraryListFragment.newInstance(R.layout.fragment_itinerary_list, R.layout.itinerary_list_item);
+        searchItineraryFragment = ItineraryListFragment.newInstance(R.layout.fragment_search_itinerary, R.layout.itinerary_list_item);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -138,7 +139,14 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_intinerary, menu);
-        return true;
+
+        SearchView view = (SearchView)menu.findItem(R.id.search).getActionView();
+        if(view!=null)
+        {
+            view.setOnQueryTextListener(this);
+        }
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -160,18 +168,48 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
     public void refresh_list(final ItineraryListFragment fragment)
     {
         /** Get a listing of the itineraries for the current user and update the fragment with the items **/
-        mRestClient.getItineraryService().listItineraries(Session.getActiveSession().getAccessToken(), new Callback<List<Itinerary>>() {
-            @Override
-            public void success(List<Itinerary> itineraries, Response response) {
-                ItineraryActivity.this.itineraries = itineraries;
-                fragment.updateItems(itineraries);
-            }
+        if(fragment==itineraryListFragment) {
+            mRestClient.getItineraryService().listItineraries(Session.getActiveSession().getAccessToken(), new Callback<List<Itinerary>>() {
+                @Override
+                public void success(List<Itinerary> itineraries, Response response) {
+                    ItineraryActivity.this.itineraries = itineraries;
+                    fragment.updateItems(itineraries);
+                }
 
-            @Override
-            public void failure(RetrofitError error) {
-                Log.e("GET ITINERARIES", error.getMessage());
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.e("GET ITINERARIES", error.getMessage());
+                }
+            });
+        }
 
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        if(!s.equals("")) {
+            if (currentFragment == itineraryListFragment) {
+                mDrawer.setSelection(1);
+            }
+            mRestClient.getItineraryService().searchItinerary(s, Session.getActiveSession().getAccessToken(), new Callback<List<Itinerary>>() {
+                @Override
+                public void success(List<Itinerary> itineraries, Response response) {
+                    searchItineraryFragment.updateItems(itineraries);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                }
+            });
+        }
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        return false;
     }
 }

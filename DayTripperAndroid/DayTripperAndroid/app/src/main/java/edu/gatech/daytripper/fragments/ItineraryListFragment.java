@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.style.BulletSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,10 +44,17 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
     private RecyclerView mRecycleView;
     private ItineraryAdapter mAdapter;
 
+    private int layout, list_item;
+
     private final int ITINERARY_CREATE_CODE = 86;
 
-    public static ItineraryListFragment newInstance() {
+
+    public static ItineraryListFragment newInstance(int layout, int list_item) {
         ItineraryListFragment fragment = new ItineraryListFragment();
+        Bundle args = new Bundle();
+        args.putInt("layout", layout);
+        args.putInt("list_item", list_item);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -66,7 +74,11 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View rootView = inflater.inflate(R.layout.fragment_itinerary_list, container, false);
+        Bundle args = getArguments();
+        layout = args.getInt("layout");
+        list_item = args.getInt("list_item");
+
+        View rootView = inflater.inflate(layout, container, false);
 
         mSwipeRefresh = (SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(this);
@@ -82,9 +94,10 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
 
         mRecycleView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
 
-        mAddButton = (FloatingActionButton)rootView.findViewById(R.id.add_fab);
+        mAddButton = (FloatingActionButton) rootView.findViewById(R.id.add_fab);
         mAddButton.attachToRecyclerView(mRecycleView);
         mAddButton.setOnClickListener(this);
+
 
         return rootView;
     }

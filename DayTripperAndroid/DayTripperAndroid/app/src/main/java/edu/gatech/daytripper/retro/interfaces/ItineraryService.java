@@ -31,4 +31,7 @@ public interface ItineraryService
 
     @DELETE("/itinerary/{id}")
     public void deleteItinerary(@Path("id") int id, @Query("token") String token, Callback<Boolean> callback);
+
+    @GET("/itinerary/search")
+    public void searchItinerary(@Query("query") String query, @Query("token") String token, Callback<List<Itinerary>> callback);
 }
