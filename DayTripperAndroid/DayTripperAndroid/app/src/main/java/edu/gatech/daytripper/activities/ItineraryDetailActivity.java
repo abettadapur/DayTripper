@@ -7,6 +7,7 @@ import android.location.Geocoder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,9 +20,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +35,7 @@ import java.util.Map;
 import edu.gatech.daytripper.R;
 import edu.gatech.daytripper.fragments.ItemDetailFragment;
 import edu.gatech.daytripper.fragments.ItemListFragment;
+import edu.gatech.daytripper.model.Directions;
 import edu.gatech.daytripper.model.Item;
 import edu.gatech.daytripper.model.Itinerary;
 import edu.gatech.daytripper.net.RestClient;
@@ -127,7 +134,7 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
 
 
     @Override
-    public void onMapReady(GoogleMap googleMap)
+    public void onMapReady(final GoogleMap googleMap)
     {
         Geocoder coder = new Geocoder(this);
         try {
@@ -138,6 +145,12 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
         catch(IOException ioex)
         {}
 
+        Collections.sort(currentItinerary.getItems(), new Comparator<Item>() {
+            @Override
+            public int compare(Item lhs, Item rhs) {
+                return (int)(lhs.getStart_time().getTimeInMillis() - rhs.getStart_time().getTimeInMillis());
+            }
+        });
         for(Item i: currentItinerary.getItems())
         {
             Marker marker = googleMap.addMarker(new MarkerOptions()
@@ -148,8 +161,33 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
 
             marker_to_item.put(marker, i);
         }
-        updateSlidingView(currentItinerary.getItems().get(0));
+        for(int j = 0; j<currentItinerary.getItems().size()-1; j++)
+        {
+            LatLng origin = currentItinerary.getItems().get(j).getYelp_entry().getLocation().getCoordinate();
+            LatLng destination = currentItinerary.getItems().get(j+1).getYelp_entry().getLocation().getCoordinate();
+            mRestClient.getDirectionsService().getPolyline(origin.latitude+", "+origin.longitude, destination.latitude+", "+destination.longitude, Session.getActiveSession().getAccessToken(), new Callback<String>() {
+                @Override
+                public void success(String polyline, Response response) {
 
+                    Log.i("POLY", polyline);
+                    Log.i("RESPONSE", response.getBody().toString());
+
+                    List<LatLng> points = PolyUtil.decode(polyline);
+                    PolylineOptions line = new PolylineOptions().geodesic(true);
+                    for(LatLng point : points)
+                    {
+                        line.add(point);
+                    }
+                    googleMap.addPolyline(line);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                }
+            });
+        }
+        itemDetailFragment.updateItem(currentItinerary.getItems().get(0));
         googleMap.setOnMarkerClickListener(this);
 
     }
@@ -165,13 +203,9 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
     {
         marker.showInfoWindow();
         Item i = marker_to_item.get(marker);
-        updateSlidingView(i);
+
         itemDetailFragment.updateItem(i);
         return true;
     }
 
-    private void updateSlidingView(Item i)
-    {
-
-    }
 }
