@@ -68,7 +68,17 @@
         
           
           
-              <ul class="simple">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="apidoc.html">REST API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apidoc.html#authentication">Authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc.html#itineraries">Itineraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc.html#search-itineraries">Search Itineraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc.html#itinerary-ratings">Itinerary Ratings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc.html#items">Items</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc.html#categories">Categories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidoc.html#directions">Directions</a></li>
+</ul>
+</li>
 </ul>
 
           
@@ -106,17 +116,76 @@
    <h1>HTTP Routing Table</h1>
 
    <div class="modindex-jumpbox">
-   <a href="#cap-/users"><strong>/users</strong></a>
+   <a href="#cap-/itinerary"><strong>/itinerary</strong></a> | 
+   <a href="#cap-/maps"><strong>/maps</strong></a>
    </div>
 
    <table class="indextable modindextable" cellspacing="0" cellpadding="2">
      <tr class="pcap"><td></td><td>&nbsp;</td><td></td></tr>
-     <tr class="cap" id="cap-/users"><td></td><td>
-       <strong>/users</strong></td><td></td></tr>
+     <tr class="cap" id="cap-/itinerary"><td></td><td>
+       <strong>/itinerary</strong></td><td></td></tr>
      <tr>
        <td></td>
        <td>
-       <a href="index.html#get--users-(int-user_id)-posts-(tag)"><code class="xref">GET /users/(int:user_id)/posts/(tag)</code></a></td><td>
+       <a href="apidoc.html#get--itinerary--int-id-"><code class="xref">GET /itinerary/&lt;int:id&gt;</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="apidoc.html#get--itinerary--int-id--item--int-id-"><code class="xref">GET /itinerary/&lt;int:id&gt;/item/&lt;int:id&gt;</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="apidoc.html#get--itinerary-list"><code class="xref">GET /itinerary/list</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="apidoc.html#get--itinerary-search"><code class="xref">GET /itinerary/search</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="apidoc.html#post--itinerary--int-id--item-create"><code class="xref">POST /itinerary/&lt;int:id&gt;/item/create</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="apidoc.html#post--itinerary-create"><code class="xref">POST /itinerary/create</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="apidoc.html#put--itinerary--int-id-"><code class="xref">PUT /itinerary/&lt;int:id&gt;</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="apidoc.html#put--itinerary--int-id--item--int-id-"><code class="xref">PUT /itinerary/&lt;int:id&gt;/item/&lt;int:id&gt;</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="apidoc.html#delete--itinerary--int-id-"><code class="xref">DELETE /itinerary/&lt;int:id&gt;</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="apidoc.html#delete--itinerary--int-id--item--int-id-"><code class="xref">DELETE /itinerary/&lt;int:id&gt;/item/&lt;int:id&gt;</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="pcap"><td></td><td>&nbsp;</td><td></td></tr>
+     <tr class="cap" id="cap-/maps"><td></td><td>
+       <strong>/maps</strong></td><td></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="apidoc.html#get--maps-directions"><code class="xref">GET /maps/directions</code></a></td><td>
+       <em></em></td></tr>
+     <tr>
+       <td></td>
+       <td>
+       <a href="apidoc.html#get--maps-polyline"><code class="xref">GET /maps/polyline</code></a></td><td>
        <em></em></td></tr>
    </table>
 

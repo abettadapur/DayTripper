@@ -19,7 +19,7 @@
 
 
 \title{Day Tripper Documentation}
-\date{March 30, 2015}
+\date{March 31, 2015}
 \release{1.0}
 \author{Alex Bettadapur, Max Virgil}
 \newcommand{\sphinxlogo}{}
@@ -129,93 +129,470 @@
 \phantomsection\label{index::doc}
 
 
-Contents:
+Welcome to our API documentation
 
 
-\chapter{Indices and tables}
-\label{index:welcome-to-day-tripper-s-documentation}\label{index:indices-and-tables}\begin{itemize}
-\item {} 
-\DUspan{xref,std,std-ref}{genindex}
+\chapter{REST API Documentation}
+\label{apidoc:welcome-to-day-tripper-s-documentation}\label{apidoc:rest-api-documentation}\label{apidoc::doc}
+The DayTripper REST API can be used to interface with the application and its recommendations engine. All requests except those in the auth section require the token query parameter, which is a Facebook OAUTH token that has been previously verified with the DayTripper service. This token is used to both authenticate the user and provide user identity information.
 
-\item {} 
-\DUspan{xref,std,std-ref}{modindex}
 
-\item {} 
-\DUspan{xref,std,std-ref}{search}
+\section{Authentication}
+\label{apidoc:authentication}
 
-\end{itemize}
+\section{Itineraries}
+\label{apidoc:itineraries}
+The itineraries resource represents all itineraries that are currently present in the application.
 
 
 \begin{fulllineitems}
-\phantomsection\label{index:get--users-(int-user_id)-posts-(tag)}\pysiglinewithargsret{\bfcode{GET~}\bfcode{/users/}}{\strong{int: }\emph{user\_id}}{\bfcode{/posts/}}{\emph{tag}}{}
-The posts tagged with \emph{tag} that the user (\emph{user\_id}) wrote.
+\phantomsection\label{apidoc:post--itinerary-create}\pysigline{\bfcode{POST~}\bfcode{/itinerary/create}}
+Creates an itinerary with the specified parameters. The itinerary will be prefilled with items based on the time and location specified.
 
-\textbf{Example request}:
+\textbf{Request}
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n+nf}{GET} \PYG{n+nn}{/users/123/posts/web} \PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1}
-\PYG{n+na}{Host}\PYG{o}{:} \PYG{l}{example.com}
-\PYG{n+na}{Accept}\PYG{o}{:} \PYG{l}{application/json, text/javascript}
+\PYG{n+nx}{POST} \PYG{o}{/}\PYG{n+nx}{itinerary}\PYG{o}{/}\PYG{n+nx}{create}
+\PYG{n+nx}{Content}\PYG{o}{\PYGZhy{}}\PYG{n+nx}{Type}\PYG{o}{:} \PYG{n+nx}{application}\PYG{o}{/}\PYG{n+nx}{json}
+
+ \PYG{p}{\PYGZob{}}
+     \PYG{l+s+s2}{\PYGZdq{}city\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Atlanta\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}date\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T01:30:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}end\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T21:00:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Sample Itinerary\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}start\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T10:00:53\PYGZhy{}0400\PYGZdq{}}
+  \PYG{p}{\PYGZcb{}}
 \end{Verbatim}
 
-\textbf{Example response}:
+\textbf{Response}
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\PYG{k+kr}{HTTP}\PYG{o}{/}\PYG{l+m}{1.1} \PYG{l+m}{200} \PYG{n+ne}{OK}
-\PYG{n+na}{Vary}\PYG{o}{:} \PYG{l}{Accept}
-\PYG{n+na}{Content\PYGZhy{}Type}\PYG{o}{:} \PYG{l}{text/javascript}
+\PYG{n+nx}{HTTP}\PYG{o}{/}\PYG{l+m+mf}{1.1} \PYG{l+m+mi}{201} \PYG{n+nx}{Created}
+\PYG{n+nx}{Content}\PYG{o}{\PYGZhy{}}\PYG{n+nx}{Type}\PYG{o}{:} \PYG{n+nx}{application}\PYG{o}{/}\PYG{n+nx}{json}
+
+\PYG{p}{\PYGZob{}}
+  \PYG{l+s+s2}{\PYGZdq{}city\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Atlanta\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}date\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T01:30:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}end\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T21:00:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{14}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}items\PYGZdq{}}\PYG{o}{:}\PYG{p}{[}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}\PYG{p}{]}
+  \PYG{l+s+s2}{\PYGZdq{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Sample Itinerary\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}start\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T10:00:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}user\PYGZdq{}}\PYG{o}{:}\PYG{p}{\PYGZob{}}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\end{fulllineitems}
+
+
+
+\begin{fulllineitems}
+\phantomsection\label{apidoc:get--itinerary--int-id-}\pysigline{\bfcode{GET~}\bfcode{/itinerary/\textless{}int:id\textgreater{}}}
+Retrieve an itinerary with the id specified from the database. Comes with the associated items and user. Users can only retrieve itineraries that are theirs.
+
+\textbf{Response}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{HTTP}\PYG{o}{/}\PYG{l+m+mf}{1.1} \PYG{l+m+mi}{201} \PYG{n+nx}{OK}
+\PYG{n+nx}{ContentType}\PYG{o}{:} \PYG{n+nx}{application}\PYG{o}{/}\PYG{n+nx}{json}
+
+\PYG{p}{\PYGZob{}}
+   \PYG{l+s+s2}{\PYGZdq{}city\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Atlanta\PYGZdq{}}\PYG{p}{,}
+   \PYG{l+s+s2}{\PYGZdq{}date\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T01:30:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+   \PYG{l+s+s2}{\PYGZdq{}end\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T21:00:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+   \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{14}\PYG{p}{,}
+   \PYG{l+s+s2}{\PYGZdq{}items\PYGZdq{}}\PYG{o}{:}\PYG{p}{[}
+       \PYG{p}{\PYGZob{}}
+         \PYG{l+s+s2}{\PYGZdq{}category\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}lunch\PYGZdq{}}\PYG{p}{,}
+         \PYG{l+s+s2}{\PYGZdq{}end\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T11:30:53\PYGZhy{}04:00\PYGZdq{}}\PYG{p}{,}
+         \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{32}\PYG{p}{,}
+         \PYG{l+s+s2}{\PYGZdq{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Heirloom Market BBQ\PYGZdq{}}\PYG{p}{,}
+         \PYG{l+s+s2}{\PYGZdq{}start\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T10:00:53\PYGZhy{}04:00\PYGZdq{}}\PYG{p}{,}
+         \PYG{l+s+s2}{\PYGZdq{}yelp\PYGZus{}entry\PYGZdq{}}\PYG{o}{:}\PYG{p}{\PYGZob{}}
+            \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}heirloom\PYGZhy{}market\PYGZhy{}bbq\PYGZhy{}atlanta\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}image\PYGZus{}url\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}http://s3\PYGZhy{}media1.fl.yelpassets.com/bphoto/nxPlyqHrLCNMnDe87P0yLQ/ms.jpg\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}location\PYGZdq{}}\PYG{o}{:}\PYG{p}{\PYGZob{}}
+               \PYG{l+s+s2}{\PYGZdq{}address\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2243 Akers Mill Rd SE\PYGZdq{}}\PYG{p}{,}
+               \PYG{l+s+s2}{\PYGZdq{}city\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Atlanta\PYGZdq{}}\PYG{p}{,}
+               \PYG{l+s+s2}{\PYGZdq{}coordinate\PYGZdq{}}\PYG{o}{:}\PYG{p}{\PYGZob{}}
+                  \PYG{l+s+s2}{\PYGZdq{}latitude\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mf}{33.8986473470416}\PYG{p}{,}
+                  \PYG{l+s+s2}{\PYGZdq{}longitude\PYGZdq{}}\PYG{o}{:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{84.4471785276031}
+               \PYG{p}{\PYGZcb{}}\PYG{p}{,}
+               \PYG{l+s+s2}{\PYGZdq{}postal\PYGZus{}code\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{30339}\PYG{p}{,}
+               \PYG{l+s+s2}{\PYGZdq{}state\PYGZus{}code\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}GA\PYGZdq{}}\PYG{p}{,}
+               \PYG{l+s+s2}{\PYGZdq{}yelp\PYGZus{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}heirloom\PYGZhy{}market\PYGZhy{}bbq\PYGZhy{}atlanta\PYGZdq{}}
+            \PYG{p}{\PYGZcb{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Heirloom Market BBQ\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}phone\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}7706122502\PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}price\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{2}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}rating\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mf}{4.5}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}review\PYGZus{}count\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{688}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}url\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}http://www.yelp.com/biz/heirloom\PYGZhy{}market\PYGZhy{}bbq\PYGZhy{}atlanta\PYGZdq{}}
+         \PYG{p}{\PYGZcb{}}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}yelp\PYGZus{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}heirloom\PYGZhy{}market\PYGZhy{}bbq\PYGZhy{}atlanta\PYGZdq{}}
+   \PYG{p}{]}
+   \PYG{l+s+s2}{\PYGZdq{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Sample Itinerary\PYGZdq{}}\PYG{p}{,}
+   \PYG{l+s+s2}{\PYGZdq{}start\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T10:00:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+   \PYG{l+s+s2}{\PYGZdq{}user\PYGZdq{}}\PYG{o}{:}\PYG{p}{\PYGZob{}}
+        \PYG{l+s+s2}{\PYGZdq{}email\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}alexbettadapur@gmail.com\PYGZdq{}}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}first\PYGZus{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Alex\PYGZdq{}}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{10206134897237072}\PYG{p}{,}
+        \PYG{l+s+s2}{\PYGZdq{}last\PYGZus{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Bettadapur\PYGZdq{}}
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\end{fulllineitems}
+
+
+
+\begin{fulllineitems}
+\phantomsection\label{apidoc:get--itinerary-list}\pysigline{\bfcode{GET~}\bfcode{/itinerary/list}}
+Gets all the itineraries that the user owns.
+
+\textbf{Response}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{HTTP}\PYG{o}{/}\PYG{l+m+mf}{1.1} \PYG{l+m+mi}{201} \PYG{n+nx}{OK}
+\PYG{n+nx}{ContentType}\PYG{o}{:} \PYG{n+nx}{application}\PYG{o}{/}\PYG{n+nx}{json}
 
 \PYG{p}{[}
   \PYG{p}{\PYGZob{}}
-    \PYG{l+s+s2}{\PYGZdq{}post\PYGZus{}id\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mi}{12345}\PYG{p}{,}
-    \PYG{l+s+s2}{\PYGZdq{}author\PYGZus{}id\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mi}{123}\PYG{p}{,}
-    \PYG{l+s+s2}{\PYGZdq{}tags\PYGZdq{}}\PYG{o}{:} \PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}server\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}web\PYGZdq{}}\PYG{p}{]}\PYG{p}{,}
-    \PYG{l+s+s2}{\PYGZdq{}subject\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}I tried Nginx\PYGZdq{}}
+     \PYG{l+s+s2}{\PYGZdq{}city\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Atlanta\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}date\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T01:30:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}end\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T21:00:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{14}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}items\PYGZdq{}}\PYG{o}{:}\PYG{p}{[}
+         \PYG{p}{\PYGZob{}}
+           \PYG{l+s+s2}{\PYGZdq{}category\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}lunch\PYGZdq{}}\PYG{p}{,}
+           \PYG{l+s+s2}{\PYGZdq{}end\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T11:30:53\PYGZhy{}04:00\PYGZdq{}}\PYG{p}{,}
+           \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{32}\PYG{p}{,}
+           \PYG{l+s+s2}{\PYGZdq{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Heirloom Market BBQ\PYGZdq{}}\PYG{p}{,}
+           \PYG{l+s+s2}{\PYGZdq{}start\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T10:00:53\PYGZhy{}04:00\PYGZdq{}}\PYG{p}{,}
+           \PYG{l+s+s2}{\PYGZdq{}yelp\PYGZus{}entry\PYGZdq{}}\PYG{o}{:}\PYG{p}{\PYGZob{}}
+              \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}heirloom\PYGZhy{}market\PYGZhy{}bbq\PYGZhy{}atlanta\PYGZdq{}}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}image\PYGZus{}url\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}http://s3\PYGZhy{}media1.fl.yelpassets.com/bphoto/nxPlyqHrLCNMnDe87P0yLQ/ms.jpg\PYGZdq{}}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}location\PYGZdq{}}\PYG{o}{:}\PYG{p}{\PYGZob{}}
+                 \PYG{l+s+s2}{\PYGZdq{}address\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2243 Akers Mill Rd SE\PYGZdq{}}\PYG{p}{,}
+                 \PYG{l+s+s2}{\PYGZdq{}city\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Atlanta\PYGZdq{}}\PYG{p}{,}
+                 \PYG{l+s+s2}{\PYGZdq{}coordinate\PYGZdq{}}\PYG{o}{:}\PYG{p}{\PYGZob{}}
+                    \PYG{l+s+s2}{\PYGZdq{}latitude\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mf}{33.8986473470416}\PYG{p}{,}
+                    \PYG{l+s+s2}{\PYGZdq{}longitude\PYGZdq{}}\PYG{o}{:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{84.4471785276031}
+                 \PYG{p}{\PYGZcb{}}\PYG{p}{,}
+                 \PYG{l+s+s2}{\PYGZdq{}postal\PYGZus{}code\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{30339}\PYG{p}{,}
+                 \PYG{l+s+s2}{\PYGZdq{}state\PYGZus{}code\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}GA\PYGZdq{}}\PYG{p}{,}
+                 \PYG{l+s+s2}{\PYGZdq{}yelp\PYGZus{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}heirloom\PYGZhy{}market\PYGZhy{}bbq\PYGZhy{}atlanta\PYGZdq{}}
+              \PYG{p}{\PYGZcb{}}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Heirloom Market BBQ\PYGZdq{}}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}phone\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}7706122502\PYGZdq{}}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}price\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{2}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}rating\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mf}{4.5}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}review\PYGZus{}count\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{688}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}url\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}http://www.yelp.com/biz/heirloom\PYGZhy{}market\PYGZhy{}bbq\PYGZhy{}atlanta\PYGZdq{}}
+           \PYG{p}{\PYGZcb{}}\PYG{p}{,}
+          \PYG{l+s+s2}{\PYGZdq{}yelp\PYGZus{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}heirloom\PYGZhy{}market\PYGZhy{}bbq\PYGZhy{}atlanta\PYGZdq{}}
+     \PYG{p}{]}
+     \PYG{l+s+s2}{\PYGZdq{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Sample Itinerary\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}start\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T10:00:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}user\PYGZdq{}}\PYG{o}{:}\PYG{p}{\PYGZob{}}
+          \PYG{l+s+s2}{\PYGZdq{}email\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}alexbettadapur@gmail.com\PYGZdq{}}\PYG{p}{,}
+          \PYG{l+s+s2}{\PYGZdq{}first\PYGZus{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Alex\PYGZdq{}}\PYG{p}{,}
+          \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{10206134897237072}\PYG{p}{,}
+          \PYG{l+s+s2}{\PYGZdq{}last\PYGZus{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Bettadapur\PYGZdq{}}
+      \PYG{p}{\PYGZcb{}}
   \PYG{p}{\PYGZcb{}}\PYG{p}{,}
+  \PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
+\PYG{p}{]}
+\end{Verbatim}
+
+\end{fulllineitems}
+
+
+
+\begin{fulllineitems}
+\phantomsection\label{apidoc:put--itinerary--int-id-}\pysigline{\bfcode{PUT~}\bfcode{/itinerary/\textless{}int:id\textgreater{}}}
+Update an exisiting itinerary with new information. This should only be used to update itinerary attributes, not add or remove items. Users can only edit itineraries that are theirs.
+
+\textbf{Request}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{PUT} \PYG{o}{/}\PYG{n+nx}{itinerary}\PYG{o}{/}\PYG{n+nx}{create}
+\PYG{n+nx}{Content}\PYG{o}{\PYGZhy{}}\PYG{n+nx}{Type}\PYG{o}{:} \PYG{n+nx}{application}\PYG{o}{/}\PYG{n+nx}{json}
+
   \PYG{p}{\PYGZob{}}
-    \PYG{l+s+s2}{\PYGZdq{}post\PYGZus{}id\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mi}{12346}\PYG{p}{,}
-    \PYG{l+s+s2}{\PYGZdq{}author\PYGZus{}id\PYGZdq{}}\PYG{o}{:} \PYG{l+m+mi}{123}\PYG{p}{,}
-    \PYG{l+s+s2}{\PYGZdq{}tags\PYGZdq{}}\PYG{o}{:} \PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}html5\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}standards\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}web\PYGZdq{}}\PYG{p}{]}\PYG{p}{,}
-    \PYG{l+s+s2}{\PYGZdq{}subject\PYGZdq{}}\PYG{o}{:} \PYG{l+s+s2}{\PYGZdq{}We go to HTML 5\PYGZdq{}}
+     \PYG{l+s+s2}{\PYGZdq{}city\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Atlanta\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}date\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T01:30:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}end\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T21:00:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Sample Itinerary\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}start\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T10:00:53\PYGZhy{}0400\PYGZdq{}}
   \PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\textbf{Response}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{HTTP}\PYG{o}{/}\PYG{l+m+mf}{1.1} \PYG{l+m+mi}{200} \PYG{n+nx}{OK}
+\PYG{n+nx}{Content}\PYG{o}{\PYGZhy{}}\PYG{n+nx}{Type}\PYG{o}{:} \PYG{n+nx}{application}\PYG{o}{/}\PYG{n+nx}{json}
+
+\PYG{p}{\PYGZob{}}
+  \PYG{l+s+s2}{\PYGZdq{}city\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Atlanta\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}date\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T01:30:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}end\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T21:00:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{14}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}items\PYGZdq{}}\PYG{o}{:}\PYG{p}{[}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}\PYG{p}{]}
+  \PYG{l+s+s2}{\PYGZdq{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Sample Itinerary\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}start\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T10:00:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+  \PYG{l+s+s2}{\PYGZdq{}user\PYGZdq{}}\PYG{o}{:}\PYG{p}{\PYGZob{}}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\end{fulllineitems}
+
+
+
+\begin{fulllineitems}
+\phantomsection\label{apidoc:delete--itinerary--int-id-}\pysigline{\bfcode{DELETE~}\bfcode{/itinerary/\textless{}int:id\textgreater{}}}
+Delete the itinerary with the specified Id. Users can only delete itineraries that are theirs
+
+\textbf{Response}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{HTTP}\PYG{o}{/}\PYG{l+m+mf}{1.1} \PYG{l+m+mi}{204} \PYG{n+nx}{No} \PYG{n+nx}{Content}
+
+\PYG{k+kc}{true}
+\end{Verbatim}
+
+\end{fulllineitems}
+
+
+
+\section{Search Itineraries}
+\label{apidoc:search-itineraries}
+Users can also search for itineraries from other users using the search endpoint.
+
+
+\begin{fulllineitems}
+\phantomsection\label{apidoc:get--itinerary-search}\pysigline{\bfcode{GET~}\bfcode{/itinerary/search}}
+Search for an itinerary
+
+\textbf{Response}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{HTTP}\PYG{o}{/}\PYG{l+m+mf}{1.1} \PYG{l+m+mi}{201} \PYG{n+nx}{OK}
+\PYG{n+nx}{ContentType}\PYG{o}{:} \PYG{n+nx}{application}\PYG{o}{/}\PYG{n+nx}{json}
+
+\PYG{p}{[}
+  \PYG{p}{\PYGZob{}}
+     \PYG{l+s+s2}{\PYGZdq{}city\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Atlanta\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}date\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T01:30:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}end\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T21:00:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{14}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}items\PYGZdq{}}\PYG{o}{:}\PYG{p}{[}
+         \PYG{p}{\PYGZob{}}
+           \PYG{l+s+s2}{\PYGZdq{}category\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}lunch\PYGZdq{}}\PYG{p}{,}
+           \PYG{l+s+s2}{\PYGZdq{}end\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T11:30:53\PYGZhy{}04:00\PYGZdq{}}\PYG{p}{,}
+           \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{32}\PYG{p}{,}
+           \PYG{l+s+s2}{\PYGZdq{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Heirloom Market BBQ\PYGZdq{}}\PYG{p}{,}
+           \PYG{l+s+s2}{\PYGZdq{}start\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T10:00:53\PYGZhy{}04:00\PYGZdq{}}\PYG{p}{,}
+           \PYG{l+s+s2}{\PYGZdq{}yelp\PYGZus{}entry\PYGZdq{}}\PYG{o}{:}\PYG{p}{\PYGZob{}}
+              \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}heirloom\PYGZhy{}market\PYGZhy{}bbq\PYGZhy{}atlanta\PYGZdq{}}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}image\PYGZus{}url\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}http://s3\PYGZhy{}media1.fl.yelpassets.com/bphoto/nxPlyqHrLCNMnDe87P0yLQ/ms.jpg\PYGZdq{}}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}location\PYGZdq{}}\PYG{o}{:}\PYG{p}{\PYGZob{}}
+                 \PYG{l+s+s2}{\PYGZdq{}address\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2243 Akers Mill Rd SE\PYGZdq{}}\PYG{p}{,}
+                 \PYG{l+s+s2}{\PYGZdq{}city\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Atlanta\PYGZdq{}}\PYG{p}{,}
+                 \PYG{l+s+s2}{\PYGZdq{}coordinate\PYGZdq{}}\PYG{o}{:}\PYG{p}{\PYGZob{}}
+                    \PYG{l+s+s2}{\PYGZdq{}latitude\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mf}{33.8986473470416}\PYG{p}{,}
+                    \PYG{l+s+s2}{\PYGZdq{}longitude\PYGZdq{}}\PYG{o}{:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{84.4471785276031}
+                 \PYG{p}{\PYGZcb{}}\PYG{p}{,}
+                 \PYG{l+s+s2}{\PYGZdq{}postal\PYGZus{}code\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{30339}\PYG{p}{,}
+                 \PYG{l+s+s2}{\PYGZdq{}state\PYGZus{}code\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}GA\PYGZdq{}}\PYG{p}{,}
+                 \PYG{l+s+s2}{\PYGZdq{}yelp\PYGZus{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}heirloom\PYGZhy{}market\PYGZhy{}bbq\PYGZhy{}atlanta\PYGZdq{}}
+              \PYG{p}{\PYGZcb{}}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Heirloom Market BBQ\PYGZdq{}}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}phone\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}7706122502\PYGZdq{}}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}price\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{2}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}rating\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mf}{4.5}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}review\PYGZus{}count\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{688}\PYG{p}{,}
+              \PYG{l+s+s2}{\PYGZdq{}url\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}http://www.yelp.com/biz/heirloom\PYGZhy{}market\PYGZhy{}bbq\PYGZhy{}atlanta\PYGZdq{}}
+           \PYG{p}{\PYGZcb{}}\PYG{p}{,}
+          \PYG{l+s+s2}{\PYGZdq{}yelp\PYGZus{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}heirloom\PYGZhy{}market\PYGZhy{}bbq\PYGZhy{}atlanta\PYGZdq{}}
+     \PYG{p}{]}
+     \PYG{l+s+s2}{\PYGZdq{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Sample Itinerary\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}start\PYGZus{}time\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}2015\PYGZhy{}03\PYGZhy{}31T10:00:53\PYGZhy{}0400\PYGZdq{}}\PYG{p}{,}
+     \PYG{l+s+s2}{\PYGZdq{}user\PYGZdq{}}\PYG{o}{:}\PYG{p}{\PYGZob{}}
+          \PYG{l+s+s2}{\PYGZdq{}email\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}alexbettadapur@gmail.com\PYGZdq{}}\PYG{p}{,}
+          \PYG{l+s+s2}{\PYGZdq{}first\PYGZus{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Alex\PYGZdq{}}\PYG{p}{,}
+          \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}}\PYG{o}{:}\PYG{l+m+mi}{10206134897237072}\PYG{p}{,}
+          \PYG{l+s+s2}{\PYGZdq{}last\PYGZus{}name\PYGZdq{}}\PYG{o}{:}\PYG{l+s+s2}{\PYGZdq{}Bettadapur\PYGZdq{}}
+      \PYG{p}{\PYGZcb{}}
+  \PYG{p}{\PYGZcb{}}\PYG{p}{,}
+  \PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
 \PYG{p}{]}
 \end{Verbatim}
 \begin{quote}\begin{description}
 \item[{Query Parameters}] \leavevmode\begin{itemize}
 \item {} 
-\textbf{\texttt{sort}} -- one of \code{hit}, \code{created-at}
+\textbf{\texttt{query}} -- The search term -- required
 
 \item {} 
-\textbf{\texttt{offset}} -- offset number. default is 0
-
-\item {} 
-\textbf{\texttt{limit}} -- limit number. default is 30
+\textbf{\texttt{city}} -- An optional city to filter by
 
 \end{itemize}
 
-\item[{Request Headers}] \leavevmode\begin{itemize}
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
+
+
+\section{Itinerary Ratings}
+\label{apidoc:itinerary-ratings}
+
+\section{Items}
+\label{apidoc:items}
+The items resource represents the individual events contained within an itinerary. This resource can be used to manually add, update, or delete items from a pre-existing itinerary. It can also be used to get detailed information about a specific event.
+
+
+\begin{fulllineitems}
+\phantomsection\label{apidoc:post--itinerary--int-id--item-create}\pysigline{\bfcode{POST~}\bfcode{/itinerary/\textless{}int:id\textgreater{}/item/create}}
+Creates an item with the specified parameters and adds it to the specified itinerary
+
+\textbf{Request}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{POST} \PYG{o}{/}\PYG{n+nx}{itinerary}\PYG{o}{/}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n+nx}{items}\PYG{o}{/}\PYG{n+nx}{create}
+\PYG{n+nx}{Content}\PYG{o}{\PYGZhy{}}\PYG{n+nx}{Type}\PYG{o}{:} \PYG{n+nx}{application}\PYG{o}{/}\PYG{n+nx}{json}
+
+\PYG{p}{\PYGZob{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\textbf{Response}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{HTTP}\PYG{o}{/}\PYG{l+m+mf}{1.1} \PYG{l+m+mi}{201} \PYG{n+nx}{Created}
+
+\PYG{p}{\PYGZob{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\end{fulllineitems}
+
+
+
+\begin{fulllineitems}
+\phantomsection\label{apidoc:get--itinerary--int-id--item--int-id-}\pysigline{\bfcode{GET~}\bfcode{/itinerary/\textless{}int:id\textgreater{}/item/\textless{}int:id\textgreater{}}}
+Gets the specified item.
+
+\textbf{Response}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{HTTP}\PYG{o}{/}\PYG{l+m+mf}{1.1} \PYG{l+m+mi}{201} \PYG{n+nx}{Created}
+
+\PYG{p}{\PYGZob{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\end{fulllineitems}
+
+
+
+\begin{fulllineitems}
+\phantomsection\label{apidoc:put--itinerary--int-id--item--int-id-}\pysigline{\bfcode{PUT~}\bfcode{/itinerary/\textless{}int:id\textgreater{}/item/\textless{}int:id\textgreater{}}}
+Updates an item with new details as specified.
+
+\textbf{Request}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{PUT} \PYG{o}{/}\PYG{n+nx}{itinerary}\PYG{o}{/}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n+nx}{items}\PYG{o}{/}\PYG{l+m+mi}{1}
+\PYG{n+nx}{Content}\PYG{o}{\PYGZhy{}}\PYG{n+nx}{Type}\PYG{o}{:} \PYG{n+nx}{application}\PYG{o}{/}\PYG{n+nx}{json}
+
+\PYG{p}{\PYGZob{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\textbf{Response}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{HTTP}\PYG{o}{/}\PYG{l+m+mf}{1.1} \PYG{l+m+mi}{200} \PYG{n+nx}{OK}
+
+\PYG{p}{\PYGZob{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+
+\end{fulllineitems}
+
+
+
+\begin{fulllineitems}
+\phantomsection\label{apidoc:delete--itinerary--int-id--item--int-id-}\pysigline{\bfcode{DELETE~}\bfcode{/itinerary/\textless{}int:id\textgreater{}/item/\textless{}int:id\textgreater{}}}
+Deletes the specified item
+
+\textbf{Response}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{HTTP}\PYG{o}{/}\PYG{l+m+mf}{1.1} \PYG{l+m+mi}{204} \PYG{n+nx}{No} \PYG{n+nx}{Content}
+
+\PYG{k+kc}{true}
+\end{Verbatim}
+
+\end{fulllineitems}
+
+
+
+\section{Categories}
+\label{apidoc:categories}
+
+\section{Directions}
+\label{apidoc:directions}
+
+\begin{fulllineitems}
+\phantomsection\label{apidoc:get--maps-directions}\pysigline{\bfcode{GET~}\bfcode{/maps/directions}}
+Gets directions from the Google Directions API.
+
+\textbf{Response}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{HTTP}\PYG{o}{/}\PYG{l+m+mf}{1.1} \PYG{l+m+mi}{200} \PYG{n+nx}{OK}
+
+\PYG{p}{\PYGZob{}}
+
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
+\begin{quote}\begin{description}
+\item[{Query Parameters}] \leavevmode\begin{itemize}
 \item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html\#sec14.1}{Accept} -- the response content type depends on
-\emph{\texttt{Accept}} header
+\textbf{\texttt{origin}} -- The start location. This can be an address string or coordinates. --- required
 
 \item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html\#sec14.8}{Authorization} -- optional OAuth token to authenticate
+\textbf{\texttt{destination}} -- The end location. This can be an address string or coordinates. --- required
 
 \end{itemize}
 
-\item[{Response Headers}] \leavevmode\begin{itemize}
-\item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html\#sec14.17}{Content-Type} -- this depends on \emph{\texttt{Accept}}
-header of request
+\end{description}\end{quote}
 
-\end{itemize}
+\end{fulllineitems}
 
-\item[{Status Codes}] \leavevmode\begin{itemize}
+
+
+\begin{fulllineitems}
+\phantomsection\label{apidoc:get--maps-polyline}\pysigline{\bfcode{GET~}\bfcode{/maps/polyline}}
+Gets a Google Encoded polyline for use on a map. See here for more information
+
+\textbf{Response}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nx}{HTTP}\PYG{o}{/}\PYG{l+m+mf}{1.1} \PYG{l+m+mi}{200} \PYG{n+nx}{OK}
+
+\PYG{n+nx}{fldkjadsfias}\PYG{p}{;}\PYG{n+nx}{odfjsa}\PYG{p}{;}\PYG{n+nx}{ijkfdas}
+\end{Verbatim}
+\begin{quote}\begin{description}
+\item[{Query Parameters}] \leavevmode\begin{itemize}
 \item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.2.1}{200 OK} -- no error
+\textbf{\texttt{origin}} -- The start location. This can be an address string or coordinates. --- required
 
 \item {} 
-\href{http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\#sec10.4.5}{404 Not Found} -- there's no user
+\textbf{\texttt{destination}} -- The end location. This can be an address string or coordinates. --- required
 
 \end{itemize}
 
@@ -228,8 +605,21 @@ header of request
 \renewcommand{\indexname}{HTTP Routing Table}
 \begin{theindex}
 \def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
-\bigletter{/users}
-\item {\texttt{GET /users/(int:user\_id)/posts/(tag)}}, \pageref{index:get--users-(int-user_id)-posts-(tag)}
+\bigletter{/itinerary}
+\item {\texttt{GET /itinerary/\textless{}int:id\textgreater{}}}, \pageref{apidoc:get--itinerary--int-id-}
+\item {\texttt{GET /itinerary/\textless{}int:id\textgreater{}/item/\textless{}int:id\textgreater{}}}, \pageref{apidoc:get--itinerary--int-id--item--int-id-}
+\item {\texttt{GET /itinerary/list}}, \pageref{apidoc:get--itinerary-list}
+\item {\texttt{GET /itinerary/search}}, \pageref{apidoc:get--itinerary-search}
+\item {\texttt{POST /itinerary/\textless{}int:id\textgreater{}/item/create}}, \pageref{apidoc:post--itinerary--int-id--item-create}
+\item {\texttt{POST /itinerary/create}}, \pageref{apidoc:post--itinerary-create}
+\item {\texttt{PUT /itinerary/\textless{}int:id\textgreater{}}}, \pageref{apidoc:put--itinerary--int-id-}
+\item {\texttt{PUT /itinerary/\textless{}int:id\textgreater{}/item/\textless{}int:id\textgreater{}}}, \pageref{apidoc:put--itinerary--int-id--item--int-id-}
+\item {\texttt{DELETE /itinerary/\textless{}int:id\textgreater{}}}, \pageref{apidoc:delete--itinerary--int-id-}
+\item {\texttt{DELETE /itinerary/\textless{}int:id\textgreater{}/item/\textless{}int:id\textgreater{}}}, \pageref{apidoc:delete--itinerary--int-id--item--int-id-}
+\indexspace
+\bigletter{/maps}
+\item {\texttt{GET /maps/directions}}, \pageref{apidoc:get--maps-directions}
+\item {\texttt{GET /maps/polyline}}, \pageref{apidoc:get--maps-polyline}
 \end{theindex}
 
 \renewcommand{\indexname}{Index}
