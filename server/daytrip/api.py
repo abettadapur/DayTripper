@@ -579,7 +579,7 @@ class PolylineResource(Resource):
         user_id = get_uid_or_abort_on_bad_token(args['token'])
 
         directions = maps.directions(args['origin'], args['destination'])
-        return directions['overview_polyline']['points'], 200
+        return directions[0]['overview_polyline']['points'], 200
 
 def get_uid_or_abort_on_bad_token(token):
     uid = db.sqlite.check_authorization(token)
