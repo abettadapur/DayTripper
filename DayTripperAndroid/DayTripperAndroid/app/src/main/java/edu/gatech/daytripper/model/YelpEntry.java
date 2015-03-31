@@ -12,6 +12,7 @@ public class YelpEntry
     private String url;
     private float rating;
     private int review_count;
+    private int price;
 
 
 
@@ -89,5 +90,13 @@ public class YelpEntry
 
     public void setReview_count(int review_count) {
         this.review_count = review_count;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 }

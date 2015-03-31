@@ -26,6 +26,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.View
         public TextView mTitleView;
         public TextView mSubtitleView;
         public SwipeLayout mSwipeDelete;
+        public View itemView;
 
 
         public ViewHolder(View itemView) {
@@ -35,8 +36,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.View
             mSwipeDelete = (SwipeLayout)itemView.findViewById(R.id.swipeLayout);
             mSwipeDelete.setShowMode(SwipeLayout.ShowMode.LayDown);
             mSwipeDelete.setDragEdge(SwipeLayout.DragEdge.Right);
-
-
+            this.itemView = itemView;
         }
     }
     private List<Itinerary> mItems;
@@ -61,6 +61,7 @@ public class ItineraryAdapter extends RecyclerView.Adapter<ItineraryAdapter.View
         Itinerary itinerary = mItems.get(i);
         viewHolder.mTitleView.setText(itinerary.getName());
         viewHolder.mSubtitleView.setText(itinerary.getCity());
+        viewHolder.itemView.setTag(i);
     }
 
     @Override

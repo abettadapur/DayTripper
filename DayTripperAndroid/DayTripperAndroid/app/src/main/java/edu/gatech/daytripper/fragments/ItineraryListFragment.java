@@ -2,14 +2,18 @@ package edu.gatech.daytripper.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.style.BulletSpan;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -43,10 +47,11 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
     private FloatingActionButton mAddButton;
     private RecyclerView mRecycleView;
     private ItineraryAdapter mAdapter;
-
+    private int mContextIndex;
     private int layout, list_item;
 
     private final int ITINERARY_CREATE_CODE = 86;
+    private final int CONTEXT_DELETE = 87;
 
 
     public static ItineraryListFragment newInstance(int layout, int list_item) {
@@ -98,6 +103,8 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
         mAddButton.attachToRecyclerView(mRecycleView);
         mAddButton.setOnClickListener(this);
 
+        registerForContextMenu(mRecycleView);
+
 
         return rootView;
     }
@@ -139,6 +146,26 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
     }
 
     @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        super.onCreateContextMenu(menu, v, menuInfo);
+        Itinerary itinerary = mItineraryList.get(mContextIndex);
+        menu.setHeaderTitle(itinerary.getName());
+        menu.add(0, CONTEXT_DELETE, 0, "Delete Itinerary");
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if(item.getItemId() == CONTEXT_DELETE)
+        {
+            mListListener.remove_item(mItineraryList.get(mContextIndex).getId());
+        }
+        return super.onContextItemSelected(item);
+    }
+
+
+    @Override
     public void onItemClick(View childView, int position)
     {
         int itinerary_id = mItineraryList.get(position).getId();
@@ -148,7 +175,12 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
     }
 
     @Override
-    public void onItemLongPress(View childView, int position) {
+    public void onItemLongPress(View childView, int position)
+    {
+        Vibrator vb = (Vibrator)getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        vb.vibrate(100);
+        mContextIndex = position;
+        getActivity().openContextMenu(childView);
 
     }
 
@@ -195,6 +227,7 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
     public interface ItineraryListListener
     {
         public void refresh_list(ItineraryListFragment fragment);
+        public void remove_item(int id);
 
     }
 

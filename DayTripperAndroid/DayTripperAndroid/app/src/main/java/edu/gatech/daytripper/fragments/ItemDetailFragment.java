@@ -7,10 +7,15 @@ import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.IconTextView;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 
+import com.joanzapata.android.iconify.IconDrawable;
+import com.joanzapata.android.iconify.Iconify;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 
 import edu.gatech.daytripper.R;
 import edu.gatech.daytripper.model.Item;
@@ -24,6 +29,7 @@ public class ItemDetailFragment extends Fragment
     private Item currentItem;
     private TextView mTitleView, mSubtitleView, mReviewCountView;
     private RatingBar mRatingView;
+    private IconTextView mIconView;
 
 
     public static ItemDetailFragment newInstance()
@@ -50,6 +56,7 @@ public class ItemDetailFragment extends Fragment
         mSubtitleView = (TextView)v.findViewById(R.id.subtitleView);
         mReviewCountView = (TextView)v.findViewById(R.id.ratingCountView);
         mRatingView = (RatingBar)v.findViewById(R.id.ratingView);
+        mIconView = (IconTextView)v.findViewById(R.id.iconView);
         return v;
     }
 
@@ -63,6 +70,26 @@ public class ItemDetailFragment extends Fragment
         mRatingView.setRating(currentItem.getYelp_entry().getRating());
         mSubtitleView.setText(PhoneNumberUtils.formatNumber(currentItem.getYelp_entry().getPhone(), "US"));
         mReviewCountView.setText(" - "+currentItem.getYelp_entry().getReview_count()+" reviews");
+
+        switch(item.getCategory())
+        {
+            case "breakfast":
+                Iconify.setIcon(mIconView, Iconify.IconValue.fa_coffee);
+                break;
+            case "lunch":
+                Iconify.setIcon(mIconView, Iconify.IconValue.fa_cutlery);
+                break;
+            case "dinner":
+                Iconify.setIcon(mIconView, Iconify.IconValue.fa_cutlery);
+                break;
+            case "nightlife":
+                Iconify.setIcon(mIconView, Iconify.IconValue.fa_glass);
+                break;
+            case "attraction":
+                Iconify.setIcon(mIconView, Iconify.IconValue.fa_futbol_o);
+                break;
+        }
+
 
     }
 

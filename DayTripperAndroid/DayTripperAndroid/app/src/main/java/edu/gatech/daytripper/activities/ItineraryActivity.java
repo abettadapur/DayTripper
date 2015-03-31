@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -147,6 +148,10 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_intinerary, menu);
+        menu.findItem(R.id.search).setIcon(
+                new IconDrawable(this, Iconify.IconValue.fa_search)
+                        .color(0xFFFFFF)
+                        .actionBarSize());
 
         SearchView view = (SearchView)menu.findItem(R.id.search).getActionView();
         if(view!=null)
@@ -194,6 +199,32 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
     }
 
     @Override
+    public void remove_item(int id) {
+        mRestClient.getItineraryService().deleteItinerary(id, Session.getActiveSession().getAccessToken(), new Callback<Boolean>() {
+            @Override
+            public void success(Boolean aBoolean, Response response) {
+                mRestClient.getItineraryService().listItineraries(Session.getActiveSession().getAccessToken(), new Callback<List<Itinerary>>() {
+                    @Override
+                    public void success(List<Itinerary> itineraries, Response response) {
+                        ItineraryActivity.this.itineraries = itineraries;
+                        itineraryListFragment.updateItems(itineraries);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
+    @Override
     public boolean onQueryTextSubmit(String s) {
         if(!s.equals("")) {
             if (currentFragment == itineraryListFragment) {
@@ -216,8 +247,15 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
         return true;
     }
 
+
     @Override
     public boolean onQueryTextChange(String s) {
         return false;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+
+        super.onCreateContextMenu(menu, v, menuInfo);
     }
 }
