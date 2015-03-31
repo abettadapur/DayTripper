@@ -2,6 +2,8 @@ package edu.gatech.daytripper.activities;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v7.app.ActionBarActivity;
@@ -17,6 +19,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -51,6 +55,7 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
     private FloatingActionButton mFab;
     private ItemDetailFragment itemDetailFragment;
     private Map<Marker, Item> marker_to_item;
+    private static String[] colors = {"red", "blue", "cyan", "green","purple", "orange"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,11 +156,15 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
                 return (int)(lhs.getStart_time().getTimeInMillis() - rhs.getStart_time().getTimeInMillis());
             }
         });
-        for(Item i: currentItinerary.getItems())
+        for(int j = 0; j<currentItinerary.getItems().size(); j++)
         {
+            Item i = currentItinerary.getItems().get(j);
+            String drawableName = "marker_"+colors[j]+"_number_"+j;
+            Bitmap b = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(drawableName,"drawable", getPackageName()));
+            Bitmap scaled = Bitmap.createScaledBitmap(b, b.getWidth()*3, b.getHeight()*3, false);
             Marker marker = googleMap.addMarker(new MarkerOptions()
                     .title(i.getName())
-
+                    .icon(BitmapDescriptorFactory.fromBitmap(scaled))
                     .snippet(i.getYelp_entry().getLocation().getAddress())
                     .position(i.getYelp_entry().getLocation().getCoordinate()));
 
@@ -165,7 +174,8 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
         {
             LatLng origin = currentItinerary.getItems().get(j).getYelp_entry().getLocation().getCoordinate();
             LatLng destination = currentItinerary.getItems().get(j+1).getYelp_entry().getLocation().getCoordinate();
-            mRestClient.getDirectionsService().getPolyline(origin.latitude+", "+origin.longitude, destination.latitude+", "+destination.longitude, Session.getActiveSession().getAccessToken(), new Callback<String>() {
+            final String color_str = "maps_"+colors[j];
+            mRestClient.getDirectionsService().getPolyline(origin.latitude + ", " + origin.longitude, destination.latitude + ", " + destination.longitude, Session.getActiveSession().getAccessToken(), new Callback<String>() {
                 @Override
                 public void success(String polyline, Response response) {
 
@@ -174,10 +184,10 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
 
                     List<LatLng> points = PolyUtil.decode(polyline);
                     PolylineOptions line = new PolylineOptions().geodesic(true);
-                    for(LatLng point : points)
-                    {
+                    for (LatLng point : points) {
                         line.add(point);
                     }
+                    line.color(getResources().getColor(getResources().getIdentifier(color_str,"color", getPackageName())));
                     googleMap.addPolyline(line);
                 }
 

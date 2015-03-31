@@ -15,5 +15,11 @@
     <color name="material_drawer_selected_text">#536EEA</color>
     <color name="material_drawer_dark_selected_text">#536EEA</color>
     <color name="dividers">#DADADA</color>
+    <color name="maps_red">#f00909</color>
+    <color name="maps_blue">#0928f0</color>
+    <color name="maps_cyan">#09e1f0</color>
+    <color name="maps_green">#1df009</color>
+    <color name="maps_orange">#f05209</color>
+    <color name="maps_purple">#c209f0</color>
 
 </resources>
