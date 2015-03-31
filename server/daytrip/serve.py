@@ -31,6 +31,8 @@ api.add_resource(restapi.CreateItemResource, '/itinerary/<int:itinerary_id>/item
 api.add_resource(restapi.ListCategoryResource, '/category/list')
 api.add_resource(restapi.QueryCategoryResource, '/category/<string:category_str>/query')
 
+api.add_resource(restapi.DirectionsResource, '/maps/directions')
+
 
 
 

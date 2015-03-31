@@ -548,7 +548,21 @@ class QueryCategoryResource(Resource):
                 return_results.append(db.sqlite.get_yelp_entry(r['id']).as_dict())
         return return_results, 200
 
+class DirectionsResource(Resource):
 
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument("token", type=str, required=True, location='args', help='No token to verify')
+        self.reqparse.add_argument('origin', type=str, required=True, location='args', help='Need a starting location')
+        self.reqparse.add_argument('destination', type=str, required=True, location='args', help="Need a ending location")
+
+        super(DirectionsResource, self).__init__()
+
+    def get(self):
+        args = self.reqparse.parse_args()
+        user_id = get_uid_or_abort_on_bad_token(args['token'])
+
+        return maps.directions(args['origin'], args['destination']), 200
 
 def get_uid_or_abort_on_bad_token(token):
     uid = db.sqlite.check_authorization(token)
