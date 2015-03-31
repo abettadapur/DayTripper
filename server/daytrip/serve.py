@@ -32,6 +32,7 @@ api.add_resource(restapi.ListCategoryResource, '/category/list')
 api.add_resource(restapi.QueryCategoryResource, '/category/<string:category_str>/query')
 
 api.add_resource(restapi.DirectionsResource, '/maps/directions')
+api.add_resource(restapi.PolylineResource, '/maps/polyline')
 
 
 
