@@ -7,6 +7,28 @@ The DayTripper REST API can be used to interface with the application and its re
 Authentication
 -------------------------------
 
+.. http:post:: /auth/verify
+
+  Registers a Facebook authentication token with the server. The Facebook token must be a valid token that matches the Facebook user-id provided. This must be called once before using the API with a Facebook token. If the user-id and the token do not match, a 401 HTTP response will be returned.
+
+  **Request**
+
+  .. code-block:: js
+
+    POST /auth/verify
+    Content-Type: application/json
+
+    {
+      "token": ".....",
+      "user_id": "...."
+    }
+
+.. http:delete:: /auth/logout
+
+  Logout and delete the Facebook token from the database. The token will no longer be valid and any requests made with it will be rejected. A call to /auth/verify is required to continue using the API.
+
+  :query token: The token to logout.
+
 Itineraries
 ----------------
 
@@ -287,6 +309,52 @@ Users can also search for itineraries from other users using the search endpoint
 
 Itinerary Ratings
 --------------------------------------
+
+The ratings resource allows users to rate other users itineraries. A simple star rating method is used.
+
+.. http:post:: /itinerary/<int:id>/rating/create
+  
+  Creates a rating for the specified itinerary
+
+  **Request**
+
+  .. code-block:: js
+
+    POST /itinerary/1/ratings/create
+    Content-Type: application/json
+
+    {
+      "rating": 5
+    }
+
+  **Response**
+
+  .. code-block:: js
+
+    HTTP/1.1 201 Created
+
+    {
+      "rating": 5
+    }
+
+.. http:get:: /itinerary/1/ratings/1
+
+  Gets a specific rating for the specified itinerary
+
+  **Response**
+
+  .. code-block:: js
+
+    HTTP/1.1 201 Created
+
+    {
+      "rating": 5
+    }
+
+.. http:get:: /itinerary/1/ratings/list
+
+.. http:put:: /itinerary/1/ratings/1
+
 
 
 Items

@@ -70,6 +70,25 @@ class AuthResource(Resource):
                 db.sqlite.insert_user(new_user)
 
             return True, 200
+        else:
+            return False, 401
+
+
+class AuthLogoutResource(Resource):
+
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('token', type=str, required = True, help="No token to verify", location='args')
+        super(AuthLogoutResource, self).__init__()
+
+
+    def delete(self):
+        args = self.reqparse.parse_args()
+        token = args['token']
+
+        db.sqlite.delete_authorization(token)
+
+        return True, 204
 
 
 class ItineraryResource(Resource):

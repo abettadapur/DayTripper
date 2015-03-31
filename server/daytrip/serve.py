@@ -13,6 +13,7 @@ api.add_resource(restapi.Test, '/test')
 api.add_resource(restapi.Test2, '/test/<string:parameter>')
 
 api.add_resource(restapi.AuthResource, '/auth/verify')
+api.add_resource(restapi.AuthLogoutResource, '/auth/logout')
 
 api.add_resource(restapi.CreateItineraryResource, '/itinerary/create')
 api.add_resource(restapi.ItineraryResource, '/itinerary/<int:id>')

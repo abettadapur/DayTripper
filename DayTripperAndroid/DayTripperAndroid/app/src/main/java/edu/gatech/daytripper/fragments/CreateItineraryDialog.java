@@ -13,12 +13,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.Session;
 
 import java.text.SimpleDateFormat;
@@ -42,21 +44,22 @@ import retrofit.client.Response;
  */
 public class CreateItineraryDialog extends DialogFragment
 {
-    private EditText mNameBox, mStartPicker, mEndPicker, mDatePicker;
+    private EditText mNameBox, mStartPicker, mEndPicker, mDatePicker, mCitySpinner;
     private Calendar mDate, mStart, mEnd;
-    private Spinner mCitySpinner;
     private ArrayAdapter<String> mCityAdapter;
-    private final String[] cities = {"Atlanta", "New York City", "Seattle", "San Francisco", "Philadelphia"};
+    private final String[] cities = {"Atlanta", "Austin", "Miami", "Portland", "Philadelphia", "Seattle" };
 
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
-        AlertDialog.Builder b = new AlertDialog.Builder(getActivity())
-                .setTitle("Create Itinerary")
-                .setPositiveButton("Create", new DialogInterface.OnClickListener() {
+        MaterialDialog.Builder b = new MaterialDialog.Builder(getActivity())
+                .title("Create Itinerary")
+                .positiveText("Create")
+                .callback(new MaterialDialog.ButtonCallback() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onPositive(MaterialDialog dialog) {
+                        super.onPositive(dialog);
                         String name = mNameBox.getText().toString();
-                        String city = cities[mCitySpinner.getSelectedItemPosition()];
+                        String city = mCitySpinner.getText().toString();
 
                         Itinerary newItinerary = new Itinerary(name, mDate, mStart, mEnd, city, new ArrayList<Item>());
                         ItineraryService service = new RestClient().getItineraryService();
@@ -77,13 +80,16 @@ public class CreateItineraryDialog extends DialogFragment
                             }
                         });
                     }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onNegative(MaterialDialog dialog) {
+                        super.onNegative(dialog);
                         dialog.dismiss();
                     }
-                });
+                })
+                .negativeText("Cancel");
+
+
         LayoutInflater i = getActivity().getLayoutInflater();
         View v = i.inflate(R.layout.dialog_create_itinerary, null);
 
@@ -106,9 +112,25 @@ public class CreateItineraryDialog extends DialogFragment
         mEndPicker = (EditText)v.findViewById(R.id.endPicker);
         mDatePicker = (EditText)v.findViewById(R.id.datePicker);
 
-        mCitySpinner = (Spinner)v.findViewById(R.id.citySpinner);
-        mCityAdapter = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_item, cities);
-        mCitySpinner.setAdapter(mCityAdapter);
+        mCitySpinner = (EditText)v.findViewById(R.id.citySpinner);
+
+
+        mCitySpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new MaterialDialog.Builder(getActivity())
+                        .title("Cities")
+                        .items(cities)
+                        .itemsCallback(new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                mCitySpinner.setText(cities[which]);
+                            }
+                        })
+                        .positiveText(android.R.string.cancel)
+                        .show();
+            }
+        });
 
         mStartPicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,8 +153,8 @@ public class CreateItineraryDialog extends DialogFragment
             }
         });
         updateView();
-        b.setView(v);
-        return b.create();
+        b.customView(v, false);
+        return b.build();
     }
 
     DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
