@@ -155,8 +155,9 @@ class SqlLiteManager(object):
                 ),
                 (itinerary.user.id, itinerary.name, itinerary.date, itinerary.start_time, itinerary.end_time, itinerary.city)
             )
-            if len(itinerary.items)> 0:
-                pass #CALL INSERT for each item
+
+            for item in itinerary.items:
+                self.insert_item(item, itinerary)
 
             itinerary_id = cursor.lastrowid
             cursor.close()
@@ -281,10 +282,7 @@ class SqlLiteManager(object):
             item_id = cursor.lastrowid
             cursor.close()
 
-        if not self.has_yelp_entry(item.yelp_id):
-            entry = yelpapi.business(item.yelp_id)
-            self.insert_yelp_entry(entry)
-            item.yelp_entry = entry
+        item.yelp_entry = self.get_yelp_entry(item.yelp_id)
         return item_id
 
     def get_item(self, id):
@@ -366,6 +364,10 @@ class SqlLiteManager(object):
 
     # YELP_ENTRY OPERATIONS
     def get_yelp_entry(self, id):
+        if not self.has_yelp_entry(id):
+            entry = yelpapi.business(id)
+            self.insert_yelp_entry(entry)
+
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.row_factory = self.yelp_entry_from_cursor
