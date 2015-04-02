@@ -1,7 +1,7 @@
 package edu.gatech.daytripper.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -190,7 +190,7 @@ public class ItineraryListFragment extends Fragment implements RecyclerItemClick
     {
         CreateItineraryDialog dialog = new CreateItineraryDialog();
         dialog.setTargetFragment(this, ITINERARY_CREATE_CODE);
-        dialog.show(getActivity().getFragmentManager(), "fm");
+        dialog.show(getActivity().getSupportFragmentManager(), "fm");
 
     }
 

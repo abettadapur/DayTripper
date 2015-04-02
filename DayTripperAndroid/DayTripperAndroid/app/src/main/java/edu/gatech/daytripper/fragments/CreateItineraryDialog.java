@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
@@ -142,7 +142,7 @@ public class CreateItineraryDialog extends DialogFragment
         mEndPicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(CreateItineraryDialog.this.getActivity(), endTimeSetListener, mStart.get(Calendar.HOUR), mStart.get(Calendar.MINUTE), true).show();
+                new TimePickerDialog(CreateItineraryDialog.this.getActivity(), endTimeSetListener, mEnd.get(Calendar.HOUR), mEnd.get(Calendar.MINUTE), true).show();
             }
         });
 
@@ -163,6 +163,14 @@ public class CreateItineraryDialog extends DialogFragment
             mDate.set(Calendar.YEAR, year);
             mDate.set(Calendar.MONTH, monthOfYear);
             mDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            mStart.set(Calendar.YEAR, year);
+            mStart.set(Calendar.MONTH, monthOfYear);
+            mStart.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            mEnd.set(Calendar.YEAR, year);
+            mEnd.set(Calendar.MONTH, monthOfYear);
+            mEnd.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             updateView();
         }
     };
@@ -187,7 +195,7 @@ public class CreateItineraryDialog extends DialogFragment
 
     private void updateView()
     {
-        String dateFormat = "MM/dd/yy";
+        String dateFormat = "MM/dd/yyyy";
         SimpleDateFormat dateSdf = new SimpleDateFormat(dateFormat, Locale.US);
         String timeFormat = "H:mm";
         SimpleDateFormat timeSdf = new SimpleDateFormat(timeFormat, Locale.US);

@@ -1,6 +1,6 @@
 package edu.gatech.daytripper.activities;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.ActionBarActivity;
@@ -100,12 +100,12 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
                         String item = ((Nameable) iDrawerItem).getName();
                         switch (item) {
                             case "My Itineraries":
-                                getFragmentManager().beginTransaction().remove(currentFragment).add(R.id.container, itineraryListFragment).commit();
+                                getSupportFragmentManager().beginTransaction().remove(currentFragment).add(R.id.container, itineraryListFragment).commit();
                                 currentFragment = itineraryListFragment;
                                 getSupportActionBar().setTitle("Your Itineraries");
                                 break;
                             case "Search Itineraries":
-                                getFragmentManager().beginTransaction().remove(currentFragment).add(R.id.container, searchItineraryFragment).commit();
+                                getSupportFragmentManager().beginTransaction().remove(currentFragment).add(R.id.container, searchItineraryFragment).commit();
                                 currentFragment = searchItineraryFragment;
                                 getSupportActionBar().setTitle("Search Results");
                                 break;
@@ -135,7 +135,7 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
 
         if(savedInstanceState==null)
         {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, itineraryListFragment)
                     .commit();
             currentFragment = itineraryListFragment;

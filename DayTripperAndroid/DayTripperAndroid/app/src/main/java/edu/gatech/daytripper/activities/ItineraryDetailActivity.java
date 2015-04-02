@@ -19,18 +19,18 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
+import com.joanzapata.android.iconify.IconDrawable;
+import com.joanzapata.android.iconify.Iconify;
 import com.melnykov.fab.FloatingActionButton;
 
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -38,9 +38,9 @@ import java.util.List;
 import java.util.Map;
 
 import edu.gatech.daytripper.R;
+import edu.gatech.daytripper.fragments.EditItineraryFragment;
 import edu.gatech.daytripper.fragments.ItemDetailFragment;
 import edu.gatech.daytripper.fragments.ItemListFragment;
-import edu.gatech.daytripper.model.Directions;
 import edu.gatech.daytripper.model.Item;
 import edu.gatech.daytripper.model.Itinerary;
 import edu.gatech.daytripper.net.RestClient;
@@ -118,6 +118,12 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_itinerary_detail, menu);
+        menu.findItem(R.id.action_edit).setIcon(new IconDrawable(this, Iconify.IconValue.fa_edit)
+                .color(0xFFFFFF)
+                .actionBarSize());
+        menu.findItem(R.id.action_randomize).setIcon(new IconDrawable(this, Iconify.IconValue.fa_magic)
+                .color(0xFFFFFF)
+                .actionBarSize());
         return true;
     }
 
@@ -134,6 +140,12 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
                 return true;
             case R.id.action_settings:
                 return true;
+
+            case R.id.action_edit:
+                Intent i = new Intent(this, EditItineraryActivity.class);
+                i.putExtra("itinerary_id", currentItinerary.getId());
+                startActivity(i);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -205,7 +217,7 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
 
     @Override
     public void onClick(View v) {
-        Intent i = new Intent(this, EditItineraryActivity.class);
+        Intent i = new Intent(this, EditItineraryFragment.class);
         startActivity(i);
     }
 

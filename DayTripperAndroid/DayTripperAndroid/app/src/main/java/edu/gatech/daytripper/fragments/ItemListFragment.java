@@ -1,7 +1,7 @@
 package edu.gatech.daytripper.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -32,12 +32,9 @@ import edu.gatech.daytripper.model.Itinerary;
  */
 public class ItemListFragment extends Fragment implements RecyclerItemClickListener.OnItemClickListener{
 
-
-
-    private ItemListListener mListener;
-    private List<Item> mItemList;
     private RecyclerView mRecycleView;
     private ItemAdapter mAdapter;
+    private Itinerary mCurrentItinerary;
 
 
     public static ItemListFragment newInstance() {
@@ -62,12 +59,7 @@ public class ItemListFragment extends Fragment implements RecyclerItemClickListe
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (ItemListListener)activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+
     }
 
     @Override
@@ -76,7 +68,7 @@ public class ItemListFragment extends Fragment implements RecyclerItemClickListe
         View rootView = inflater.inflate(R.layout.fragment_item_list, container, false);
         mRecycleView = (RecyclerView)rootView.findViewById(R.id.recycle_view);
 
-        mAdapter = new ItemAdapter(mItemList, getActivity());
+        mAdapter = new ItemAdapter(mCurrentItinerary.getItems(), getActivity());
         mRecycleView.setAdapter(mAdapter);
 
         mRecycleView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -85,39 +77,25 @@ public class ItemListFragment extends Fragment implements RecyclerItemClickListe
         mRecycleView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
 
 
-
         return rootView;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+
     }
 
 
 
-
-
-    public void updateItems(List<Item> items)
+    public void setItinerary(Itinerary itinerary)
     {
-
-        if(items!=null) {
-            mItemList.clear();
-            mItemList.addAll(items);
-            mAdapter.notifyDataSetChanged();
-        }
+        mCurrentItinerary = itinerary;
     }
+
 
     @Override
     public void onItemClick(View childView, int position) {
-        int item_id = mItemList.get(position).getId();
-        int itinerary_id = mListener.getItinerary().getId();
-
-        Intent i = new Intent(getActivity(), ItemDetailActivity.class);
-        i.putExtra(ItemDetailActivity.ITINERARY_ID_EXTRA, itinerary_id);
-        i.putExtra(ItemDetailActivity.ITEM_ID_EXTRA, item_id);
-        startActivity(i);
     }
 
     @Override
@@ -136,10 +114,6 @@ public class ItemListFragment extends Fragment implements RecyclerItemClickListe
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface ItemListListener {
-        // TODO: Update argument type and name
-        public void refresh_list(ItemListFragment fragment);
-        public Itinerary getItinerary();
-    }
+
 
 }

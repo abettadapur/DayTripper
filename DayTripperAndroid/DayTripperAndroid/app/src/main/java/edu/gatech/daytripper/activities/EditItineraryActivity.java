@@ -1,39 +1,110 @@
 package edu.gatech.daytripper.activities;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+
+import com.astuetz.PagerSlidingTabStrip;
+import com.facebook.Session;
 
 import edu.gatech.daytripper.R;
+import edu.gatech.daytripper.fragments.EditItineraryFragment;
+import edu.gatech.daytripper.fragments.ItemListFragment;
+import edu.gatech.daytripper.model.Itinerary;
+import edu.gatech.daytripper.net.RestClient;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
-public class EditItineraryActivity extends ActionBarActivity {
+/**
+ * Created by Alex on 4/1/2015.
+ */
+public class EditItineraryActivity extends ActionBarActivity
+{
+    private Toolbar mToolbar;
+    private PagerSlidingTabStrip mTabStrip;
+    private ViewPager mViewPager;
+    private Itinerary mCurrentItinerary;
+    private RestClient mRestClient;
+
+    private MyPagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_edit_itinerary);
+        mToolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+
+        mTabStrip = (PagerSlidingTabStrip)findViewById(R.id.tabs);
+        mViewPager = (ViewPager)findViewById(R.id.pager);
+
+
+
+        mRestClient = new RestClient();
+        mRestClient.getItineraryService().getItinerary(getIntent().getIntExtra("itinerary_id", 0), Session.getActiveSession().getAccessToken(), new Callback<Itinerary>() {
+            @Override
+            public void success(Itinerary itinerary, Response response) {
+                mCurrentItinerary = itinerary;
+                getSupportActionBar().setTitle("Editing " + itinerary.getName());
+
+                mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+
+                mViewPager.setAdapter(mPagerAdapter);
+
+                mTabStrip.setViewPager(mViewPager);
+                mViewPager.setCurrentItem(0);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+
+
+
     }
 
+    public class MyPagerAdapter extends FragmentPagerAdapter {
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_edit_itinerary, menu);
-        return true;
-    }
+        private final String[] TITLES = {"Details", "Items"};
+        private Fragment[] fragments;
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        public MyPagerAdapter(FragmentManager supportFragmentManager) {
+            super(supportFragmentManager);
+            fragments = new Fragment[2];
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            EditItineraryFragment itineraryFragment = EditItineraryFragment.newInstance();
+            itineraryFragment.setItinerary(mCurrentItinerary);
+            fragments[0] = itineraryFragment;
+
+            ItemListFragment itemListFragment = ItemListFragment.newInstance();
+            itemListFragment.setItinerary(mCurrentItinerary);
+            fragments[1] = itemListFragment;
+
         }
 
-        return super.onOptionsItemSelected(item);
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return TITLES[position];
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragments[position];
+        }
+
+        @Override
+        public int getCount() {
+            return TITLES.length;
+        }
     }
 }
