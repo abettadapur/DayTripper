@@ -12,3 +12,15 @@ def match_category(category_name):
             return c
 
     return None
+
+
+def category_default_duration(category_name, default=60):
+    """Returns number of minutes"""
+    if category_name in ['breakfast']:
+        return 45
+    elif category_name in ['lunch', 'dinner', 'attraction']:
+        return 60
+    elif category_name in ['nightlife']:
+        return 100
+    else:
+        return default
