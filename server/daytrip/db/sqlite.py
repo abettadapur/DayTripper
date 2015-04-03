@@ -156,10 +156,12 @@ class SqlLiteManager(object):
                 (itinerary.user.id, itinerary.name, itinerary.date, itinerary.start_time, itinerary.end_time, itinerary.city)
             )
 
+            itinerary_id = cursor.lastrowid
+
+            itinerary.id = itinerary_id
             for item in itinerary.items:
                 self.insert_item(item, itinerary)
 
-            itinerary_id = cursor.lastrowid
             cursor.close()
             return itinerary_id
 
