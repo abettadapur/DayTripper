@@ -155,15 +155,14 @@ class SqlLiteManager(object):
                 ),
                 (itinerary.user.id, itinerary.name, itinerary.date, itinerary.start_time, itinerary.end_time, itinerary.city)
             )
-
             itinerary_id = cursor.lastrowid
-
             itinerary.id = itinerary_id
-            for item in itinerary.items:
-                self.insert_item(item, itinerary)
-
             cursor.close()
-            return itinerary_id
+
+        for item in itinerary.items:
+            self.insert_item(item, itinerary)
+            
+        return itinerary_id
 
     def get_itinerary(self, id):
         with sqlite3.connect(self.db_name) as conn:
