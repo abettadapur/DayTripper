@@ -86,7 +86,7 @@ def fetch_sample_items(city, categories):
         sample_items.append(new_item)
 
         used_yelp_ids.append(new_item.yelp_id)
-        search_location = new_item.yelp_entry.location.address
+        search_location = new_item.yelp_entry.location.city
         coordinate_str = new_item.yelp_entry.location.coordinate_string()
 
     return sample_items
@@ -101,7 +101,7 @@ def fetch_new_item(location, category, start_time="", end_time="", coordinate_st
 
     Does not persist Item result to the database!
     """
-    yelp_id, item_name = best_yelp_id_with_name(location, category, coordinate_str, disallowed_yelp_ids)
+    yelp_id, item_name = best_yelp_id_with_name(location, category, coordinate_str=coordinate_str, disallowed_yelp_ids=disallowed_yelp_ids)
 
     item = Item(
         id=None,
