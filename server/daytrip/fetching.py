@@ -82,7 +82,7 @@ def fetch_sample_items(city, categories):
     search_location = city
     coordinate_str = None
     for category in categories:
-        new_item = fetch_new_item(search_location, category, coordinate_str, disallowed_yelp_ids=used_yelp_ids)
+        new_item = fetch_new_item(search_location, category, coordinate_str=coordinate_str, disallowed_yelp_ids=used_yelp_ids)
         sample_items.append(new_item)
 
         used_yelp_ids.append(new_item.yelp_id)
