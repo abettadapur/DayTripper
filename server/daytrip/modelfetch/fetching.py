@@ -7,6 +7,7 @@ import db
 import random
 import dateutil.parser
 import datetime
+import strategy
 
 
 BREAKFAST = 'breakfast'
@@ -92,7 +93,6 @@ def fetch_sample_items(city, categories):
     return sample_items
 
 
-
 def fetch_new_item(location, category, start_time="", end_time="", coordinate_str=None, disallowed_yelp_ids=[]):
     """
     If start_time, end_time not specified, callee must add these to Item!
@@ -115,25 +115,35 @@ def fetch_new_item(location, category, start_time="", end_time="", coordinate_st
     return item
 
 
-def best_yelp_id_with_name(location, category, coordinate_str=None, disallowed_yelp_ids=[]):
+def best_yelp_id_with_name(location, category, coordinate_str=None, disallowed_yelp_ids=[], strategy_name="random"):
     """coordinate_str is for cll param in query string"""
+    extra_yelp_params = {}
     if coordinate_str is not None:
-        search_results = yelpapi.search(category.search_term, location, category.filters, cll=coordinate_str)
-    else:  # location is city
-        search_results = yelpapi.search(category.search_term, location, category.filters)
+        extra_yelp_params['cll'] = coordinate_str
 
+    # for these strategies, use YelpAPI
+    # then reset strategy_name so that we can still call strategy module below
+    if strategy_name == 'yelp-rating':
+        extra_yelp_params['sort'] = 2
+        strategy_name = 'first'
+    elif strategy_name == 'distance':
+        extra_yelp_params['sort'] = 1
+        strategy_name = 'first'
+
+    search_results = yelpapi.search(category.search_term, location, category.filters, **extra_yelp_params)
     candidate_ids_with_names = [(result['id'], result['name'])
                                 for result
                                 in search_results
                                 if result['id'] not in disallowed_yelp_ids]
+
+    candidate_ids = [elem[0] for elem in candidate_ids_with_names]
 
     if len(candidate_ids_with_names) == 0:
         print "best_yelp_id_with_name: no good ids found!  returning random result"
         default_result = search_results[random.randrange(len(search_results))]
         return default_result['id'], default_result['name']
 
-    # TODO create multiple "strategies" for selecting the result
-    index = 0
+    index = strategy.run_strategy(strategy_name, candidate_ids)
     yelp_id = candidate_ids_with_names[index][0]
     yelp_name = candidate_ids_with_names[index][1]
     return yelp_id, yelp_name

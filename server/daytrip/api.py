@@ -1,5 +1,4 @@
 import facebook
-from flask import request
 from flask_restful import Resource, reqparse, abort
 import db
 import model
@@ -9,7 +8,7 @@ from model.itinerary_rating import ItineraryRating
 from model.item import Item
 from model.user import User
 from maps import maps
-import fetching
+from modelfetch import fetching
 
 from yelp import yelpapi
 

@@ -362,6 +362,22 @@ class SqlLiteManager(object):
             return item
         return None
 
+    def get_yelp_count_in_items(self, yelp_id):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'SELECT COUNT(*) FROM {table} WHERE {yelp_id}=?'
+                .format(
+                    table=item_schema.ITEM_TABLE,
+                    yelp_id=item_schema.YELP_ID
+                ),
+                (id, )
+            )
+            row = cursor.fetchone()
+            count = row[0]
+
+            cursor.close()
+            return count
 
     # YELP_ENTRY OPERATIONS
     def get_yelp_entry(self, id):
