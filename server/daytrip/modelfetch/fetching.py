@@ -80,14 +80,12 @@ def fetch_sample_items(city, categories):
     sample_items = []
     used_yelp_ids = []
 
-    search_location = city
     coordinate_str = None
     for category in categories:
-        new_item = fetch_new_item(search_location, category, coordinate_str=coordinate_str, disallowed_yelp_ids=used_yelp_ids)
+        new_item = fetch_new_item(city, category, coordinate_str=coordinate_str, disallowed_yelp_ids=used_yelp_ids)
         sample_items.append(new_item)
 
         used_yelp_ids.append(new_item.yelp_id)
-        search_location = new_item.yelp_entry.location.city
         coordinate_str = new_item.yelp_entry.location.coordinate_string()
 
     return sample_items
