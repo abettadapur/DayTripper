@@ -135,14 +135,14 @@ public class CreateItineraryDialog extends DialogFragment
         mStartPicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(CreateItineraryDialog.this.getActivity(), startTimeSetListener, mStart.get(Calendar.HOUR), mStart.get(Calendar.MINUTE), true).show();
+                new TimePickerDialog(CreateItineraryDialog.this.getActivity(), startTimeSetListener, mStart.get(Calendar.HOUR_OF_DAY), mStart.get(Calendar.MINUTE), true).show();
             }
         });
 
         mEndPicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(CreateItineraryDialog.this.getActivity(), endTimeSetListener, mEnd.get(Calendar.HOUR), mEnd.get(Calendar.MINUTE), true).show();
+                new TimePickerDialog(CreateItineraryDialog.this.getActivity(), endTimeSetListener, mEnd.get(Calendar.HOUR_OF_DAY), mEnd.get(Calendar.MINUTE), true).show();
             }
         });
 

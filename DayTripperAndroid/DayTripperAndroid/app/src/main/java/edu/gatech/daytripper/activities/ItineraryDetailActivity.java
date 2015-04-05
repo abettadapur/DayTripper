@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.Session;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
 import com.joanzapata.android.iconify.IconDrawable;
@@ -31,6 +33,7 @@ import com.melnykov.fab.FloatingActionButton;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -56,7 +59,9 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
     private FloatingActionButton mFab;
     private ItemDetailFragment itemDetailFragment;
     private Map<Marker, Item> marker_to_item;
+    private List<Polyline> polylines;
     private static String[] colors = {"red", "blue", "cyan", "green","purple", "orange"};
+    private GoogleMap mGoogleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +69,7 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
         setContentView(R.layout.activity_itinerary_detail);
 
         marker_to_item = new HashMap<>();
+        polylines = new ArrayList<>();
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -146,23 +152,44 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
                 i.putExtra("itinerary_id", currentItinerary.getId());
                 startActivity(i);
                 break;
+
+            case R.id.action_randomize:
+                new MaterialDialog.Builder(this)
+                        .title("Confirm")
+                        .content("Randomizing your itinerary will delete all items you have added and regenerate a new set of items. Are you sure you want to do this?")
+                        .positiveText("Yes")
+                        .negativeText("No")
+                        .callback(new MaterialDialog.ButtonCallback() {
+                            @Override
+                            public void onPositive(MaterialDialog dialog) {
+                                final MaterialDialog progressDialog = new MaterialDialog.Builder(ItineraryDetailActivity.this)
+                                        .title("Randomizing")
+                                        .content("Regenerating your itinerary...")
+                                        .progress(true, 0)
+                                        .show();
+                                mRestClient.getItineraryService().randomizeItinerary(currentItinerary.getId(), Session.getActiveSession().getAccessToken(), new Callback<Itinerary>() {
+                                    @Override
+                                    public void success(Itinerary itinerary, Response response) {
+                                        progressDialog.dismiss();
+                                        currentItinerary = itinerary;
+                                        updateView();
+                                    }
+
+                                    @Override
+                                    public void failure(RetrofitError error) {
+                                        progressDialog.dismiss();
+                                    }
+                                });
+                            }
+                        })
+                        .show();
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Override
-    public void onMapReady(final GoogleMap googleMap)
+    private void updateView()
     {
-        Geocoder coder = new Geocoder(this);
-        try {
-            List<Address> addresses = coder.getFromLocationName(currentItinerary.getCity(), 1);
-            LatLng city =  new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(city, 10));
-        }
-        catch(IOException ioex)
-        {}
-
+        clearMap();
         Collections.sort(currentItinerary.getItems(), new Comparator<Item>() {
             @Override
             public int compare(Item lhs, Item rhs) {
@@ -175,7 +202,7 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
             String drawableName = "marker_"+colors[j]+"_number_"+j;
             Bitmap b = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(drawableName,"drawable", getPackageName()));
             Bitmap scaled = Bitmap.createScaledBitmap(b, b.getWidth()*3, b.getHeight()*3, false);
-            Marker marker = googleMap.addMarker(new MarkerOptions()
+            Marker marker = mGoogleMap.addMarker(new MarkerOptions()
                     .title(i.getName())
                     .icon(BitmapDescriptorFactory.fromBitmap(scaled))
                     .snippet(i.getYelp_entry().getLocation().getAddress())
@@ -201,7 +228,7 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
                         line.add(point);
                     }
                     line.color(getResources().getColor(getResources().getIdentifier(color_str,"color", getPackageName())));
-                    googleMap.addPolyline(line);
+                    polylines.add(mGoogleMap.addPolyline(line));
                 }
 
                 @Override
@@ -211,7 +238,38 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
             });
         }
         itemDetailFragment.updateItem(currentItinerary.getItems().get(0));
+    }
+
+    private void clearMap() {
+        for (Marker m : marker_to_item.keySet()) {
+            m.remove();
+        }
+        marker_to_item.clear();
+
+        for(Polyline p: polylines)
+        {
+            p.remove();
+        }
+
+        polylines.clear();
+    }
+
+    @Override
+    public void onMapReady(final GoogleMap googleMap)
+    {
+        Geocoder coder = new Geocoder(this);
+        try {
+            List<Address> addresses = coder.getFromLocationName(currentItinerary.getCity(), 1);
+            LatLng city =  new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(city, 10));
+        }
+        catch(IOException ioex)
+        {}
+
         googleMap.setOnMarkerClickListener(this);
+
+        mGoogleMap = googleMap;
+        updateView();
 
     }
 

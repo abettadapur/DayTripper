@@ -83,15 +83,8 @@ public class EditItineraryFragment extends Fragment {
             public void onClick(View v) {
                 new MaterialDialog.Builder(EditItineraryFragment.this.getActivity())
                         .title("Cities")
-                        .items(cities)
-                        .itemsCallback(new MaterialDialog.ListCallback() {
-                            @Override
-                            public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                mCurrentItinerary.setCity(text.toString());
-                                updateView();
-                            }
-                        })
-                        .positiveText(android.R.string.cancel)
+                        .content("At this time, you cannot change the city of your itinerary. Please create a new itinerary in the desired city")
+                        .positiveText("Ok")
                         .show();
             }
         });
@@ -100,14 +93,14 @@ public class EditItineraryFragment extends Fragment {
         mStartTimeBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(EditItineraryFragment.this.getActivity(), startTimeSetListener, mCurrentItinerary.getStart_time().get(Calendar.HOUR), mCurrentItinerary.getStart_time().get(Calendar.MINUTE), true).show();
+                new TimePickerDialog(EditItineraryFragment.this.getActivity(), startTimeSetListener, mCurrentItinerary.getStart_time().get(Calendar.HOUR_OF_DAY), mCurrentItinerary.getStart_time().get(Calendar.MINUTE), true).show();
             }
         });
 
         mEndTimeBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(EditItineraryFragment.this.getActivity(), endTimeSetListener, mCurrentItinerary.getEnd_time().get(Calendar.HOUR), mCurrentItinerary.getEnd_time().get(Calendar.MINUTE), true).show();
+                new TimePickerDialog(EditItineraryFragment.this.getActivity(), endTimeSetListener, mCurrentItinerary.getEnd_time().get(Calendar.HOUR_OF_DAY), mCurrentItinerary.getEnd_time().get(Calendar.MINUTE), true).show();
             }
         });
 

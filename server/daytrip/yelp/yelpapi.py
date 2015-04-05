@@ -56,7 +56,8 @@ def request(host, path, url_params=None):
 
     token = oauth2.Token(TOKEN, TOKEN_SECRET)
     oauth_request.sign_request(oauth2.SignatureMethod_HMAC_SHA1(), consumer, token)
-    signed_url = oauth_request.to_url();
+    signed_url = oauth_request.to_url()
+    print signed_url
 
     if 'cll' in url_params:
         signed_url = format_cll_param(signed_url)
