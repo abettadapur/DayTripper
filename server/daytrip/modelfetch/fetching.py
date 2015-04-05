@@ -35,6 +35,8 @@ CATEGORY_START_HOURS = {
 
 CATEGORIES = [model.match_category(name) for name in DEFAULT_SCHEDULE]
 
+FETCH_STRATEGY_OPTIONS = ['distance', 'yelp-rating'] + strategy.STRATEGIES.keys()
+
 
 def fetch_sample_itinerary(user, name, city, start_time, end_time, date):
     """
@@ -142,6 +144,10 @@ def best_yelp_id_with_name(location, category, coordinate_str=None, disallowed_y
         return default_result['id'], default_result['name']
 
     index = strategy.run_strategy(strategy_name, candidate_ids)
+
+    if index == -1:  # strategy found nothing
+        index = 0
+
     yelp_id = candidate_ids_with_names[index][0]
     yelp_name = candidate_ids_with_names[index][1]
     return yelp_id, yelp_name

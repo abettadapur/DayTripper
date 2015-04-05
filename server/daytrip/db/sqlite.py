@@ -371,7 +371,7 @@ class SqlLiteManager(object):
                     table=item_schema.ITEM_TABLE,
                     yelp_id=item_schema.YELP_ID
                 ),
-                (id, )
+                (yelp_id, )
             )
             row = cursor.fetchone()
             count = row[0]

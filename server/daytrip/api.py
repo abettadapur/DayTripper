@@ -308,6 +308,42 @@ class CreateItemResource(Resource):
         return db.sqlite.get_item(item_id).as_dict(), 201
 
 
+class FetchYelpResource(Resource):
+
+    def __init__(self):
+        self.strategy_choices = fetching.FETCH_STRATEGY_OPTIONS
+
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('token', type=str, required=True, location='args', help='No token to verify')
+        self.reqparse.add_argument('strategy', type=str, required=False, default='random', location='args', choices=self.strategy_choices)
+
+        # 'dids' refers to 'disallowed_yelp_ids'
+        #
+        # Will query string be too long?
+        self.reqparse.add_argument('dids', action='append', type=str, required=False, default=[], location='args')
+        super(FetchYelpResource, self).__init__()
+
+    def get(self, itinerary_id, item_id):
+        args = self.reqparse.parse_args()
+
+        user_id = get_uid_or_abort_on_bad_token(args['token'])
+        disallowed_yelp_ids = args['dids']
+
+        item = db.sqlite.get_item(item_id)
+        disallowed_yelp_ids.append(item.yelp_id)
+
+        selected_id, selected_name = fetching.best_yelp_id_with_name(
+            location=item.yelp_entry.location.city,
+            category=model.match_category(item.category),
+            coordinate_str=item.yelp_entry.location.coordinate_string(),
+            disallowed_yelp_ids=disallowed_yelp_ids,
+            strategy_name=args['strategy']
+        )
+
+        selected_yelp_entry = db.sqlite.get_yelp_entry(selected_id)
+        return selected_yelp_entry.as_dict()
+
+
 class CreateRatingResource(Resource):
 
     def __init__(self):
@@ -336,7 +372,6 @@ class RatingResource(Resource):
         super(RatingResource, self).__init__()
 
     def get(self, itinerary_id, id):
-        print "HELLO"
         args = self.reqparse.parse_args()
 
         user_id = get_uid_or_abort_on_bad_token(args['token'])
