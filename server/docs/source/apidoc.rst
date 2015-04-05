@@ -433,6 +433,48 @@ The items resource represents the individual events contained within an itinerar
 
     true
 
+.. http:get:: /itinerary/<int:id>/item/<int:id>/query
+
+  Returns a different suggested YelpEntry for this item.
+
+  Optional parameters:
+    strategy:  one of [distance, yelp-rating, price-0, price-1, price-2, price-3, price-4, random, popularity, first] (defaults to random)
+    dids: additional YelpIDs that server is not allowed to return
+
+  **Request**
+
+  .. code-block:: js
+
+  GET itinerary/6/item/22/query?token=token&strategy=yelp-rating&dids=gusto-wood-fire-grill-atlanta&dids=ocean-market-downtown-atlanta
+
+  **Response**
+
+  .. code-block:: js
+
+    HTTP/1.1 200 OK
+
+    {
+        "id": "get-fruity-cafe-atlanta-2",
+        "image_url": "http://s3-media4.fl.yelpassets.com/bphoto/4aCT0WPU_cI9dpM4Ia_k_g/ms.jpg",
+        "location": {
+            "address": "79 Marietta St NW",
+            "city": "Atlanta",
+            "coordinate": {
+                "latitude": 33.7564522,
+                "longitude": -84.391679
+            },
+            "postal_code": 30303,
+            "state_code": "GA",
+            "yelp_id": "get-fruity-cafe-atlanta-2"
+        },
+        "name": "Get Fruity Cafe",
+        "phone": "4045210109",
+        "price": 1,
+        "rating": 4.5,
+        "review_count": 64,
+        "url": "http://www.yelp.com/biz/get-fruity-cafe-atlanta-2"
+    }
+
 
 Categories
 -----------------------------------
