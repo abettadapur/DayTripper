@@ -4,6 +4,7 @@ import urllib2
 import pprint
 import oauth2
 import lxml
+import re
 from bs4 import BeautifulSoup
 
 from etc import config
@@ -38,6 +39,8 @@ def append_price(business_api_entry):
 def request(host, path, url_params=None):
     url_params = url_params or {}
 
+    print url_params
+
     url = 'http://{0}{1}?'.format(host, urllib.quote(path.encode("utf8")))
     consumer = oauth2.Consumer(CONSUMER_KEY, CONSUMER_SECRET)
     oauth_request = oauth2.Request(method="GET", url=url, parameters=url_params)
@@ -56,6 +59,10 @@ def request(host, path, url_params=None):
     signed_url = oauth_request.to_url()
     print signed_url
 
+    if 'cll' in url_params:
+        signed_url = format_cll_param(signed_url)
+        print signed_url
+
     conn = urllib2.urlopen(signed_url, None)
     try:
         response = json.loads(conn.read())
@@ -63,6 +70,16 @@ def request(host, path, url_params=None):
         conn.close()
 
     return response
+
+
+def format_cll_param(signed_url):
+    """ un-escapes the comma in the cll query string parameter """
+    float_regex = r'[+-]?\d+(\.\d+)?'
+    regex = r'(\?|&)cll=(' + float_regex + r')%2C(' + float_regex + ')'
+    pattern = re.compile(regex)
+
+    new_url = pattern.sub(r'\1cll=\2,\4', signed_url, 1)
+    return new_url
 
 
 def search(term, location, category_filters, **kwargs):

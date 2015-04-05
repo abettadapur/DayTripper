@@ -155,12 +155,14 @@ class SqlLiteManager(object):
                 ),
                 (itinerary.user.id, itinerary.name, itinerary.date, itinerary.start_time, itinerary.end_time, itinerary.city)
             )
-            if len(itinerary.items)> 0:
-                pass #CALL INSERT for each item
-
             itinerary_id = cursor.lastrowid
+            itinerary.id = itinerary_id
             cursor.close()
-            return itinerary_id
+
+        for item in itinerary.items:
+            self.insert_item(item, itinerary)
+            
+        return itinerary_id
 
     def get_itinerary(self, id):
         with sqlite3.connect(self.db_name) as conn:
@@ -237,6 +239,11 @@ class SqlLiteManager(object):
             )
             cursor.close()
 
+        for item in itinerary.items:
+            if not self.item_exists(item):
+                self.insert_item(item, itinerary)
+
+
     def delete_itinerary(self, id):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
@@ -281,11 +288,23 @@ class SqlLiteManager(object):
             item_id = cursor.lastrowid
             cursor.close()
 
-        if not self.has_yelp_entry(item.yelp_id):
-            entry = yelpapi.business(item.yelp_id)
-            self.insert_yelp_entry(entry)
-            item.yelp_entry = entry
+        item.yelp_entry = self.get_yelp_entry(item.yelp_id)
         return item_id
+
+    def item_exists(self, item):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'SELECT {id} from {table} WHERE {id}=?'
+                .format(table=item_schema.ITEM_TABLE, id=item_schema.ID)
+                , (item.id, )
+            )
+
+            item = cursor.fetchone()
+            cursor.close()
+            if item:
+                return True
+            return False
 
     def get_item(self, id):
         with sqlite3.connect(self.db_name) as conn:
@@ -363,9 +382,29 @@ class SqlLiteManager(object):
             return item
         return None
 
+    def get_yelp_count_in_items(self, yelp_id):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'SELECT COUNT(*) FROM {table} WHERE {yelp_id}=?'
+                .format(
+                    table=item_schema.ITEM_TABLE,
+                    yelp_id=item_schema.YELP_ID
+                ),
+                (yelp_id, )
+            )
+            row = cursor.fetchone()
+            count = row[0]
+
+            cursor.close()
+            return count
 
     # YELP_ENTRY OPERATIONS
     def get_yelp_entry(self, id):
+        if not self.has_yelp_entry(id):
+            entry = yelpapi.business(id)
+            self.insert_yelp_entry(entry)
+
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.row_factory = self.yelp_entry_from_cursor

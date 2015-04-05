@@ -9,6 +9,10 @@ class YelpLocation(object):
         self.latitude = latitude
         self.longitude = longitude
 
+    def coordinate_string(self):
+        if self.latitude is None or self.longitude is None:
+            return ''
+        return str('%0.6f' % self.latitude) + ',' + str('%0.6f' % self.longitude)
 
     def as_dict(self):
         loc_dict = self.__dict__
