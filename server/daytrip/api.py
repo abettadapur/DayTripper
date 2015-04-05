@@ -242,7 +242,7 @@ class RandomizeItineraryResource(Resource):
 
         db.sqlite.update_itinerary(itinerary)
 
-        return itinerary
+        return itinerary.as_dict()
 
 
 class ItemResource(Resource):

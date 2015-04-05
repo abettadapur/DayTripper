@@ -102,7 +102,7 @@ def search(term, location, category_filters, **kwargs):
 def business(yelp_id):
     api_entry = request(API_HOST, BUSINESS_PATH+yelp_id)
     append_price(api_entry)
-    location = YelpLocation(api_entry['id'], api_entry['location']['address'][0], api_entry['location']['city'], api_entry['location']['postal_code'], api_entry['location']['state_code'], api_entry['location']['coordinate']['latitude'], api_entry['location']['coordinate']['longitude'])
+    location = YelpLocation(api_entry['id'], api_entry['location']['address'][0] if len(api_entry['location']['address'])> 0 else "", api_entry['location']['city'], api_entry['location']['postal_code'], api_entry['location']['state_code'], api_entry['location']['coordinate']['latitude'], api_entry['location']['coordinate']['longitude'])
     entry = YelpEntry(api_entry['id'], api_entry['name'], api_entry.get('phone', ''), api_entry['image_url'], api_entry['url'], api_entry['rating'], api_entry['review_count'], location, api_entry.get('price', 0))
     return entry
 
