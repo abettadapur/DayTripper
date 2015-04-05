@@ -239,6 +239,11 @@ class SqlLiteManager(object):
             )
             cursor.close()
 
+        for item in itinerary.items:
+            if not self.item_exists(item):
+                self.insert_item(item, itinerary)
+
+
     def delete_itinerary(self, id):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
@@ -285,6 +290,21 @@ class SqlLiteManager(object):
 
         item.yelp_entry = self.get_yelp_entry(item.yelp_id)
         return item_id
+
+    def item_exists(self, item):
+        with sqlite3.connect(self.db_name) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                'SELECT {id} from {table} WHERE {id}=?'
+                .format(table=item_schema.ITEM_TABLE, id=item_schema.ID)
+                , (item.id, )
+            )
+
+            item = cursor.fetchone()
+            cursor.close()
+            if item:
+                return True
+            return False
 
     def get_item(self, id):
         with sqlite3.connect(self.db_name) as conn:

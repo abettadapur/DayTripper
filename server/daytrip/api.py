@@ -203,6 +203,7 @@ class ListItineraryResource(Resource):
         itineraries_dict = [i.as_dict() for i in itineraries]
         return itineraries_dict
 
+
 class SearchItineraryResource(Resource):
 
     def __init__(self):
@@ -218,6 +219,30 @@ class SearchItineraryResource(Resource):
         itineraries = db.sqlite.search_itineraries(args['query'], args['city'])
 
         return [i.as_dict() for i in itineraries], 200
+
+
+class RandomizeItineraryResource(Resource):
+
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument("token", type=str, required=True, location='args', help='Missing auth token')
+
+    def get(self, id):
+        args = self.reqparse.parse_args()
+
+        user_id = get_uid_or_abort_on_bad_token(args['token'])
+        itinerary = db.sqlite.get_itinerary(id)
+
+        abort_on_invalid_itinerary(itinerary, user_id)
+
+        for item in itinerary.items:
+            db.sqlite.delete_item(item.id)
+
+        itinerary = fetching.fetch_sample_itinerary_from_old(itinerary)
+
+        db.sqlite.update_itinerary(itinerary)
+
+        return itinerary
 
 
 class ItemResource(Resource):

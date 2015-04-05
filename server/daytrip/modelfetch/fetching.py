@@ -62,6 +62,13 @@ def fetch_sample_itinerary(user, name, city, start_time, end_time, date):
 
     return sample_itinerary
 
+def fetch_sample_itinerary_from_old(old_itinerary):
+    valid_categories = filter_valid_categories(CATEGORIES, old_itinerary.start_time, old_itinerary.end_time)
+    sample_items = fetch_sample_items(old_itinerary.city, valid_categories)
+    update_start_end_times(sample_items, old_itinerary.start_time)
+
+    old_itinerary.items = sample_items
+    return old_itinerary
 
 def filter_valid_categories(categories, start_time, end_time):
     results = []
