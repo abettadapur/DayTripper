@@ -48,7 +48,7 @@ public class ItemDetailActivity extends ActionBarActivity implements OnMapReadyC
         mTitleView = (TextView)findViewById(R.id.titleView);
         //mImageView = (ImageView)findViewById(R.id.imageView);
         mRatingView = (RatingBar)findViewById(R.id.ratingView);
-        mSubtitleView = (TextView)findViewById(R.id.subtitleView);
+        //mSubtitleView = (TextView)findViewById(R.id.subtitleView);
         mReviewCountView = (TextView)findViewById(R.id.ratingCountView);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -77,7 +77,7 @@ public class ItemDetailActivity extends ActionBarActivity implements OnMapReadyC
         //ImageLoader loader = new ImageLoader(mImageView);
         //loader.execute(currentItem.getYelp_entry().getImage_url());
         mRatingView.setRating(currentItem.getYelp_entry().getRating());
-        mSubtitleView.setText(PhoneNumberUtils.formatNumber(currentItem.getYelp_entry().getPhone(), "US"));
+        //mSubtitleView.setText(PhoneNumberUtils.formatNumber(currentItem.getYelp_entry().getPhone(), "US"));
         mReviewCountView.setText(" - "+currentItem.getYelp_entry().getReview_count()+" reviews");
 
         getSupportActionBar().setTitle(currentItem.getCategory());

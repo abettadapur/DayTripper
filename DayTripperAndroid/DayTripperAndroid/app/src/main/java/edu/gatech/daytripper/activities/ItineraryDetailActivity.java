@@ -265,7 +265,7 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
         }
         catch(IOException ioex)
         {}
-
+        googleMap.setMyLocationEnabled(true);
         googleMap.setOnMarkerClickListener(this);
 
         mGoogleMap = googleMap;

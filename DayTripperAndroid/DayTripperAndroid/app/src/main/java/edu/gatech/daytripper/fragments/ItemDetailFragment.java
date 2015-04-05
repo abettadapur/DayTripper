@@ -2,6 +2,8 @@ package edu.gatech.daytripper.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 
 import edu.gatech.daytripper.R;
 import edu.gatech.daytripper.model.Item;
+import info.hoang8f.widget.FButton;
 
 /**
  * Created by Alex on 3/30/2015.
@@ -27,7 +30,8 @@ public class ItemDetailFragment extends Fragment
 {
 
     private Item currentItem;
-    private TextView mTitleView, mSubtitleView, mReviewCountView;
+    private TextView mTitleView, mReviewCountView;
+    private FButton mCallButton, mNavButton, mWebButton;
     private RatingBar mRatingView;
     private IconTextView mIconView;
 
@@ -53,10 +57,45 @@ public class ItemDetailFragment extends Fragment
 
         View v = inflater.inflate(R.layout.fragment_item_detail, container, false);
         mTitleView = (TextView)v.findViewById(R.id.titleView);
-        mSubtitleView = (TextView)v.findViewById(R.id.subtitleView);
+        //mSubtitleView = (TextView)v.findViewById(R.id.subtitleView);
+        mCallButton = (FButton)v.findViewById(R.id.callButton);
+        mNavButton = (FButton)v.findViewById(R.id.navButton);
+        mWebButton = (FButton)v.findViewById(R.id.webButton);
         mReviewCountView = (TextView)v.findViewById(R.id.ratingCountView);
         mRatingView = (RatingBar)v.findViewById(R.id.ratingView);
         mIconView = (IconTextView)v.findViewById(R.id.iconView);
+
+        Iconify.addIcons(mCallButton, mNavButton, mWebButton);
+
+        mNavButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                Uri.parse("google.navigation:q="+currentItem.getYelp_entry().getLocation().getCoordinate().latitude+","+currentItem.getYelp_entry().getLocation().getCoordinate().longitude));
+                startActivity(intent);
+            }
+        });
+
+        mCallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+currentItem.getYelp_entry().getPhone()));
+                startActivity(intent);
+            }
+        });
+
+        mWebButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(currentItem.getYelp_entry().getUrl()));
+                startActivity(browserIntent);
+            }
+        });
+
         return v;
     }
 
@@ -68,7 +107,7 @@ public class ItemDetailFragment extends Fragment
         //ImageLoader loader = new ImageLoader(mImageView);
         //loader.execute(currentItem.getYelp_entry().getImage_url());
         mRatingView.setRating(currentItem.getYelp_entry().getRating());
-        mSubtitleView.setText(PhoneNumberUtils.formatNumber(currentItem.getYelp_entry().getPhone(), "US"));
+        //mSubtitleView.setText(PhoneNumberUtils.formatNumber(currentItem.getYelp_entry().getPhone(), "US"));
         mReviewCountView.setText(" - "+currentItem.getYelp_entry().getReview_count()+" reviews");
 
         switch(item.getCategory())

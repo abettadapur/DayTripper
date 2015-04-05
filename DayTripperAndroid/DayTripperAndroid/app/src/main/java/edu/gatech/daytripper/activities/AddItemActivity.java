@@ -40,6 +40,7 @@ import edu.gatech.daytripper.model.Item;
 import edu.gatech.daytripper.model.Itinerary;
 import edu.gatech.daytripper.model.YelpEntry;
 import edu.gatech.daytripper.net.RestClient;
+import info.hoang8f.widget.FButton;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -53,9 +54,10 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
     private EditText mStartTimeView, mEndTimeView, mCategoryView;
     private TextView mArrowLabel;
     private GoogleMap mGoogleMap;
+    private FButton mCallButton, mNavButton, mWebButton;
 
     //ITEM DETAIL VIEWS
-    private TextView mTitleView, mSubtitleView, mReviewCountView;
+    private TextView mTitleView, mReviewCountView;
     private RatingBar mRatingView;
     private IconTextView mIconView;
 
@@ -84,12 +86,15 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
         mCategoryView = (EditText) findViewById(R.id.categoryView);
         mArrowLabel = (TextView)findViewById(R.id.arrowLabel);
         mTitleView = (TextView)findViewById(R.id.titleView);
-        mSubtitleView = (TextView)findViewById(R.id.subtitleView);
+        mCallButton = (FButton)findViewById(R.id.callButton);
+        mNavButton = (FButton)findViewById(R.id.navButton);
+        mWebButton = (FButton)findViewById(R.id.webButton);
+
         mReviewCountView = (TextView)findViewById(R.id.ratingCountView);
         mRatingView = (RatingBar)findViewById(R.id.ratingView);
         mIconView = (IconTextView)findViewById(R.id.iconView);
 
-        Iconify.addIcons(mArrowLabel);
+        Iconify.addIcons(mArrowLabel, mCallButton, mNavButton);
 
         mToolbar.setTitle("Add an Item");
         setSupportActionBar(mToolbar);
@@ -299,7 +304,7 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
         }
         catch(IOException ioex)
         {}
-
+        mGoogleMap.setMyLocationEnabled(true);
         updateMap();
     }
 
@@ -322,7 +327,7 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
         mTitleView.setText(item.getName());
         mRatingView.setRating(item.getYelp_entry().getRating());
         mReviewCountView.setText(" - " + item.getYelp_entry().getReview_count());
-        mSubtitleView.setText(PhoneNumberUtils.formatNumber(item.getYelp_entry().getPhone()));
+       // mSubtitleView.setText(PhoneNumberUtils.formatNumber(item.getYelp_entry().getPhone()));
 
         switch(item.getCategory())
         {
@@ -350,7 +355,7 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
         mTitleView.setText(entry.getName());
         mRatingView.setRating(entry.getRating());
         mReviewCountView.setText(" - " + entry.getReview_count());
-        mSubtitleView.setText(PhoneNumberUtils.formatNumber(entry.getPhone()));
+       // mSubtitleView.setText(PhoneNumberUtils.formatNumber(entry.getPhone()));
 
         switch(mCurrentItem.getCategory())
         {
