@@ -24,6 +24,7 @@ import java.util.GregorianCalendar;
 
 import edu.gatech.daytripper.model.Itinerary;
 import edu.gatech.daytripper.retro.interfaces.AuthService;
+import edu.gatech.daytripper.retro.interfaces.CategoryService;
 import edu.gatech.daytripper.retro.interfaces.DirectionsService;
 import edu.gatech.daytripper.retro.interfaces.ItemService;
 import edu.gatech.daytripper.retro.interfaces.ItineraryService;
@@ -40,6 +41,7 @@ public class RestClient {
     private ItineraryService itineraryService;
     private ItemService itemService;
     private DirectionsService directionsService;
+    private CategoryService categoryService;
 
     public RestClient()
     {
@@ -85,6 +87,7 @@ public class RestClient {
         itineraryService = adapter.create(ItineraryService.class);
         itemService = adapter.create(ItemService.class);
         directionsService = adapter.create(DirectionsService.class);
+        categoryService = adapter.create(CategoryService.class);
 
     }
 
@@ -95,6 +98,7 @@ public class RestClient {
     public ItineraryService getItineraryService() { return itineraryService; }
     public ItemService getItemService() { return itemService; }
     public DirectionsService getDirectionsService() { return directionsService; }
+    public CategoryService getCategoryService(){ return categoryService; }
 
     private class CalendarSerializer implements JsonSerializer<Calendar>, JsonDeserializer<Calendar>
     {

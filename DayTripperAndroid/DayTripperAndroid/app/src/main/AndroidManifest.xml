@@ -73,6 +73,10 @@
             android:name=".activities.ItemDetailActivity"
             android:label="@string/title_activity_item_detail" >
         </activity>
+        <activity android:name=".activities.AddItemActivity"
+            android:label="Add an Item">
+
+        </activity>
     </application>
 
 </manifest>

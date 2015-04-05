@@ -2,6 +2,7 @@ package edu.gatech.daytripper.activities;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,9 +15,13 @@ import android.view.View;
 import com.astuetz.PagerSlidingTabStrip;
 import com.facebook.Session;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import edu.gatech.daytripper.R;
 import edu.gatech.daytripper.fragments.EditItineraryFragment;
 import edu.gatech.daytripper.fragments.ItemListFragment;
+import edu.gatech.daytripper.model.Item;
 import edu.gatech.daytripper.model.Itinerary;
 import edu.gatech.daytripper.net.RestClient;
 import retrofit.Callback;
@@ -53,6 +58,14 @@ public class EditItineraryActivity extends ActionBarActivity
             @Override
             public void success(Itinerary itinerary, Response response) {
                 mCurrentItinerary = itinerary;
+
+                Collections.sort(mCurrentItinerary.getItems(), new Comparator<Item>() {
+                    @Override
+                    public int compare(Item lhs, Item rhs) {
+                        return (int) (lhs.getStart_time().getTimeInMillis() - rhs.getStart_time().getTimeInMillis());
+                    }
+                });
+
                 getSupportActionBar().setTitle("Editing " + itinerary.getName());
 
                 mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
@@ -69,6 +82,7 @@ public class EditItineraryActivity extends ActionBarActivity
             }
         });
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
     }

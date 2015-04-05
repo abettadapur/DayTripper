@@ -75,6 +75,7 @@ public class ItineraryActivity extends ActionBarActivity implements ItineraryLis
         Request request = Request.newMeRequest(Session.getActiveSession(), new Request.GraphUserCallback() {
             @Override
             public void onCompleted(GraphUser graphUser, com.facebook.Response response) {
+
                 mAccountHeader.addProfile(new ProfileDrawerItem().withName(graphUser.getName()), 0);
             }
         });

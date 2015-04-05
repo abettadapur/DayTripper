@@ -12,10 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.melnykov.fab.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.gatech.daytripper.R;
+import edu.gatech.daytripper.activities.AddItemActivity;
 import edu.gatech.daytripper.activities.ItemDetailActivity;
 import edu.gatech.daytripper.adapters.ItemAdapter;
 import edu.gatech.daytripper.adapters.RecyclerItemClickListener;
@@ -36,6 +39,8 @@ public class ItemListFragment extends Fragment implements RecyclerItemClickListe
     private ItemAdapter mAdapter;
     private Itinerary mCurrentItinerary;
 
+    private FloatingActionButton mFab;
+
 
     public static ItemListFragment newInstance() {
         ItemListFragment fragment = new ItemListFragment();
@@ -52,7 +57,6 @@ public class ItemListFragment extends Fragment implements RecyclerItemClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mItemList = new ArrayList<>();
     }
 
 
@@ -76,6 +80,16 @@ public class ItemListFragment extends Fragment implements RecyclerItemClickListe
 
         mRecycleView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), this));
 
+        mFab = (FloatingActionButton)rootView.findViewById(R.id.add_fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(ItemListFragment.this.getActivity(), AddItemActivity.class);
+                i.putExtra("itinerary_id", mCurrentItinerary.getId());
+                getActivity().startActivity(i);
+            }
+        });
+
 
         return rootView;
     }
@@ -90,6 +104,7 @@ public class ItemListFragment extends Fragment implements RecyclerItemClickListe
 
     public void setItinerary(Itinerary itinerary)
     {
+
         mCurrentItinerary = itinerary;
     }
 
