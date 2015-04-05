@@ -1,7 +1,5 @@
 package edu.gatech.daytripper.activities;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,7 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.facebook.Session;
@@ -119,6 +116,12 @@ public class EditItineraryActivity extends ActionBarActivity
         @Override
         public int getCount() {
             return TITLES.length;
+        }
+
+        public void updateItinerary(Itinerary itinerary)
+        {
+            ((EditItineraryFragment)fragments[0]).setItineraryAndUpdate(itinerary);
+            ((ItemListFragment)fragments[1]).setItineraryAndUpdate(itinerary);
         }
     }
 }

@@ -1,10 +1,12 @@
 package edu.gatech.daytripper.activities;
 
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -54,7 +56,7 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
     private EditText mStartTimeView, mEndTimeView, mCategoryView;
     private TextView mArrowLabel;
     private GoogleMap mGoogleMap;
-    private FButton mCallButton, mNavButton, mWebButton;
+    private FButton mCallButton, mNavButton, mWebButton, mAddButton;
 
     //ITEM DETAIL VIEWS
     private TextView mTitleView, mReviewCountView;
@@ -89,12 +91,43 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
         mCallButton = (FButton)findViewById(R.id.callButton);
         mNavButton = (FButton)findViewById(R.id.navButton);
         mWebButton = (FButton)findViewById(R.id.webButton);
+        mAddButton = (FButton)findViewById(R.id.addButton);
+
+
+        mNavButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                Uri.parse("google.navigation:q=" + mCurrentItem.getYelp_entry().getLocation().getCoordinate().latitude + "," + mCurrentItem.getYelp_entry().getLocation().getCoordinate().longitude));
+                startActivity(intent);
+            }
+        });
+
+        mCallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+mCurrentItem.getYelp_entry().getPhone()));
+                startActivity(intent);
+            }
+        });
+
+        mWebButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mCurrentItem.getYelp_entry().getUrl()));
+                startActivity(browserIntent);
+            }
+        });
 
         mReviewCountView = (TextView)findViewById(R.id.ratingCountView);
         mRatingView = (RatingBar)findViewById(R.id.ratingView);
         mIconView = (IconTextView)findViewById(R.id.iconView);
 
-        Iconify.addIcons(mArrowLabel, mCallButton, mNavButton);
+        Iconify.addIcons(mArrowLabel, mCallButton, mNavButton, mAddButton, mWebButton);
 
         mToolbar.setTitle("Add an Item");
         setSupportActionBar(mToolbar);
@@ -311,7 +344,7 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
-        if(marker.getTitle().equals(prevItem.getName()))
+        if(prevItem != null && marker.getTitle().equals(prevItem.getName()))
         {
             updateItemView(prevItem);
         }
@@ -327,6 +360,7 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
         mTitleView.setText(item.getName());
         mRatingView.setRating(item.getYelp_entry().getRating());
         mReviewCountView.setText(" - " + item.getYelp_entry().getReview_count());
+        mAddButton.setVisibility(View.INVISIBLE);
        // mSubtitleView.setText(PhoneNumberUtils.formatNumber(item.getYelp_entry().getPhone()));
 
         switch(item.getCategory())
@@ -350,11 +384,36 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
 
     }
 
-    private void updateItemView(YelpEntry entry)
+    private void updateItemView(final YelpEntry entry)
     {
         mTitleView.setText(entry.getName());
         mRatingView.setRating(entry.getRating());
         mReviewCountView.setText(" - " + entry.getReview_count());
+        mAddButton.setVisibility(View.VISIBLE);
+
+        mAddButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mCurrentItem.setName(entry.getName());
+                final MaterialDialog progressDialog = new MaterialDialog.Builder(AddItemActivity.this).title("Adding").content("Adding this item to your itinerary").progress(true, 0).show();
+                mCurrentItem.setYelp_entry(entry);
+                mCurrentItem.setYelp_id(entry.getId());
+                mRestClient.getItemService().createItem(mCurrentItinerary.getId(), mCurrentItem, Session.getActiveSession().getAccessToken(), new Callback<Item>() {
+                    @Override
+                    public void success(Item item, Response response) {
+                        progressDialog.dismiss();
+                        finish();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        progressDialog.dismiss();
+                    }
+                });
+            }
+        });
        // mSubtitleView.setText(PhoneNumberUtils.formatNumber(entry.getPhone()));
 
         switch(mCurrentItem.getCategory())

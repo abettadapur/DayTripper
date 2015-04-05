@@ -13,4 +13,7 @@
         android:title="Edit Itinerary"
         app:showAsAction="collapseActionView|ifRoom"
         />
+    <item android:id="@+id/action_refresh"
+        android:title="Refresh"
+        app:showAsAction="collapseActionView|ifRoom"/>
 </menu>

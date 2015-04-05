@@ -108,6 +108,13 @@ public class ItemListFragment extends Fragment implements RecyclerItemClickListe
         mCurrentItinerary = itinerary;
     }
 
+    public void setItineraryAndUpdate(Itinerary itinerary)
+    {
+        mCurrentItinerary = itinerary;
+        mAdapter = new ItemAdapter(mCurrentItinerary.getItems(), getActivity());
+        mRecycleView.setAdapter(mAdapter);
+    }
+
 
     @Override
     public void onItemClick(View childView, int position) {

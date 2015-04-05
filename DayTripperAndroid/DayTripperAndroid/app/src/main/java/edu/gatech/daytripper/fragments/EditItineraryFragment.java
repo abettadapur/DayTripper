@@ -58,6 +58,13 @@ public class EditItineraryFragment extends Fragment {
         mCurrentItinerary = itinerary;
     }
 
+    public void setItineraryAndUpdate(Itinerary itinerary)
+    {
+        mCurrentItinerary = itinerary;
+        updateView();
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
