@@ -437,15 +437,11 @@ The items resource represents the individual events contained within an itinerar
 
   Returns a different suggested YelpEntry for this item.
 
-  Optional parameters:
-    strategy:  one of [distance, yelp-rating, price-0, price-1, price-2, price-3, price-4, random, popularity, first] (defaults to random)
-    dids: additional YelpIDs that server is not allowed to return
-
   **Request**
 
   .. code-block:: js
 
-  GET itinerary/6/item/22/query?token=token&strategy=yelp-rating&dids=gusto-wood-fire-grill-atlanta&dids=ocean-market-downtown-atlanta
+    GET itinerary/6/item/22/query?token=token&strategy=yelp-rating&dids=gusto-wood-fire-grill-atlanta&dids=ocean-market-downtown-atlanta
 
   **Response**
 
@@ -474,6 +470,9 @@ The items resource represents the individual events contained within an itinerar
         "review_count": 64,
         "url": "http://www.yelp.com/biz/get-fruity-cafe-atlanta-2"
     }
+
+  :query strategy:  one of [distance, yelp-rating, price-0, price-1, price-2, price-3, price-4, random, popularity, first] (defaults to random)
+  :query dids: additional YelpIDs that server is not allowed to return
 
 
 Categories
