@@ -38,7 +38,7 @@ CATEGORIES = [model.match_category(name) for name in DEFAULT_SCHEDULE]
 FETCH_STRATEGY_OPTIONS = ['distance', 'yelp-rating'] + strategy.STRATEGIES.keys()
 
 
-def fetch_sample_itinerary(user, name, city, start_time, end_time, date):
+def fetch_sample_itinerary(user, name, city, start_time, end_time, date, public):
     """
     start_time, end_time, and date should be STRINGS straight from args[]
     (i.e. don't pass datetime object result of dateutil.parser.parse)
@@ -57,6 +57,7 @@ def fetch_sample_itinerary(user, name, city, start_time, end_time, date):
         start_time=start_time,
         end_time=end_time,
         city=city,
+        public=public,
         items=sample_items
     )
 

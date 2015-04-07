@@ -143,7 +143,7 @@ class SqlLiteManager(object):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                'INSERT INTO {table} ({user}, {name}, {date}, {start_time}, {end_time}, {city}) VALUES (?,?,?,?,?,?)'
+                'INSERT INTO {table} ({user}, {name}, {date}, {start_time}, {end_time}, {city}, {public}) VALUES (?,?,?,?,?,?,?)'
                 .format(
                     table = itinerary_schema.ITINERARY_TABLE,
                     user = itinerary_schema.USER_ID,
@@ -151,9 +151,10 @@ class SqlLiteManager(object):
                     date = itinerary_schema.DATE,
                     start_time = itinerary_schema.START_TIME,
                     end_time = itinerary_schema.END_TIME,
-                    city = itinerary_schema.CITY
+                    city = itinerary_schema.CITY,
+                    public = itinerary_schema.PUBLIC
                 ),
-                (itinerary.user.id, itinerary.name, itinerary.date, itinerary.start_time, itinerary.end_time, itinerary.city)
+                (itinerary.user.id, itinerary.name, itinerary.date, itinerary.start_time, itinerary.end_time, itinerary.city, itinerary.public)
             )
             itinerary_id = cursor.lastrowid
             itinerary.id = itinerary_id
@@ -161,7 +162,7 @@ class SqlLiteManager(object):
 
         for item in itinerary.items:
             self.insert_item(item, itinerary)
-            
+
         return itinerary_id
 
     def get_itinerary(self, id):
@@ -207,13 +208,14 @@ class SqlLiteManager(object):
             cursor = conn.cursor()
             cursor.row_factory = self.itinerary_from_cursor
             cursor.execute(
-                'SELECT * FROM {table} WHERE {name} LIKE ? AND {city} LIKE ?'
+                'SELECT * FROM {table} WHERE {name} LIKE ? AND {city} LIKE ? AND {public} = ?'
                 .format(
                     table = itinerary_schema.ITINERARY_TABLE,
                     name = itinerary_schema.NAME,
-                    city = itinerary_schema.CITY
+                    city = itinerary_schema.CITY,
+                    public = itinerary_schema.PUBLIC,
                 ),
-                ('%'+query+'%', '%'+city+'%')
+                ('%'+query+'%', '%'+city+'%', True)
             )
 
             itineraries = cursor.fetchall()
@@ -224,7 +226,7 @@ class SqlLiteManager(object):
         with sqlite3.connect(self.db_name) as conn:
             cursor = conn.cursor()
             cursor.execute(
-                'UPDATE {table} SET {user}=?, {name}=?, {date}=?, {start_time}=?, {end_time}=?, {city}=? WHERE {id}=?'
+                'UPDATE {table} SET {user}=?, {name}=?, {date}=?, {start_time}=?, {end_time}=?, {city}=?, {public}=? WHERE {id}=?'
                 .format(
                     table=itinerary_schema.ITINERARY_TABLE,
                     user=itinerary_schema.USER_ID,
@@ -233,9 +235,10 @@ class SqlLiteManager(object):
                     start_time=itinerary_schema.START_TIME,
                     end_time=itinerary_schema.END_TIME,
                     city=itinerary_schema.CITY,
+                    public = itinerary_schema.PUBLIC,
                     id=itinerary_schema.ID
                 ),
-                (itinerary.user.id, itinerary.name, itinerary.date, itinerary.start_time, itinerary.end_time, itinerary.city, itinerary.id)
+                (itinerary.user.id, itinerary.name, itinerary.date, itinerary.start_time, itinerary.end_time, itinerary.city, itinerary.public, itinerary.id)
             )
             cursor.close()
 
@@ -261,7 +264,7 @@ class SqlLiteManager(object):
         if row:
             items = self.list_items(row[0])
             user = self.get_user(row[1])
-            itinerary = Itinerary(row[0], user, row[2], row[3], row[4], row[5], row[6], items)
+            itinerary = Itinerary(row[0], user, row[2], row[3], row[4], row[5], row[6], row[7], items)
             return itinerary
         return None
 

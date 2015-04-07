@@ -101,7 +101,7 @@ class ItineraryResource(Resource):
         self.put_reqparse.add_argument('start_time', type=str, required=True, location='json', help='No start_time provided')
         self.put_reqparse.add_argument('end_time', type=str, required=True, location='json', help='No end_time provided')
         self.put_reqparse.add_argument('city', type=str, required=True, location='json', help='No city provided')
-        self.put_reqparse.add_argument('items', type=list, required=True, location='json', help='No items field provided')
+        self.put_reqparse.add_argument('public', type=bool, required=True, location='json', help='No publicity provided')
 
         super(ItineraryResource, self).__init__()
 
@@ -129,6 +129,7 @@ class ItineraryResource(Resource):
             start_time=args['start_time'],
             end_time=args['end_time'],
             city=args['city'],
+            public=args['public'],
             items=old_itinerary.items
         )
         db.sqlite.update_itinerary(updated_itinerary)
@@ -159,6 +160,7 @@ class CreateItineraryResource(Resource):
         self.reqparse.add_argument('start_time', type=str, required=True, location='json', help='No start_time provided')
         self.reqparse.add_argument('end_time', type=str, required=True, location='json', help='No end_time provided')
         self.reqparse.add_argument('city', type=str, required=True, location='json', help='No city provided')
+        self.reqparse.add_argument('public', type=bool, required=True, location='json', help="No publicity provided")
 
         super(CreateItineraryResource, self).__init__()
 
@@ -180,7 +182,8 @@ class CreateItineraryResource(Resource):
             city=args['city'],
             start_time=args['start_time'],
             end_time=args['end_time'],
-            date=args['date']
+            date=args['date'],
+            public=args['public']
         )
 
         itinerary_id = db.sqlite.insert_itinerary(itinerary)
@@ -541,4 +544,5 @@ def abort_on_invalid_itinerary(itinerary, user_id):
         abort(404, message='Itinerary not found')
 
     if itinerary.user.id != user_id:
-        abort(401, message='Do not own itinerary')
+        if not itinerary.public:
+            abort(401, message='Do not own itinerary')

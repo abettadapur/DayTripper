@@ -2,7 +2,7 @@ __author__ = 'abettadapur'
 
 class Itinerary(object):
 
-    def __init__(self, id, user, name, date, start_time, end_time, city, items):
+    def __init__(self, id, user, name, date, start_time, end_time, city, public, items):
         self.id = id
         self.user = user
         self.name = name
@@ -10,6 +10,7 @@ class Itinerary(object):
         self.start_time = start_time
         self.end_time = end_time
         self.city = city
+        self.public = public
         self.items = items
 
 
