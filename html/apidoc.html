@@ -1,0 +1,674 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>REST API Documentation &mdash; Day Tripper 1.0 documentation</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Day Tripper 1.0 documentation" href="index.html"/>
+        <link rel="prev" title="Welcome to Day Tripper’s documentation!" href="index.html"/> 
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+          <a href="index.html" class="fa fa-home"> Day Tripper</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">REST API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#authentication">Authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#itineraries">Itineraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#search-itineraries">Search Itineraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#itinerary-ratings">Itinerary Ratings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#items">Items</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#categories">Categories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#directions">Directions</a></li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Day Tripper</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>REST API Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          <a href="_sources/apidoc.txt" rel="nofollow"> View page source</a>
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="rest-api-documentation">
+<h1>REST API Documentation<a class="headerlink" href="#rest-api-documentation" title="Permalink to this headline">¶</a></h1>
+<p>The DayTripper REST API can be used to interface with the application and its recommendations engine. All requests except those in the auth section require the token query parameter, which is a Facebook OAUTH token that has been previously verified with the DayTripper service. This token is used to both authenticate the user and provide user identity information.</p>
+<div class="section" id="authentication">
+<h2>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h2>
+<dl class="post">
+<dt id="post--auth-verify">
+<code class="descname">POST </code><code class="descname">/auth/verify</code><a class="headerlink" href="#post--auth-verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a Facebook authentication token with the server. The Facebook token must be a valid token that matches the Facebook user-id provided. This must be called once before using the API with a Facebook token. If the user-id and the token do not match, a 401 HTTP response will be returned.</p>
+<p><strong>Request</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">POST</span> <span class="o">/</span><span class="nx">auth</span><span class="o">/</span><span class="nx">verify</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+<span class="p">{</span>
+  <span class="s2">&quot;token&quot;</span><span class="o">:</span> <span class="s2">&quot;.....&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;user_id&quot;</span><span class="o">:</span> <span class="s2">&quot;....&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="delete">
+<dt id="delete--auth-logout">
+<code class="descname">DELETE </code><code class="descname">/auth/logout</code><a class="headerlink" href="#delete--auth-logout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logout and delete the Facebook token from the database. The token will no longer be valid and any requests made with it will be rejected. A call to /auth/verify is required to continue using the API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first last simple">
+<li><strong>token</strong> &#8211; The token to logout.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="itineraries">
+<h2>Itineraries<a class="headerlink" href="#itineraries" title="Permalink to this headline">¶</a></h2>
+<p>The itineraries resource represents all itineraries that are currently present in the application.</p>
+<dl class="post">
+<dt id="post--itinerary-create">
+<code class="descname">POST </code><code class="descname">/itinerary/create</code><a class="headerlink" href="#post--itinerary-create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an itinerary with the specified parameters. The itinerary will be prefilled with items based on the time and location specified.</p>
+<p><strong>Request</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">POST</span> <span class="o">/</span><span class="nx">itinerary</span><span class="o">/</span><span class="nx">create</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+ <span class="p">{</span>
+     <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;date&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T01:30:53-0400&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;end_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T21:00:53-0400&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Sample Itinerary&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;start_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T10:00:53-0400&quot;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">201</span> <span class="nx">Created</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+<span class="p">{</span>
+  <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;date&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T01:30:53-0400&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;end_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T21:00:53-0400&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">14</span><span class="p">,</span>
+  <span class="s2">&quot;items&quot;</span><span class="o">:</span><span class="p">[...]</span>
+  <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Sample Itinerary&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;start_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T10:00:53-0400&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;user&quot;</span><span class="o">:</span><span class="p">{...}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--itinerary--int-id-">
+<code class="descname">GET </code><code class="descname">/itinerary/&lt;int:id&gt;</code><a class="headerlink" href="#get--itinerary--int-id-" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve an itinerary with the id specified from the database. Comes with the associated items and user. Users can only retrieve itineraries that are theirs.</p>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">201</span> <span class="nx">OK</span>
+<span class="nx">ContentType</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+<span class="p">{</span>
+   <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;date&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T01:30:53-0400&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;end_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T21:00:53-0400&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">14</span><span class="p">,</span>
+   <span class="s2">&quot;items&quot;</span><span class="o">:</span><span class="p">[</span>
+       <span class="p">{</span>
+         <span class="s2">&quot;category&quot;</span><span class="o">:</span><span class="s2">&quot;lunch&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;end_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T11:30:53-04:00&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">32</span><span class="p">,</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Heirloom Market BBQ&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;start_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T10:00:53-04:00&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;yelp_entry&quot;</span><span class="o">:</span><span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;heirloom-market-bbq-atlanta&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;image_url&quot;</span><span class="o">:</span><span class="s2">&quot;http://s3-media1.fl.yelpassets.com/bphoto/nxPlyqHrLCNMnDe87P0yLQ/ms.jpg&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;location&quot;</span><span class="o">:</span><span class="p">{</span>
+               <span class="s2">&quot;address&quot;</span><span class="o">:</span><span class="s2">&quot;2243 Akers Mill Rd SE&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;coordinate&quot;</span><span class="o">:</span><span class="p">{</span>
+                  <span class="s2">&quot;latitude&quot;</span><span class="o">:</span><span class="mf">33.8986473470416</span><span class="p">,</span>
+                  <span class="s2">&quot;longitude&quot;</span><span class="o">:-</span><span class="mf">84.4471785276031</span>
+               <span class="p">},</span>
+               <span class="s2">&quot;postal_code&quot;</span><span class="o">:</span><span class="mi">30339</span><span class="p">,</span>
+               <span class="s2">&quot;state_code&quot;</span><span class="o">:</span><span class="s2">&quot;GA&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;yelp_id&quot;</span><span class="o">:</span><span class="s2">&quot;heirloom-market-bbq-atlanta&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Heirloom Market BBQ&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;phone&quot;</span><span class="o">:</span><span class="s2">&quot;7706122502&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;price&quot;</span><span class="o">:</span><span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;rating&quot;</span><span class="o">:</span><span class="mf">4.5</span><span class="p">,</span>
+            <span class="s2">&quot;review_count&quot;</span><span class="o">:</span><span class="mi">688</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="o">:</span><span class="s2">&quot;http://www.yelp.com/biz/heirloom-market-bbq-atlanta&quot;</span>
+         <span class="p">},</span>
+        <span class="s2">&quot;yelp_id&quot;</span><span class="o">:</span><span class="s2">&quot;heirloom-market-bbq-atlanta&quot;</span>
+   <span class="p">]</span>
+   <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Sample Itinerary&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;start_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T10:00:53-0400&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;user&quot;</span><span class="o">:</span><span class="p">{</span>
+        <span class="s2">&quot;email&quot;</span><span class="o">:</span><span class="s2">&quot;alexbettadapur@gmail.com&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;first_name&quot;</span><span class="o">:</span><span class="s2">&quot;Alex&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">10206134897237072</span><span class="p">,</span>
+        <span class="s2">&quot;last_name&quot;</span><span class="o">:</span><span class="s2">&quot;Bettadapur&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--itinerary-list">
+<code class="descname">GET </code><code class="descname">/itinerary/list</code><a class="headerlink" href="#get--itinerary-list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all the itineraries that the user owns.</p>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">201</span> <span class="nx">OK</span>
+<span class="nx">ContentType</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+<span class="p">[</span>
+  <span class="p">{</span>
+     <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;date&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T01:30:53-0400&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;end_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T21:00:53-0400&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">14</span><span class="p">,</span>
+     <span class="s2">&quot;items&quot;</span><span class="o">:</span><span class="p">[</span>
+         <span class="p">{</span>
+           <span class="s2">&quot;category&quot;</span><span class="o">:</span><span class="s2">&quot;lunch&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;end_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T11:30:53-04:00&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">32</span><span class="p">,</span>
+           <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Heirloom Market BBQ&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;start_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T10:00:53-04:00&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;yelp_entry&quot;</span><span class="o">:</span><span class="p">{</span>
+              <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;heirloom-market-bbq-atlanta&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;image_url&quot;</span><span class="o">:</span><span class="s2">&quot;http://s3-media1.fl.yelpassets.com/bphoto/nxPlyqHrLCNMnDe87P0yLQ/ms.jpg&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;location&quot;</span><span class="o">:</span><span class="p">{</span>
+                 <span class="s2">&quot;address&quot;</span><span class="o">:</span><span class="s2">&quot;2243 Akers Mill Rd SE&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;coordinate&quot;</span><span class="o">:</span><span class="p">{</span>
+                    <span class="s2">&quot;latitude&quot;</span><span class="o">:</span><span class="mf">33.8986473470416</span><span class="p">,</span>
+                    <span class="s2">&quot;longitude&quot;</span><span class="o">:-</span><span class="mf">84.4471785276031</span>
+                 <span class="p">},</span>
+                 <span class="s2">&quot;postal_code&quot;</span><span class="o">:</span><span class="mi">30339</span><span class="p">,</span>
+                 <span class="s2">&quot;state_code&quot;</span><span class="o">:</span><span class="s2">&quot;GA&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;yelp_id&quot;</span><span class="o">:</span><span class="s2">&quot;heirloom-market-bbq-atlanta&quot;</span>
+              <span class="p">},</span>
+              <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Heirloom Market BBQ&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;phone&quot;</span><span class="o">:</span><span class="s2">&quot;7706122502&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;price&quot;</span><span class="o">:</span><span class="mi">2</span><span class="p">,</span>
+              <span class="s2">&quot;rating&quot;</span><span class="o">:</span><span class="mf">4.5</span><span class="p">,</span>
+              <span class="s2">&quot;review_count&quot;</span><span class="o">:</span><span class="mi">688</span><span class="p">,</span>
+              <span class="s2">&quot;url&quot;</span><span class="o">:</span><span class="s2">&quot;http://www.yelp.com/biz/heirloom-market-bbq-atlanta&quot;</span>
+           <span class="p">},</span>
+          <span class="s2">&quot;yelp_id&quot;</span><span class="o">:</span><span class="s2">&quot;heirloom-market-bbq-atlanta&quot;</span>
+     <span class="p">]</span>
+     <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Sample Itinerary&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;start_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T10:00:53-0400&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;user&quot;</span><span class="o">:</span><span class="p">{</span>
+          <span class="s2">&quot;email&quot;</span><span class="o">:</span><span class="s2">&quot;alexbettadapur@gmail.com&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;first_name&quot;</span><span class="o">:</span><span class="s2">&quot;Alex&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">10206134897237072</span><span class="p">,</span>
+          <span class="s2">&quot;last_name&quot;</span><span class="o">:</span><span class="s2">&quot;Bettadapur&quot;</span>
+      <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="p">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="put">
+<dt id="put--itinerary--int-id-">
+<code class="descname">PUT </code><code class="descname">/itinerary/&lt;int:id&gt;</code><a class="headerlink" href="#put--itinerary--int-id-" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update an exisiting itinerary with new information. This should only be used to update itinerary attributes, not add or remove items. Users can only edit itineraries that are theirs.</p>
+<p><strong>Request</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">PUT</span> <span class="o">/</span><span class="nx">itinerary</span><span class="o">/</span><span class="nx">create</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+  <span class="p">{</span>
+     <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;date&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T01:30:53-0400&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;end_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T21:00:53-0400&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Sample Itinerary&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;start_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T10:00:53-0400&quot;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="nx">OK</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+<span class="p">{</span>
+  <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;date&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T01:30:53-0400&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;end_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T21:00:53-0400&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">14</span><span class="p">,</span>
+  <span class="s2">&quot;items&quot;</span><span class="o">:</span><span class="p">[...]</span>
+  <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Sample Itinerary&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;start_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T10:00:53-0400&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;user&quot;</span><span class="o">:</span><span class="p">{...}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="delete">
+<dt id="delete--itinerary--int-id-">
+<code class="descname">DELETE </code><code class="descname">/itinerary/&lt;int:id&gt;</code><a class="headerlink" href="#delete--itinerary--int-id-" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the itinerary with the specified Id. Users can only delete itineraries that are theirs</p>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">204</span> <span class="nx">No</span> <span class="nx">Content</span>
+
+<span class="kc">true</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="search-itineraries">
+<h2>Search Itineraries<a class="headerlink" href="#search-itineraries" title="Permalink to this headline">¶</a></h2>
+<p>Users can also search for itineraries from other users using the search endpoint.</p>
+<dl class="get">
+<dt id="get--itinerary-search">
+<code class="descname">GET </code><code class="descname">/itinerary/search</code><a class="headerlink" href="#get--itinerary-search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for an itinerary</p>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">201</span> <span class="nx">OK</span>
+<span class="nx">ContentType</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+<span class="p">[</span>
+  <span class="p">{</span>
+     <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;date&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T01:30:53-0400&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;end_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T21:00:53-0400&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">14</span><span class="p">,</span>
+     <span class="s2">&quot;items&quot;</span><span class="o">:</span><span class="p">[</span>
+         <span class="p">{</span>
+           <span class="s2">&quot;category&quot;</span><span class="o">:</span><span class="s2">&quot;lunch&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;end_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T11:30:53-04:00&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">32</span><span class="p">,</span>
+           <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Heirloom Market BBQ&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;start_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T10:00:53-04:00&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;yelp_entry&quot;</span><span class="o">:</span><span class="p">{</span>
+              <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="s2">&quot;heirloom-market-bbq-atlanta&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;image_url&quot;</span><span class="o">:</span><span class="s2">&quot;http://s3-media1.fl.yelpassets.com/bphoto/nxPlyqHrLCNMnDe87P0yLQ/ms.jpg&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;location&quot;</span><span class="o">:</span><span class="p">{</span>
+                 <span class="s2">&quot;address&quot;</span><span class="o">:</span><span class="s2">&quot;2243 Akers Mill Rd SE&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;coordinate&quot;</span><span class="o">:</span><span class="p">{</span>
+                    <span class="s2">&quot;latitude&quot;</span><span class="o">:</span><span class="mf">33.8986473470416</span><span class="p">,</span>
+                    <span class="s2">&quot;longitude&quot;</span><span class="o">:-</span><span class="mf">84.4471785276031</span>
+                 <span class="p">},</span>
+                 <span class="s2">&quot;postal_code&quot;</span><span class="o">:</span><span class="mi">30339</span><span class="p">,</span>
+                 <span class="s2">&quot;state_code&quot;</span><span class="o">:</span><span class="s2">&quot;GA&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;yelp_id&quot;</span><span class="o">:</span><span class="s2">&quot;heirloom-market-bbq-atlanta&quot;</span>
+              <span class="p">},</span>
+              <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Heirloom Market BBQ&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;phone&quot;</span><span class="o">:</span><span class="s2">&quot;7706122502&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;price&quot;</span><span class="o">:</span><span class="mi">2</span><span class="p">,</span>
+              <span class="s2">&quot;rating&quot;</span><span class="o">:</span><span class="mf">4.5</span><span class="p">,</span>
+              <span class="s2">&quot;review_count&quot;</span><span class="o">:</span><span class="mi">688</span><span class="p">,</span>
+              <span class="s2">&quot;url&quot;</span><span class="o">:</span><span class="s2">&quot;http://www.yelp.com/biz/heirloom-market-bbq-atlanta&quot;</span>
+           <span class="p">},</span>
+          <span class="s2">&quot;yelp_id&quot;</span><span class="o">:</span><span class="s2">&quot;heirloom-market-bbq-atlanta&quot;</span>
+     <span class="p">]</span>
+     <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Sample Itinerary&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;start_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T10:00:53-0400&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;user&quot;</span><span class="o">:</span><span class="p">{</span>
+          <span class="s2">&quot;email&quot;</span><span class="o">:</span><span class="s2">&quot;alexbettadapur@gmail.com&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;first_name&quot;</span><span class="o">:</span><span class="s2">&quot;Alex&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">10206134897237072</span><span class="p">,</span>
+          <span class="s2">&quot;last_name&quot;</span><span class="o">:</span><span class="s2">&quot;Bettadapur&quot;</span>
+      <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="p">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first last simple">
+<li><strong>query</strong> &#8211; The search term &#8211; required</li>
+<li><strong>city</strong> &#8211; An optional city to filter by</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="itinerary-ratings">
+<h2>Itinerary Ratings<a class="headerlink" href="#itinerary-ratings" title="Permalink to this headline">¶</a></h2>
+<p>The ratings resource allows users to rate other users itineraries. A simple star rating method is used.</p>
+<dl class="post">
+<dt id="post--itinerary--int-id--rating-create">
+<code class="descname">POST </code><code class="descname">/itinerary/&lt;int:id&gt;/rating/create</code><a class="headerlink" href="#post--itinerary--int-id--rating-create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a rating for the specified itinerary</p>
+<p><strong>Request</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">POST</span> <span class="o">/</span><span class="nx">itinerary</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span><span class="nx">ratings</span><span class="o">/</span><span class="nx">create</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+<span class="p">{</span>
+  <span class="s2">&quot;rating&quot;</span><span class="o">:</span> <span class="mi">5</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">201</span> <span class="nx">Created</span>
+
+<span class="p">{</span>
+  <span class="s2">&quot;rating&quot;</span><span class="o">:</span> <span class="mi">5</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--itinerary-1-ratings-1">
+<code class="descname">GET </code><code class="descname">/itinerary/1/ratings/1</code><a class="headerlink" href="#get--itinerary-1-ratings-1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a specific rating for the specified itinerary</p>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">201</span> <span class="nx">Created</span>
+
+<span class="p">{</span>
+  <span class="s2">&quot;rating&quot;</span><span class="o">:</span> <span class="mi">5</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--itinerary-1-ratings-list">
+<code class="descname">GET </code><code class="descname">/itinerary/1/ratings/list</code><a class="headerlink" href="#get--itinerary-1-ratings-list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="put">
+<dt id="put--itinerary-1-ratings-1">
+<code class="descname">PUT </code><code class="descname">/itinerary/1/ratings/1</code><a class="headerlink" href="#put--itinerary-1-ratings-1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="items">
+<h2>Items<a class="headerlink" href="#items" title="Permalink to this headline">¶</a></h2>
+<p>The items resource represents the individual events contained within an itinerary. This resource can be used to manually add, update, or delete items from a pre-existing itinerary. It can also be used to get detailed information about a specific event.</p>
+<dl class="post">
+<dt id="post--itinerary--int-id--item-create">
+<code class="descname">POST </code><code class="descname">/itinerary/&lt;int:id&gt;/item/create</code><a class="headerlink" href="#post--itinerary--int-id--item-create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an item with the specified parameters and adds it to the specified itinerary</p>
+<p><strong>Request</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">POST</span> <span class="o">/</span><span class="nx">itinerary</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span><span class="nx">items</span><span class="o">/</span><span class="nx">create</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">201</span> <span class="nx">Created</span>
+
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--itinerary--int-id--item--int-id-">
+<code class="descname">GET </code><code class="descname">/itinerary/&lt;int:id&gt;/item/&lt;int:id&gt;</code><a class="headerlink" href="#get--itinerary--int-id--item--int-id-" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the specified item.</p>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">201</span> <span class="nx">Created</span>
+
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="put">
+<dt id="put--itinerary--int-id--item--int-id-">
+<code class="descname">PUT </code><code class="descname">/itinerary/&lt;int:id&gt;/item/&lt;int:id&gt;</code><a class="headerlink" href="#put--itinerary--int-id--item--int-id-" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates an item with new details as specified.</p>
+<p><strong>Request</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">PUT</span> <span class="o">/</span><span class="nx">itinerary</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span><span class="nx">items</span><span class="o">/</span><span class="mi">1</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="nx">OK</span>
+
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="delete">
+<dt id="delete--itinerary--int-id--item--int-id-">
+<code class="descname">DELETE </code><code class="descname">/itinerary/&lt;int:id&gt;/item/&lt;int:id&gt;</code><a class="headerlink" href="#delete--itinerary--int-id--item--int-id-" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the specified item</p>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">204</span> <span class="nx">No</span> <span class="nx">Content</span>
+
+<span class="kc">true</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="categories">
+<h2>Categories<a class="headerlink" href="#categories" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="directions">
+<h2>Directions<a class="headerlink" href="#directions" title="Permalink to this headline">¶</a></h2>
+<dl class="get">
+<dt id="get--maps-directions">
+<code class="descname">GET </code><code class="descname">/maps/directions</code><a class="headerlink" href="#get--maps-directions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets directions from the Google Directions API.</p>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="nx">OK</span>
+
+<span class="p">{</span>
+
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first last simple">
+<li><strong>origin</strong> &#8211; The start location. This can be an address string or coordinates. &#8212; required</li>
+<li><strong>destination</strong> &#8211; The end location. This can be an address string or coordinates. &#8212; required</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--maps-polyline">
+<code class="descname">GET </code><code class="descname">/maps/polyline</code><a class="headerlink" href="#get--maps-polyline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a Google Encoded polyline for use on a map. See here for more information</p>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="nx">OK</span>
+
+<span class="nx">fldkjadsfias</span><span class="p">;</span><span class="nx">odfjsa</span><span class="p">;</span><span class="nx">ijkfdas</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body"><ul class="first last simple">
+<li><strong>origin</strong> &#8211; The start location. This can be an address string or coordinates. &#8212; required</li>
+<li><strong>destination</strong> &#8211; The end location. This can be an address string or coordinates. &#8212; required</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to Day Tripper’s documentation!"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Alex Bettadapur, Max Virgil.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
