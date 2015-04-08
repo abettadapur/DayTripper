@@ -1,6 +1,7 @@
 package edu.gatech.daytripper.model;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Calendar;
 import java.util.List;
@@ -16,6 +17,8 @@ public class Itinerary implements Comparable<Itinerary>
     private Calendar start_time;
     private Calendar end_time;
     private String city;
+    @SerializedName("public")
+    private boolean isPublic;
     @Expose(serialize = false)
     private List<Item> items;
     @Expose(serialize = false)
@@ -24,7 +27,7 @@ public class Itinerary implements Comparable<Itinerary>
 
     public Itinerary(){}
 
-    public Itinerary(String name, Calendar date, Calendar start_time, Calendar end_time, String city, List<Item> items)
+    public Itinerary(String name, Calendar date, Calendar start_time, Calendar end_time, String city, boolean isPublic, List<Item> items)
     {
         this.id = 0;
         this.name = name;
@@ -33,10 +36,10 @@ public class Itinerary implements Comparable<Itinerary>
         this.end_time = end_time;
         this.city = city;
         this.items = items;
+        this.isPublic = isPublic;
     }
 
-    public Itinerary(int id, String name, Calendar date, Calendar start_time, Calendar end_time, String city, List<Item> items)
-    {
+    public Itinerary(int id, String name, Calendar date, Calendar start_time, Calendar end_time, String city, boolean isPublic, List<Item> items) {
 
         this.id = id;
         this.name = name;
@@ -45,6 +48,7 @@ public class Itinerary implements Comparable<Itinerary>
         this.end_time = end_time;
         this.city = city;
         this.items = items;
+        this.isPublic = isPublic;
     }
 
     public List<Item> getItems() {
@@ -109,6 +113,14 @@ public class Itinerary implements Comparable<Itinerary>
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     @Override

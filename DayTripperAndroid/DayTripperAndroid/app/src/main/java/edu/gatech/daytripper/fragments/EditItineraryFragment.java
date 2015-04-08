@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -36,6 +38,7 @@ public class EditItineraryFragment extends Fragment {
     private Itinerary mCurrentItinerary;
 
     private EditText mNameBox, mCityBox, mDateBox, mStartTimeBox, mEndTimeBox;
+    private CheckBox mCheckBox;
 
     private String dateFormat = "MM/dd/yyyy";
     private SimpleDateFormat dateSdf;
@@ -81,6 +84,7 @@ public class EditItineraryFragment extends Fragment {
         mDateBox = (EditText) v.findViewById(R.id.datePicker);
         mStartTimeBox = (EditText) v.findViewById(R.id.startPicker);
         mEndTimeBox = (EditText) v.findViewById(R.id.endPicker);
+        mCheckBox = (CheckBox)v.findViewById(R.id.publicBox);
 
         dateSdf = new SimpleDateFormat(dateFormat, Locale.US);
         timeSdf = new SimpleDateFormat(timeFormat, Locale.US);
@@ -115,6 +119,12 @@ public class EditItineraryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 new DatePickerDialog(EditItineraryFragment.this.getActivity(), dateSetListener, mCurrentItinerary.getDate().get(Calendar.YEAR), mCurrentItinerary.getDate().get(Calendar.MONTH), mCurrentItinerary.getDate().get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+        mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mCurrentItinerary.setPublic(isChecked);
             }
         });
 
@@ -158,6 +168,8 @@ public class EditItineraryFragment extends Fragment {
             updateView();
         }
     };
+
+
 
     private void updateView() {
         mNameBox.setText(mCurrentItinerary.getName());

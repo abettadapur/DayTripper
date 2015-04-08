@@ -94,5 +94,13 @@
         </LinearLayout>
     </LinearLayout>
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/publicBox"
+        android:textSize="14sp"
+        android:textColor="#80000000"
+        android:text="Visible to the public"/>
+
 
 </LinearLayout>

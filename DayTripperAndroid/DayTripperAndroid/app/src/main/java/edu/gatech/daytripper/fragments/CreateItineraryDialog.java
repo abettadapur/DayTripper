@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -45,6 +46,7 @@ import retrofit.client.Response;
 public class CreateItineraryDialog extends DialogFragment
 {
     private EditText mNameBox, mStartPicker, mEndPicker, mDatePicker, mCitySpinner;
+    private CheckBox publicBox;
     private Calendar mDate, mStart, mEnd;
     private ArrayAdapter<String> mCityAdapter;
     private final String[] cities = {"Atlanta", "Austin", "Miami", "Portland", "Philadelphia", "Seattle" };
@@ -60,8 +62,8 @@ public class CreateItineraryDialog extends DialogFragment
                         super.onPositive(dialog);
                         String name = mNameBox.getText().toString();
                         String city = mCitySpinner.getText().toString();
-
-                        Itinerary newItinerary = new Itinerary(name, mDate, mStart, mEnd, city, new ArrayList<Item>());
+                        boolean isPublic = publicBox.isChecked();
+                        Itinerary newItinerary = new Itinerary(name, mDate, mStart, mEnd, city, isPublic, new ArrayList<Item>());
                         ItineraryService service = new RestClient().getItineraryService();
 
                         final ProgressDialog progress  = ProgressDialog.show(CreateItineraryDialog.this.getActivity(), "Creating", "Creating a custom itinerary....", true);
@@ -111,7 +113,7 @@ public class CreateItineraryDialog extends DialogFragment
         mStartPicker = (EditText)v.findViewById(R.id.startPicker);
         mEndPicker = (EditText)v.findViewById(R.id.endPicker);
         mDatePicker = (EditText)v.findViewById(R.id.datePicker);
-
+        publicBox = (CheckBox)v.findViewById(R.id.publicBox);
         mCitySpinner = (EditText)v.findViewById(R.id.citySpinner);
 
 
