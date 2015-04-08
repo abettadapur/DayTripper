@@ -19,6 +19,8 @@ import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 
+import java.text.SimpleDateFormat;
+
 import edu.gatech.daytripper.R;
 import edu.gatech.daytripper.model.Item;
 import info.hoang8f.widget.FButton;
@@ -30,10 +32,13 @@ public class ItemDetailFragment extends Fragment
 {
 
     private Item currentItem;
-    private TextView mTitleView, mReviewCountView;
+    private TextView mTitleView, mReviewCountView, mStartTimeView, mEndTimeView;
     private FButton mCallButton, mNavButton, mWebButton;
     private RatingBar mRatingView;
     private IconTextView mIconView;
+
+    private String timeFormat = "H:mm";
+    private SimpleDateFormat timeSdf;
 
 
     public static ItemDetailFragment newInstance()
@@ -64,6 +69,10 @@ public class ItemDetailFragment extends Fragment
         mReviewCountView = (TextView)v.findViewById(R.id.ratingCountView);
         mRatingView = (RatingBar)v.findViewById(R.id.ratingView);
         mIconView = (IconTextView)v.findViewById(R.id.iconView);
+        mStartTimeView = (TextView)v.findViewById(R.id.startTimeView);
+        mEndTimeView = (TextView)v.findViewById(R.id.endTimeView);
+
+        timeSdf = new SimpleDateFormat(timeFormat);
 
         Iconify.addIcons(mCallButton, mNavButton, mWebButton);
 
@@ -109,6 +118,9 @@ public class ItemDetailFragment extends Fragment
         mRatingView.setRating(currentItem.getYelp_entry().getRating());
         //mSubtitleView.setText(PhoneNumberUtils.formatNumber(currentItem.getYelp_entry().getPhone(), "US"));
         mReviewCountView.setText(" - "+currentItem.getYelp_entry().getReview_count()+" reviews");
+
+        mStartTimeView.setText(timeSdf.format(currentItem.getStart_time().getTime()));
+        mEndTimeView.setText(timeSdf.format(currentItem.getEnd_time().getTime()));
 
         switch(item.getCategory())
         {

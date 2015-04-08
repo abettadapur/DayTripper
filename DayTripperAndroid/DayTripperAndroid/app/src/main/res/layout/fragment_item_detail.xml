@@ -27,47 +27,77 @@
                 android:layout_width="68dp"
                 android:layout_height="match_parent"
                 android:textColor="#000000"
-                android:textSize="48dp" />
+                android:textSize="48dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/titleView"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:text="Large Text"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/titleView"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.8"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                    <TextView
+                        android:id = "@+id/startTimeView"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.2"
+                        android:layout_height="wrap_content"
+                        />
+
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:background="@color/dividers" />
-
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-
-                    <RatingBar
-                        android:id="@+id/ratingView"
-                        style="?android:attr/ratingBarStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/ratingCountView"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                        android:orientation="horizontal"
+                        android:layout_weight="0.8">
 
+                        <RatingBar
+                            android:id="@+id/ratingView"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/ratingCountView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    </LinearLayout>
+                    <TextView
+                        android:id = "@+id/endTimeView"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.2"
+                        android:layout_height="wrap_content"
+                        android:text="12:00"/>
                 </LinearLayout>
 
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></LinearLayout>
         </LinearLayout>
 
         <!--<TextView-->
@@ -134,6 +164,7 @@
             android:textColor="#FFFFFF"
             android:paddingRight="@dimen/md_button_padding_horizontal"
             android:paddingLeft="@dimen/md_button_padding_horizontal"
+            android:layout_gravity="bottom"
             android:text="{fa-plus} Add this item"
             android:visibility="invisible"/>
 

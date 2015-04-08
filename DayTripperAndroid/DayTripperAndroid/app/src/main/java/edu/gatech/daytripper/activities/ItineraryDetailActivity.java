@@ -130,6 +130,9 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
         menu.findItem(R.id.action_randomize).setIcon(new IconDrawable(this, Iconify.IconValue.fa_magic)
                 .color(0xFFFFFF)
                 .actionBarSize());
+        menu.findItem(R.id.action_refresh).setIcon(new IconDrawable(this, Iconify.IconValue.fa_refresh)
+                .color(0xFFFFFF)
+                .actionBarSize());
         return true;
     }
 
@@ -183,6 +186,20 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
                             }
                         })
                         .show();
+                break;
+            case R.id.action_refresh:
+                mRestClient.getItineraryService().getItinerary(currentItinerary.getId(), Session.getActiveSession().getAccessToken(), new Callback<Itinerary>() {
+                    @Override
+                    public void success(Itinerary itinerary, Response response) {
+                        currentItinerary = itinerary;
+                        updateView();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                });
         }
         return super.onOptionsItemSelected(item);
     }

@@ -7,26 +7,23 @@
     tools:context="edu.gatech.daytripper.activities.SplashActivity"
     android:background="@color/splash_color">
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:textSize="68sp"
-        android:textColor="@color/white"
-        android:text="Day Tripper"
-        android:typeface="normal"
-        android:layout_marginTop="136dp"
+    <ImageView
+        android:layout_height="100dp"
+        android:layout_width="100dp"
+        android:src="@drawable/daytripper"
+        android:id="@+id/textView"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/textView" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="102dp" />
 
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/progressBar"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="98dp"
-        android:indeterminateOnly="true" />
+        android:indeterminateTint="#FFFFFF"
+        android:indeterminateOnly="true"
+        android:layout_above="@+id/authButton"
+        android:layout_centerHorizontal="true" />
 
     <com.facebook.widget.LoginButton
         android:layout_width="wrap_content"

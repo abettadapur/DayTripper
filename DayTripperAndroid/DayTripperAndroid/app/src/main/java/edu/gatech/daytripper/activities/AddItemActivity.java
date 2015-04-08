@@ -359,7 +359,7 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
     {
         mTitleView.setText(item.getName());
         mRatingView.setRating(item.getYelp_entry().getRating());
-        mReviewCountView.setText(" - " + item.getYelp_entry().getReview_count());
+        mReviewCountView.setText(" - " + item.getYelp_entry().getReview_count()+" reviews");
         mAddButton.setVisibility(View.INVISIBLE);
        // mSubtitleView.setText(PhoneNumberUtils.formatNumber(item.getYelp_entry().getPhone()));
 
@@ -388,7 +388,7 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
     {
         mTitleView.setText(entry.getName());
         mRatingView.setRating(entry.getRating());
-        mReviewCountView.setText(" - " + entry.getReview_count());
+        mReviewCountView.setText(" - " + entry.getReview_count()+" reviews");
         mAddButton.setVisibility(View.VISIBLE);
 
         mAddButton.setOnClickListener(new View.OnClickListener()
