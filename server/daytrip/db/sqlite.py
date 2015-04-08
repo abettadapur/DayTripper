@@ -264,7 +264,7 @@ class SqlLiteManager(object):
         if row:
             items = self.list_items(row[0])
             user = self.get_user(row[1])
-            itinerary = Itinerary(row[0], user, row[2], row[3], row[4], row[5], row[6], row[7], items)
+            itinerary = Itinerary(row[0], user, row[2], row[3], row[4], row[5], row[6], row[7]==1, items)
             return itinerary
         return None
 
