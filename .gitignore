@@ -67,4 +67,6 @@ DayTripperAndroid/DayTripperAndroid/.idea/
 DayTripperAndroid/DayTripperAndroid/.DS_Store
 DayTripperAndroid/DayTripperAndroid/build
 
+server/temp.db
+
 *.db-journal
