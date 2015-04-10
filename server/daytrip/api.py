@@ -196,7 +196,7 @@ class ListItineraryResource(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument("token", type=str, required=True, location='args', help='Missing auth token')
-
+        super(ListItineraryResource, self).__init__()
 
     def get(self):
         args = self.reqparse.parse_args()
@@ -229,6 +229,7 @@ class RandomizeItineraryResource(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument("token", type=str, required=True, location='args', help='Missing auth token')
+        super(RandomizeItineraryResource, self).__init__()
 
     def get(self, id):
         args = self.reqparse.parse_args()
@@ -247,6 +248,35 @@ class RandomizeItineraryResource(Resource):
 
         return itinerary.as_dict()
 
+
+class CopyItineraryResource(Resource):
+
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument("token", type=str, required=True, location='args', help='Missing auth token')
+        self.reqparse.add_argument("date", type=str, required=False, location='json', help='Missing date')
+        super(CopyItineraryResource, self).__init__()
+
+    def post(self, id):
+        args = self.reqparse.parse_args()
+
+        user_id = get_uid_or_abort_on_bad_token(args['token'])
+        itinerary = db.sqlite.get_itinerary(id)
+
+        abort_on_invalid_itinerary(itinerary, user_id)
+
+        itinerary.user = db.sqlite.get_user(user_id)
+        itinerary.date = args['date']
+        itinerary_id = db.sqlite.insert_itinerary(itinerary)
+
+        itinerary = db.sqlite.get_itinerary(itinerary_id)
+
+        for item in itinerary.items:
+            item_id = db.sqlite.insert_item(item, itinerary)
+
+        itinerary = db.sqlite.get_itinerary(itinerary_id)
+
+        return itinerary.as_dict(), 200
 
 class ItemResource(Resource):
     def __init__(self):
