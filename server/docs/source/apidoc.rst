@@ -129,7 +129,7 @@ The itineraries resource represents all itineraries that are currently present i
         }
 
 .. http:get:: /itinerary/list
-  
+
   Gets all the itineraries that the user owns.
 
   **Response**
@@ -189,7 +189,7 @@ The itineraries resource represents all itineraries that are currently present i
 
 
 .. http:put:: /itinerary/<int:id>
-  
+
   Update an exisiting itinerary with new information. This should only be used to update itinerary attributes, not add or remove items. Users can only edit itineraries that are theirs.
 
   **Request**
@@ -205,7 +205,7 @@ The itineraries resource represents all itineraries that are currently present i
          "end_time":"2015-03-31T21:00:53-0400",
          "name":"Sample Itinerary",
          "start_time":"2015-03-31T10:00:53-0400"
-      } 
+      }
 
   **Response**
 
@@ -225,6 +225,39 @@ The itineraries resource represents all itineraries that are currently present i
       "user":{...}
     }
 
+.. http:post:: /itinerary/<int:id>/copy
+
+  Copy another user's public itinerary and all of the associated items to the current account. The POST body can optionally contain a date to assign to the copied itinerary.
+
+  **Request**
+
+  .. code-block:: js
+
+    POST /itinerary/1/copy
+    Content-Type: application/json
+
+    {
+      "date": "2015-03-31T00:00:00-0400"
+    }
+
+  **Response**
+
+  .. sourcecode:: js
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+      "city":"Atlanta",
+      "date":"2015-03-31T00:00:00-0400",
+      "end_time":"2015-03-31T21:00:53-0400",
+      "id":14,
+      "items":[...]
+      "name":"Sample Itinerary",
+      "start_time":"2015-03-31T10:00:53-0400",
+      "user":{...}
+    }
+
 
 .. http:delete:: /itinerary/<int:id>
 
@@ -235,17 +268,17 @@ The itineraries resource represents all itineraries that are currently present i
   .. sourcecode:: js
 
     HTTP/1.1 204 No Content
-  
+
     true
 
 
-Search Itineraries 
+Search Itineraries
 ----------------------
 
 Users can also search for itineraries from other users using the search endpoint.
 
 .. http:get:: /itinerary/search
-  
+
   Search for an itinerary
 
   **Response**
@@ -313,7 +346,7 @@ Itinerary Ratings
 The ratings resource allows users to rate other users itineraries. A simple star rating method is used.
 
 .. http:post:: /itinerary/<int:id>/rating/create
-  
+
   Creates a rating for the specified itinerary
 
   **Request**
@@ -374,6 +407,11 @@ The items resource represents the individual events contained within an itinerar
     Content-Type: application/json
 
     {
+      "category": "breakfast",
+      "end_time": "2015-04-05T08:45:47-04:00",
+      "name": "Ria's Bluebird",
+      "start_time": "2015-04-05T08:00:47-04:00",
+      "yelp_id": "rias-bluebird-atlanta"
     }
 
   **Response**
@@ -383,6 +421,30 @@ The items resource represents the individual events contained within an itinerar
     HTTP/1.1 201 Created
 
     {
+      "category": "breakfast",
+      "end_time": "2015-04-05T08:45:47-04:00",
+      "id": 1,
+      "name": "Ria's Bluebird",
+      "start_time": "2015-04-05T08:00:47-04:00",
+      "yelp_entry": {
+        "id": "rias-bluebird-atlanta",
+        "image_url": "http://s3-media2.fl.yelpassets.com/bphoto/ICjCwjkEcmzMEdLbLGXHMQ/ms.jpg",
+        "location":{
+          "address": "421 Memorial Dr SE",
+          "city": "Atlanta",
+          "coordinate":{"latitude": 33.746578, "longitude": -84.373642},
+          "postal_code": 30312,
+          "state_code": "GA",
+          "yelp_id": "rias-bluebird-atlanta"
+        },
+        "name": "Ria's Bluebird",
+        "phone": "4045213737",
+        "price": 2,
+        "rating": 4,
+        "review_count": 570,
+        "url": "http://www.yelp.com/biz/rias-bluebird-atlanta"
+      }
+      "yelp_id": "rias-bluebird-atlanta"
     }
 
 .. http:get:: /itinerary/<int:id>/item/<int:id>
@@ -396,6 +458,30 @@ The items resource represents the individual events contained within an itinerar
     HTTP/1.1 201 Created
 
     {
+      "category": "breakfast",
+      "end_time": "2015-04-05T08:45:47-04:00",
+      "id": 1,
+      "name": "Ria's Bluebird",
+      "start_time": "2015-04-05T08:00:47-04:00",
+      "yelp_entry": {
+        "id": "rias-bluebird-atlanta",
+        "image_url": "http://s3-media2.fl.yelpassets.com/bphoto/ICjCwjkEcmzMEdLbLGXHMQ/ms.jpg",
+        "location":{
+          "address": "421 Memorial Dr SE",
+          "city": "Atlanta",
+          "coordinate":{"latitude": 33.746578, "longitude": -84.373642},
+          "postal_code": 30312,
+          "state_code": "GA",
+          "yelp_id": "rias-bluebird-atlanta"
+        },
+        "name": "Ria's Bluebird",
+        "phone": "4045213737",
+        "price": 2,
+        "rating": 4,
+        "review_count": 570,
+        "url": "http://www.yelp.com/biz/rias-bluebird-atlanta"
+      }
+      "yelp_id": "rias-bluebird-atlanta"
     }
 
 .. http:put:: /itinerary/<int:id>/item/<int:id>
@@ -419,10 +505,34 @@ The items resource represents the individual events contained within an itinerar
     HTTP/1.1 200 OK
 
     {
+      "category": "breakfast",
+      "end_time": "2015-04-05T08:45:47-04:00",
+      "id": 1,
+      "name": "Ria's Bluebird",
+      "start_time": "2015-04-05T08:00:47-04:00",
+      "yelp_entry": {
+        "id": "rias-bluebird-atlanta",
+        "image_url": "http://s3-media2.fl.yelpassets.com/bphoto/ICjCwjkEcmzMEdLbLGXHMQ/ms.jpg",
+        "location":{
+          "address": "421 Memorial Dr SE",
+          "city": "Atlanta",
+          "coordinate":{"latitude": 33.746578, "longitude": -84.373642},
+          "postal_code": 30312,
+          "state_code": "GA",
+          "yelp_id": "rias-bluebird-atlanta"
+        },
+        "name": "Ria's Bluebird",
+        "phone": "4045213737",
+        "price": 2,
+        "rating": 4,
+        "review_count": 570,
+        "url": "http://www.yelp.com/biz/rias-bluebird-atlanta"
+      }
+      "yelp_id": "rias-bluebird-atlanta"
     }
 
 .. http:delete:: /itinerary/<int:id>/item/<int:id>
-  
+
   Deletes the specified item
 
   **Response**
@@ -484,7 +594,7 @@ Directions
 
 .. http:get:: /maps/directions
 
-  Gets directions from the Google Directions API. 
+  Gets directions from the Google Directions API.
 
   **Response**
 
@@ -514,14 +624,3 @@ Directions
 
   :query origin: The start location. This can be an address string or coordinates. --- required
   :query destination: The end location. This can be an address string or coordinates. --- required
-
-
-
-
-
-
-
-
-
-
-
