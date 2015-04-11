@@ -266,13 +266,11 @@ class CopyItineraryResource(Resource):
         abort_on_invalid_itinerary(itinerary, user_id)
 
         itinerary.user = db.sqlite.get_user(user_id)
-        itinerary.date = args['date']
+
+        if args['date']:
+            itinerary.date = args['date']
+
         itinerary_id = db.sqlite.insert_itinerary(itinerary)
-
-        itinerary = db.sqlite.get_itinerary(itinerary_id)
-
-        for item in itinerary.items:
-            item_id = db.sqlite.insert_item(item, itinerary)
 
         itinerary = db.sqlite.get_itinerary(itinerary_id)
 

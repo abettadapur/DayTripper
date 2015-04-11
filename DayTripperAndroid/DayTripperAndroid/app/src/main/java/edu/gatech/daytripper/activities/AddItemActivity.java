@@ -42,6 +42,7 @@ import edu.gatech.daytripper.model.Item;
 import edu.gatech.daytripper.model.Itinerary;
 import edu.gatech.daytripper.model.YelpEntry;
 import edu.gatech.daytripper.net.RestClient;
+import edu.gatech.daytripper.views.VerticalProgressBar;
 import info.hoang8f.widget.FButton;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -54,6 +55,7 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
 
     private Toolbar mToolbar;
     private EditText mStartTimeView, mEndTimeView, mCategoryView;
+
     private TextView mArrowLabel;
     private GoogleMap mGoogleMap;
     private FButton mCallButton, mNavButton, mWebButton, mAddButton;
@@ -62,6 +64,7 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
     private TextView mTitleView, mReviewCountView;
     private RatingBar mRatingView;
     private IconTextView mIconView;
+    private VerticalProgressBar mPriceBar;
 
     private Itinerary mCurrentItinerary;
     private Item mCurrentItem;
@@ -92,7 +95,8 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
         mNavButton = (FButton)findViewById(R.id.navButton);
         mWebButton = (FButton)findViewById(R.id.webButton);
         mAddButton = (FButton)findViewById(R.id.addButton);
-
+        mPriceBar = (VerticalProgressBar)findViewById(R.id.priceBar);
+        mPriceBar.setMax(4);
 
         mNavButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -361,6 +365,7 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
         mRatingView.setRating(item.getYelp_entry().getRating());
         mReviewCountView.setText(" - " + item.getYelp_entry().getReview_count()+" reviews");
         mAddButton.setVisibility(View.INVISIBLE);
+        mPriceBar.setProgress(item.getYelp_entry().getPrice());
        // mSubtitleView.setText(PhoneNumberUtils.formatNumber(item.getYelp_entry().getPhone()));
 
         switch(item.getCategory())
@@ -414,6 +419,7 @@ public class AddItemActivity extends ActionBarActivity implements OnMapReadyCall
                 });
             }
         });
+        mPriceBar.setProgress(entry.getPrice());
        // mSubtitleView.setText(PhoneNumberUtils.formatNumber(entry.getPhone()));
 
         switch(mCurrentItem.getCategory())

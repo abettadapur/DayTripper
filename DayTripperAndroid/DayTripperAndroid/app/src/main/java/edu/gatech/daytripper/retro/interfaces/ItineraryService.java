@@ -37,4 +37,7 @@ public interface ItineraryService
 
     @GET("/itinerary/{id}/randomize")
     public void randomizeItinerary(@Path("id") int id, @Query("token") String token, Callback<Itinerary> callback);
+
+    @POST("/itinerary/{id}/copy")
+    public void copyItinerary(@Path("id") int id, @Query("token") String token, Callback<Itinerary> callback);
 }

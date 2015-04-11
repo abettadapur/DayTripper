@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 
 import edu.gatech.daytripper.R;
 import edu.gatech.daytripper.model.Item;
+import edu.gatech.daytripper.views.VerticalProgressBar;
 import info.hoang8f.widget.FButton;
 
 /**
@@ -34,6 +35,7 @@ public class ItemDetailFragment extends Fragment
     private Item currentItem;
     private TextView mTitleView, mReviewCountView, mStartTimeView, mEndTimeView;
     private FButton mCallButton, mNavButton, mWebButton;
+    private VerticalProgressBar mPriceBar;
     private RatingBar mRatingView;
     private IconTextView mIconView;
 
@@ -71,6 +73,9 @@ public class ItemDetailFragment extends Fragment
         mIconView = (IconTextView)v.findViewById(R.id.iconView);
         mStartTimeView = (TextView)v.findViewById(R.id.startTimeView);
         mEndTimeView = (TextView)v.findViewById(R.id.endTimeView);
+        mPriceBar = (VerticalProgressBar)v.findViewById(R.id.priceBar);
+
+        mPriceBar.setMax(4);
 
         timeSdf = new SimpleDateFormat(timeFormat);
 
@@ -121,6 +126,8 @@ public class ItemDetailFragment extends Fragment
 
         mStartTimeView.setText(timeSdf.format(currentItem.getStart_time().getTime()));
         mEndTimeView.setText(timeSdf.format(currentItem.getEnd_time().getTime()));
+
+        mPriceBar.setProgress(item.getYelp_entry().getPrice());
 
         switch(item.getCategory())
         {

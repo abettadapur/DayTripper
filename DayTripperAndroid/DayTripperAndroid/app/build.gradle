@@ -40,6 +40,7 @@ dependencies {
     compile 'com.afollestad:material-dialogs:0.6.7.0'
     compile 'com.jpardogo.materialtabstrip:library:1.0.9'
     compile 'info.hoang8f:fbutton:1.0.5'
+    compile 'com.nispok:snackbar:2.10.6'
 
 
 }

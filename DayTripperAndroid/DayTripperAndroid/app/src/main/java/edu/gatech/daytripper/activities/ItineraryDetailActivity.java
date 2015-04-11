@@ -13,9 +13,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.facebook.Request;
 import com.facebook.Session;
+import com.facebook.model.GraphUser;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -30,6 +33,10 @@ import com.google.maps.android.PolyUtil;
 import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
 import com.melnykov.fab.FloatingActionButton;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.listeners.ActionClickListener;
 
 
 import java.io.IOException;
@@ -60,8 +67,10 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
     private ItemDetailFragment itemDetailFragment;
     private Map<Marker, Item> marker_to_item;
     private List<Polyline> polylines;
+    private Menu mMenu;
     private static String[] colors = {"red", "blue", "cyan", "green","purple", "orange"};
     private GoogleMap mGoogleMap;
+    private final int ADD_ITINERARY = 94801;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +107,24 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
             @Override
             public void success(Itinerary itinerary, Response response) {
                 currentItinerary = itinerary;
+                if(mMenu!=null)
+                {
+                    Request request = Request.newMeRequest(Session.getActiveSession(), new Request.GraphUserCallback() {
+                        @Override
+                        public void onCompleted(GraphUser graphUser, com.facebook.Response response) {
+
+                            if(currentItinerary.getUser().getId() != Long.parseLong(graphUser.getId()))
+                            {
+                                mMenu.add(0, ADD_ITINERARY, 0, "Add to your itineraries").setIcon(new IconDrawable(ItineraryDetailActivity.this, Iconify.IconValue.fa_plus).color(0xFFFFFF).actionBarSize());
+                                mMenu.removeItem(R.id.action_edit);
+                                mMenu.removeItem(R.id.action_randomize);
+                                mMenu.removeItem(R.id.action_refresh);
+                            }
+
+                        }
+                    });
+                    request.executeAsync();
+                }
 
                 //notify fragments
                 //itemListFragment.updateItems(itinerary.getItems());
@@ -124,6 +151,7 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_itinerary_detail, menu);
+        mMenu = menu;
         menu.findItem(R.id.action_edit).setIcon(new IconDrawable(this, Iconify.IconValue.fa_edit)
                 .color(0xFFFFFF)
                 .actionBarSize());
@@ -200,6 +228,34 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
 
                     }
                 });
+
+                break;
+            case ADD_ITINERARY:
+                mRestClient.getItineraryService().copyItinerary(currentItinerary.getId(), Session.getActiveSession().getAccessToken(), new Callback<Itinerary>() {
+                    @Override
+                    public void success(final Itinerary itinerary, Response response) {
+                        SnackbarManager.show(
+                            Snackbar.with(ItineraryDetailActivity.this)
+                                .text("Itinerary Successfully Added to your Itineraries")
+                                .actionLabel("View")
+                                .actionListener(new ActionClickListener() {
+                                    @Override
+                                    public void onActionClicked(Snackbar snackbar) {
+                                        Intent i = new Intent(ItineraryDetailActivity.this, ItineraryDetailActivity.class);
+                                        i.putExtra("itinerary_id", itinerary.getId());
+                                        startActivity(i);
+                                        finish();
+                                    }
+                                })
+                        );
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                });
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -216,7 +272,7 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
         for(int j = 0; j<currentItinerary.getItems().size(); j++)
         {
             Item i = currentItinerary.getItems().get(j);
-            String drawableName = "marker_"+colors[j]+"_number_"+j;
+            String drawableName = "marker_"+colors[j%6]+"_number_"+j;
             Bitmap b = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(drawableName,"drawable", getPackageName()));
             Bitmap scaled = Bitmap.createScaledBitmap(b, b.getWidth()*3, b.getHeight()*3, false);
             Marker marker = mGoogleMap.addMarker(new MarkerOptions()
