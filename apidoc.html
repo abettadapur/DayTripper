@@ -336,6 +336,37 @@
 </div>
 </dd></dl>
 
+<dl class="post">
+<dt id="post--itinerary--int-id--copy">
+<code class="descname">POST </code><code class="descname">/itinerary/&lt;int:id&gt;/copy</code><a class="headerlink" href="#post--itinerary--int-id--copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy another user&#8217;s public itinerary and all of the associated items to the current account. The POST body can optionally contain a date to assign to the copied itinerary.</p>
+<p><strong>Request</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">POST</span> <span class="o">/</span><span class="nx">itinerary</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span><span class="nx">copy</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+<span class="p">{</span>
+  <span class="s2">&quot;date&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-31T00:00:00-0400&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="nx">OK</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+<span class="p">{</span>
+  <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;date&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T00:00:00-0400&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;end_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T21:00:53-0400&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">14</span><span class="p">,</span>
+  <span class="s2">&quot;items&quot;</span><span class="o">:</span><span class="p">[...]</span>
+  <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Sample Itinerary&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;start_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T10:00:53-0400&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;user&quot;</span><span class="o">:</span><span class="p">{...}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="delete">
 <dt id="delete--itinerary--int-id-">
 <code class="descname">DELETE </code><code class="descname">/itinerary/&lt;int:id&gt;</code><a class="headerlink" href="#delete--itinerary--int-id-" title="Permalink to this definition">¶</a></dt>
@@ -488,6 +519,11 @@
 <span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
 
 <span class="p">{</span>
+  <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;breakfast&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;end_time&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-04-05T08:45:47-04:00&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Ria&#39;s Bluebird&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;start_time&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-04-05T08:00:47-04:00&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;yelp_id&quot;</span><span class="o">:</span> <span class="s2">&quot;rias-bluebird-atlanta&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -495,6 +531,30 @@
 <div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">201</span> <span class="nx">Created</span>
 
 <span class="p">{</span>
+  <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;breakfast&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;end_time&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-04-05T08:45:47-04:00&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Ria&#39;s Bluebird&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;start_time&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-04-05T08:00:47-04:00&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;yelp_entry&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;rias-bluebird-atlanta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;image_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://s3-media2.fl.yelpassets.com/bphoto/ICjCwjkEcmzMEdLbLGXHMQ/ms.jpg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;location&quot;</span><span class="o">:</span><span class="p">{</span>
+      <span class="s2">&quot;address&quot;</span><span class="o">:</span> <span class="s2">&quot;421 Memorial Dr SE&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;city&quot;</span><span class="o">:</span> <span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;coordinate&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;latitude&quot;</span><span class="o">:</span> <span class="mf">33.746578</span><span class="p">,</span> <span class="s2">&quot;longitude&quot;</span><span class="o">:</span> <span class="o">-</span><span class="mf">84.373642</span><span class="p">},</span>
+      <span class="s2">&quot;postal_code&quot;</span><span class="o">:</span> <span class="mi">30312</span><span class="p">,</span>
+      <span class="s2">&quot;state_code&quot;</span><span class="o">:</span> <span class="s2">&quot;GA&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;yelp_id&quot;</span><span class="o">:</span> <span class="s2">&quot;rias-bluebird-atlanta&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Ria&#39;s Bluebird&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;phone&quot;</span><span class="o">:</span> <span class="s2">&quot;4045213737&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;price&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;rating&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;review_count&quot;</span><span class="o">:</span> <span class="mi">570</span><span class="p">,</span>
+    <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://www.yelp.com/biz/rias-bluebird-atlanta&quot;</span>
+  <span class="p">}</span>
+  <span class="s2">&quot;yelp_id&quot;</span><span class="o">:</span> <span class="s2">&quot;rias-bluebird-atlanta&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -508,6 +568,30 @@
 <div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">201</span> <span class="nx">Created</span>
 
 <span class="p">{</span>
+  <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;breakfast&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;end_time&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-04-05T08:45:47-04:00&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Ria&#39;s Bluebird&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;start_time&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-04-05T08:00:47-04:00&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;yelp_entry&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;rias-bluebird-atlanta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;image_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://s3-media2.fl.yelpassets.com/bphoto/ICjCwjkEcmzMEdLbLGXHMQ/ms.jpg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;location&quot;</span><span class="o">:</span><span class="p">{</span>
+      <span class="s2">&quot;address&quot;</span><span class="o">:</span> <span class="s2">&quot;421 Memorial Dr SE&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;city&quot;</span><span class="o">:</span> <span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;coordinate&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;latitude&quot;</span><span class="o">:</span> <span class="mf">33.746578</span><span class="p">,</span> <span class="s2">&quot;longitude&quot;</span><span class="o">:</span> <span class="o">-</span><span class="mf">84.373642</span><span class="p">},</span>
+      <span class="s2">&quot;postal_code&quot;</span><span class="o">:</span> <span class="mi">30312</span><span class="p">,</span>
+      <span class="s2">&quot;state_code&quot;</span><span class="o">:</span> <span class="s2">&quot;GA&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;yelp_id&quot;</span><span class="o">:</span> <span class="s2">&quot;rias-bluebird-atlanta&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Ria&#39;s Bluebird&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;phone&quot;</span><span class="o">:</span> <span class="s2">&quot;4045213737&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;price&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;rating&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;review_count&quot;</span><span class="o">:</span> <span class="mi">570</span><span class="p">,</span>
+    <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://www.yelp.com/biz/rias-bluebird-atlanta&quot;</span>
+  <span class="p">}</span>
+  <span class="s2">&quot;yelp_id&quot;</span><span class="o">:</span> <span class="s2">&quot;rias-bluebird-atlanta&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -529,6 +613,30 @@
 <div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="nx">OK</span>
 
 <span class="p">{</span>
+  <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;breakfast&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;end_time&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-04-05T08:45:47-04:00&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Ria&#39;s Bluebird&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;start_time&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-04-05T08:00:47-04:00&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;yelp_entry&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;rias-bluebird-atlanta&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;image_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://s3-media2.fl.yelpassets.com/bphoto/ICjCwjkEcmzMEdLbLGXHMQ/ms.jpg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;location&quot;</span><span class="o">:</span><span class="p">{</span>
+      <span class="s2">&quot;address&quot;</span><span class="o">:</span> <span class="s2">&quot;421 Memorial Dr SE&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;city&quot;</span><span class="o">:</span> <span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;coordinate&quot;</span><span class="o">:</span><span class="p">{</span><span class="s2">&quot;latitude&quot;</span><span class="o">:</span> <span class="mf">33.746578</span><span class="p">,</span> <span class="s2">&quot;longitude&quot;</span><span class="o">:</span> <span class="o">-</span><span class="mf">84.373642</span><span class="p">},</span>
+      <span class="s2">&quot;postal_code&quot;</span><span class="o">:</span> <span class="mi">30312</span><span class="p">,</span>
+      <span class="s2">&quot;state_code&quot;</span><span class="o">:</span> <span class="s2">&quot;GA&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;yelp_id&quot;</span><span class="o">:</span> <span class="s2">&quot;rias-bluebird-atlanta&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Ria&#39;s Bluebird&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;phone&quot;</span><span class="o">:</span> <span class="s2">&quot;4045213737&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;price&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;rating&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;review_count&quot;</span><span class="o">:</span> <span class="mi">570</span><span class="p">,</span>
+    <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://www.yelp.com/biz/rias-bluebird-atlanta&quot;</span>
+  <span class="p">}</span>
+  <span class="s2">&quot;yelp_id&quot;</span><span class="o">:</span> <span class="s2">&quot;rias-bluebird-atlanta&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
