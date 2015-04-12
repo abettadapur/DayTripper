@@ -138,7 +138,7 @@ def best_yelp_id_with_name(location, category, coordinate_str=None, disallowed_y
         strategy_name = 'first'
     elif strategy_name == 'distance':
         extra_yelp_params['sort'] = 1
-        strategy_name = 'first'
+        strategy_name = 'first_random'
 
     search_results = yelpapi.search(category.search_term, location, category.filters, **extra_yelp_params)
     candidate_ids_with_names = [(result['id'], result['name'])

@@ -40,6 +40,9 @@ def strategy_popularity(yelp_ids):
 def strategy_first(yelp_ids):
     return 0
 
+def strategy_first_random(yelp_ids):
+    return random.randrange(8)
+
 
 # A strategy accepts yelp_ids as input,
 # and returns a selected index as output (or -1 on a failure)
@@ -55,5 +58,6 @@ STRATEGIES = {
     "price-4": strategy_price_for(4),
     "random": strategy_random,
     "popularity": strategy_popularity,
-    "first": strategy_first
+    "first": strategy_first,
+    "first_random": strategy_first_random
 }
