@@ -225,6 +225,39 @@ The itineraries resource represents all itineraries that are currently present i
       "user":{...}
     }
 
+.. http:post:: /itinerary/<int:id>/copy
+
+  Copy another user's public itinerary and all of the associated items to the current account. The POST body can optionally contain a date to assign to the copied itinerary.
+
+  **Request**
+
+  .. code-block:: js
+
+    POST /itinerary/1/copy
+    Content-Type: application/json
+
+    {
+      "date": "2015-03-31T00:00:00-0400"
+    }
+
+  **Response**
+
+  .. sourcecode:: js
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+      "city":"Atlanta",
+      "date":"2015-03-31T00:00:00-0400",
+      "end_time":"2015-03-31T21:00:53-0400",
+      "id":14,
+      "items":[...]
+      "name":"Sample Itinerary",
+      "start_time":"2015-03-31T10:00:53-0400",
+      "user":{...}
+    }
+
 
 .. http:delete:: /itinerary/<int:id>
 
@@ -374,6 +407,11 @@ The items resource represents the individual events contained within an itinerar
     Content-Type: application/json
 
     {
+      "category": "breakfast",
+      "end_time": "2015-04-05T08:45:47-04:00",
+      "name": "Ria's Bluebird",
+      "start_time": "2015-04-05T08:00:47-04:00",
+      "yelp_id": "rias-bluebird-atlanta"
     }
 
   **Response**
@@ -383,6 +421,30 @@ The items resource represents the individual events contained within an itinerar
     HTTP/1.1 201 Created
 
     {
+      "category": "breakfast",
+      "end_time": "2015-04-05T08:45:47-04:00",
+      "id": 1,
+      "name": "Ria's Bluebird",
+      "start_time": "2015-04-05T08:00:47-04:00",
+      "yelp_entry": {
+        "id": "rias-bluebird-atlanta",
+        "image_url": "http://s3-media2.fl.yelpassets.com/bphoto/ICjCwjkEcmzMEdLbLGXHMQ/ms.jpg",
+        "location":{
+          "address": "421 Memorial Dr SE",
+          "city": "Atlanta",
+          "coordinate":{"latitude": 33.746578, "longitude": -84.373642},
+          "postal_code": 30312,
+          "state_code": "GA",
+          "yelp_id": "rias-bluebird-atlanta"
+        },
+        "name": "Ria's Bluebird",
+        "phone": "4045213737",
+        "price": 2,
+        "rating": 4,
+        "review_count": 570,
+        "url": "http://www.yelp.com/biz/rias-bluebird-atlanta"
+      }
+      "yelp_id": "rias-bluebird-atlanta"
     }
 
 .. http:get:: /itinerary/<int:id>/item/<int:id>
@@ -396,6 +458,30 @@ The items resource represents the individual events contained within an itinerar
     HTTP/1.1 201 Created
 
     {
+      "category": "breakfast",
+      "end_time": "2015-04-05T08:45:47-04:00",
+      "id": 1,
+      "name": "Ria's Bluebird",
+      "start_time": "2015-04-05T08:00:47-04:00",
+      "yelp_entry": {
+        "id": "rias-bluebird-atlanta",
+        "image_url": "http://s3-media2.fl.yelpassets.com/bphoto/ICjCwjkEcmzMEdLbLGXHMQ/ms.jpg",
+        "location":{
+          "address": "421 Memorial Dr SE",
+          "city": "Atlanta",
+          "coordinate":{"latitude": 33.746578, "longitude": -84.373642},
+          "postal_code": 30312,
+          "state_code": "GA",
+          "yelp_id": "rias-bluebird-atlanta"
+        },
+        "name": "Ria's Bluebird",
+        "phone": "4045213737",
+        "price": 2,
+        "rating": 4,
+        "review_count": 570,
+        "url": "http://www.yelp.com/biz/rias-bluebird-atlanta"
+      }
+      "yelp_id": "rias-bluebird-atlanta"
     }
 
 .. http:put:: /itinerary/<int:id>/item/<int:id>
@@ -419,6 +505,30 @@ The items resource represents the individual events contained within an itinerar
     HTTP/1.1 200 OK
 
     {
+      "category": "breakfast",
+      "end_time": "2015-04-05T08:45:47-04:00",
+      "id": 1,
+      "name": "Ria's Bluebird",
+      "start_time": "2015-04-05T08:00:47-04:00",
+      "yelp_entry": {
+        "id": "rias-bluebird-atlanta",
+        "image_url": "http://s3-media2.fl.yelpassets.com/bphoto/ICjCwjkEcmzMEdLbLGXHMQ/ms.jpg",
+        "location":{
+          "address": "421 Memorial Dr SE",
+          "city": "Atlanta",
+          "coordinate":{"latitude": 33.746578, "longitude": -84.373642},
+          "postal_code": 30312,
+          "state_code": "GA",
+          "yelp_id": "rias-bluebird-atlanta"
+        },
+        "name": "Ria's Bluebird",
+        "phone": "4045213737",
+        "price": 2,
+        "rating": 4,
+        "review_count": 570,
+        "url": "http://www.yelp.com/biz/rias-bluebird-atlanta"
+      }
+      "yelp_id": "rias-bluebird-atlanta"
     }
 
 .. http:delete:: /itinerary/<int:id>/item/<int:id>
