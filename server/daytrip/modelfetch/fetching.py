@@ -123,7 +123,7 @@ def fetch_new_item(location, category, start_time="", end_time="", coordinate_st
     return item
 
 
-def best_yelp_id_with_name(location, category, coordinate_str=None, disallowed_yelp_ids=[], strategy_name="random"):
+def best_yelp_id_with_name(location, category, coordinate_str=None, disallowed_yelp_ids=[], strategy_name="distance"):
     """coordinate_str is for cll param in query string"""
     extra_yelp_params = {}
     if coordinate_str is not None:
@@ -131,6 +131,8 @@ def best_yelp_id_with_name(location, category, coordinate_str=None, disallowed_y
 
     # for these strategies, use YelpAPI
     # then reset strategy_name so that we can still call strategy module below
+    extra_yelp_params['radius_filters'] = 7500
+
     if strategy_name == 'yelp-rating':
         extra_yelp_params['sort'] = 2
         strategy_name = 'first'

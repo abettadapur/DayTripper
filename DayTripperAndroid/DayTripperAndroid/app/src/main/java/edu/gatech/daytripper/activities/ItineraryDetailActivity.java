@@ -236,7 +236,7 @@ public class ItineraryDetailActivity extends ActionBarActivity implements OnMapR
                     public void success(final Itinerary itinerary, Response response) {
                         SnackbarManager.show(
                             Snackbar.with(ItineraryDetailActivity.this)
-                                .text("Itinerary Successfully Added to your Itineraries")
+                                .text("Itinerary Copied")
                                 .actionLabel("View")
                                 .actionListener(new ActionClickListener() {
                                     @Override
