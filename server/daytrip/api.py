@@ -150,6 +150,46 @@ class ItineraryResource(Resource):
         return True, 204
 
 
+class ExperimentCreateItineraryResource(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('token', type=str, required=True, location='args', help='No token to verify')
+        self.reqparse.add_argument('name', type=str, required=True, location='json', help='No name provided')
+        self.reqparse.add_argument('date', type=str, required=True, location='json', help='No date provided')
+        self.reqparse.add_argument('start_time', type=str, required=True, location='json', help='No start_time provided')
+        self.reqparse.add_argument('end_time', type=str, required=True, location='json', help='No end_time provided')
+        self.reqparse.add_argument('city', type=str, required=True, location='json', help='No city provided')
+        self.reqparse.add_argument('public', type=bool, required=True, location='json', help="No publicity provided")
+
+        super(ExperimentCreateItineraryResource, self).__init__()
+
+    def post(self):
+        args = self.reqparse.parse_args()
+        user_id = get_uid_or_abort_on_bad_token(args['token'])
+        start_time = dateutil.parser.parse(args['start_time'])
+        end_time = dateutil.parser.parse(args['end_time'])
+
+        if (end_time - start_time).seconds // 3600 < 6:
+            pass  #ABORT
+
+
+        #Add some sample items based on times
+        # TODO(abettadapur): ITEM TIMES MUST BE FIXED TO ALLOW FOR TRANSPORT
+        itinerary = fetching.new_fetch_sample_itinerary(
+            user=db.sqlite.get_user(user_id),
+            name=args['name'],
+            city=args['city'],
+            start_time=args['start_time'],
+            end_time=args['end_time'],
+            date=args['date'],
+            public=args['public']
+        )
+
+        itinerary_id = db.sqlite.insert_itinerary(itinerary)
+        itinerary = db.sqlite.get_itinerary(itinerary_id)
+        return itinerary.as_dict(), 201
+
+
 class CreateItineraryResource(Resource):
 
     def __init__(self):
