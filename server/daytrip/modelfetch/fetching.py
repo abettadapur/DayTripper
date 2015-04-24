@@ -8,6 +8,7 @@ import random
 import dateutil.parser
 import datetime
 import strategy
+import new_fetching
 
 
 BREAKFAST = 'breakfast'
@@ -38,6 +39,38 @@ CATEGORIES = [model.match_category(name) for name in DEFAULT_SCHEDULE]
 FETCH_STRATEGY_OPTIONS = ['distance', 'yelp-rating'] + strategy.STRATEGIES.keys()
 
 
+def new_fetch_sample_itinerary(user, name, city, start_time, end_time, date, public):
+    """
+    start_time, end_time, and date should be STRINGS straight from args[]
+    (i.e. don't pass datetime object result of dateutil.parser.parse)
+
+    Does not persist itinerary to DB!
+    """
+    valid_categories = filter_valid_categories(CATEGORIES, start_time, end_time)
+
+    candidate_items_groupby_category = []
+    for category in valid_categories:
+        candidate_items = fetch_candidate_items_for_category(city, category)
+        candidate_items_groupby_category.append(candidate_items)
+
+    sample_items = new_fetching.get_items_for_itinerary(candidate_items_groupby_category)
+    update_start_end_times(sample_items, start_time)
+
+    sample_itinerary = Itinerary(
+        id=None,
+        user=user,
+        name=name,
+        date=date,
+        start_time=start_time,
+        end_time=end_time,
+        city=city,
+        public=public,
+        items=sample_items
+    )
+
+    return sample_itinerary
+
+
 def fetch_sample_itinerary(user, name, city, start_time, end_time, date, public):
     """
     start_time, end_time, and date should be STRINGS straight from args[]
@@ -63,6 +96,7 @@ def fetch_sample_itinerary(user, name, city, start_time, end_time, date, public)
 
     return sample_itinerary
 
+
 def fetch_sample_itinerary_from_old(old_itinerary):
     valid_categories = filter_valid_categories(CATEGORIES, old_itinerary.start_time, old_itinerary.end_time)
     sample_items = fetch_sample_items(old_itinerary.city, valid_categories)
@@ -70,6 +104,7 @@ def fetch_sample_itinerary_from_old(old_itinerary):
 
     old_itinerary.items = sample_items
     return old_itinerary
+
 
 def filter_valid_categories(categories, start_time, end_time):
     results = []
@@ -99,6 +134,32 @@ def fetch_sample_items(city, categories):
         coordinate_str = new_item.yelp_entry.location.coordinate_string()
 
     return sample_items
+
+
+def fetch_candidate_items_for_category(city, category):
+    search_results = candidate_yelp_ids_with_name(city, category)
+    candidate_items = []
+    for yelp_id, item_name in search_results:
+        item = Item(
+            id=None,
+            yelp_id=yelp_id,
+            category=category.name,
+            name=item_name,
+            start_time="",
+            end_time=""
+        )
+        item.yelp_entry = db.sqlite.get_yelp_entry(yelp_id)
+        candidate_items.append(item)
+    return candidate_items
+
+
+def candidate_yelp_ids_with_name(location, category):
+    extra_yelp_params = {'radius_filters': 7500}
+    search_results = yelpapi.search(category.search_term, location, category.filters, **extra_yelp_params)
+    candidate_ids_with_names = [(result['id'], result['name'])
+                                for result
+                                in search_results]
+    return candidate_ids_with_names
 
 
 def fetch_new_item(location, category, start_time="", end_time="", coordinate_str=None, disallowed_yelp_ids=[]):
