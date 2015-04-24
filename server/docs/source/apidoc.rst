@@ -603,7 +603,7 @@ Directions
     HTTP/1.1 200 OK
 
     {
-
+		//google directions content
     }
 
   :query origin: The start location. This can be an address string or coordinates. --- required
@@ -624,3 +624,42 @@ Directions
 
   :query origin: The start location. This can be an address string or coordinates. --- required
   :query destination: The end location. This can be an address string or coordinates. --- required
+  
+Experimental
+----------------------------------
+.. http:post:: /experiment/itinerary/create
+  
+  Creates an itinerary using an improved item selection algorithm. The parameters are the same as the regular itinerary create endpoint.
+  
+  **Request**
+
+    .. code-block:: js
+
+      POST /experiment/itinerary/create
+      Content-Type: application/json
+
+       {
+           "city":"Atlanta",
+           "date":"2015-03-31T01:30:53-0400",
+           "end_time":"2015-03-31T21:00:53-0400",
+           "name":"Sample Itinerary",
+           "start_time":"2015-03-31T10:00:53-0400"
+        }
+
+    **Response**
+
+    .. sourcecode:: js
+
+      HTTP/1.1 201 Created
+      Content-Type: application/json
+
+      {
+        "city":"Atlanta",
+        "date":"2015-03-31T01:30:53-0400",
+        "end_time":"2015-03-31T21:00:53-0400",
+        "id":14,
+        "items":[...]
+        "name":"Sample Itinerary",
+        "start_time":"2015-03-31T10:00:53-0400",
+        "user":{...}
+      }
