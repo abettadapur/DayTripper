@@ -71,6 +71,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#items">Items</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#categories">Categories</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#directions">Directions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#experimental">Experimental</a></li>
 </ul>
 </li>
 </ul>
@@ -110,7 +111,7 @@
             
   <div class="section" id="rest-api-documentation">
 <h1>REST API Documentation<a class="headerlink" href="#rest-api-documentation" title="Permalink to this headline">¶</a></h1>
-<p>The DayTripper REST API can be used to interface with the application and its recommendations engine. All requests except those in the auth section require the token query parameter, which is a Facebook OAUTH token that has been previously verified with the DayTripper service. This token is used to both authenticate the user and provide user identity information.</p>
+<p>The Day Tripper REST API can be used to interface with the application and its recommendations engine. All requests except those in the auth section require the token query parameter, which is a Facebook OAUTH token that has been previously verified with the DayTripper service. This token is used to both authenticate the user and provide user identity information.</p>
 <div class="section" id="authentication">
 <h2>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h2>
 <dl class="post">
@@ -717,7 +718,7 @@
 <div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="nx">OK</span>
 
 <span class="p">{</span>
-
+            <span class="c1">//google directions content</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -759,6 +760,46 @@
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+</div>
+<div class="section" id="experimental">
+<h2>Experimental<a class="headerlink" href="#experimental" title="Permalink to this headline">¶</a></h2>
+<dl class="post">
+<dt id="post--experiment-itinerary-create">
+<code class="descname">POST </code><code class="descname">/experiment/itinerary/create</code><a class="headerlink" href="#post--experiment-itinerary-create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an itinerary using an improved item selection algorithm. The parameters are the same as the regular itinerary create endpoint.</p>
+<p><strong>Request</strong></p>
+<blockquote>
+<div><div class="highlight-js"><div class="highlight"><pre><span class="nx">POST</span> <span class="o">/</span><span class="nx">experiment</span><span class="o">/</span><span class="nx">itinerary</span><span class="o">/</span><span class="nx">create</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+ <span class="p">{</span>
+     <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;date&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T01:30:53-0400&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;end_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T21:00:53-0400&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Sample Itinerary&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;start_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T10:00:53-0400&quot;</span>
+  <span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Response</strong></p>
+<div class="highlight-js"><div class="highlight"><pre><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">201</span> <span class="nx">Created</span>
+<span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">application</span><span class="o">/</span><span class="nx">json</span>
+
+<span class="p">{</span>
+  <span class="s2">&quot;city&quot;</span><span class="o">:</span><span class="s2">&quot;Atlanta&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;date&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T01:30:53-0400&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;end_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T21:00:53-0400&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;id&quot;</span><span class="o">:</span><span class="mi">14</span><span class="p">,</span>
+  <span class="s2">&quot;items&quot;</span><span class="o">:</span><span class="p">[...]</span>
+  <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Sample Itinerary&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;start_time&quot;</span><span class="o">:</span><span class="s2">&quot;2015-03-31T10:00:53-0400&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;user&quot;</span><span class="o">:</span><span class="p">{...}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
 </dd></dl>
 
 </div>
